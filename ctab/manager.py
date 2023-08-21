@@ -17,4 +17,4 @@ class Manager(object):
 		self.strategist.rsi(self.observer.history)
 
 	def observe(self, event):
-		self.strategist.process(event)
+		self.strategist.process(event, self.observer.history)

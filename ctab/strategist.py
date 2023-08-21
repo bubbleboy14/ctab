@@ -9,13 +9,14 @@ class Strategist(object):
 		self.symbol = symbol
 
 	def log(self, *msg):
-		log("Strategist[%s] %s"%(self.symbol, " ".join(msg)))
+		log("Strategist[%s] %s"%(self.symbol,
+			" ".join([str(m) for m in msg])))
 
-	def process(self, event):
+	def process(self, event, history):
 		self.compare(event["side"], {
 			"price": float(event["price"]),
 			"remaining": float(event["remaining"])
-		})
+		}, history)
 
 	def weighted_average(self, _history):
 		price_remaining = 0
@@ -25,11 +26,10 @@ class Strategist(object):
 			remaining_total += hist['remaining']
 		return remaining_total and price_remaining / remaining_total or 0 # TODO: actual fix
 
-	def compare(self, side, price):
-		self.log(side, price["price"], price["remaining"])
-		h = self.history
-		hs = h[side]
-		hwa = h["w_average"]
+	def compare(self, side, price, history):
+		self.log("compare", side, price["price"], price["remaining"])
+		hs = history[side]
+		hwa = history["w_average"]
 		hs.append(price)
 		hwa.append(self.weighted_average(hs))
 		self.log(side, "weighted average (full):", hwa[-1])
