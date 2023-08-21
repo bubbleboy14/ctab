@@ -1,6 +1,6 @@
 import rel
 from cantools.util import log
-from .manager import Manager
+from manager import Manager
 
 class Office(object):
 	def __init__(self, platform, symbols):

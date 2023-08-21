@@ -1,6 +1,6 @@
 from cantools.util import log
-from .observer import Observer
-from .strategist import Strategist
+from observer import Observer
+from strategist import Strategist
 
 class Manager(object):
 	def __init__(self, platform, symbol):

@@ -21,7 +21,7 @@ def jsend(ws):
 		ws.send(msg)
 	return _jsend
 
-platforms: {
+platforms = {
 	"chainrift": {
 		"feed": "wss://ws.chainrift.com/v1",
 		"subber": crsub
@@ -33,7 +33,7 @@ platforms: {
 
 def feed(platname, streamname, **cbs): # {on_message,on_error,on_open,on_close}
 	plat = platforms[platname]
-	feed = getattr(plat, "feed") or plat["feeder"](streamname,)
+	feed = getattr(plat, "feed", plat["feeder"](streamname,))
 	if "subber" in plat:
 		cbs["on_message"] = subber(streamname,
 			plat["subber"], getattr(cbs, "on_message"))

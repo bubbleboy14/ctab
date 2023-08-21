@@ -1,5 +1,5 @@
 from cantools.util import log
-from .backend import feed, rel
+from backend import feed, rel
 
 LOG = False
 
