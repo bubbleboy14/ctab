@@ -14,7 +14,7 @@ class Manager(object):
 		log("Manager[%s:%s] %s"%(self.platform, self.symbol, " ".join(msg)))
 
 	def tick(self):
-		self.strategist.tick(self.observer.history)
+		self.strategist.rsi(self.observer.history)
 
 	def observe(self, event):
 		self.strategist.process(event)
