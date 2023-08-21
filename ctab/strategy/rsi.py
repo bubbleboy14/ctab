@@ -46,7 +46,7 @@ class RSI(Base):
 				"downward": [],
 				"relative_strength": []
 			}
-			self.log("rsi", was[-1])
+			self.log("tick", was[-1])
 			if lwas > (RSI_PERIOD + 1):
 				for i in range(RSI_PERIOD + 1):
 					start = 1 + RSI_PERIOD - i
@@ -59,4 +59,4 @@ class RSI(Base):
 				down_mean = sum(changes['downward']) / RSI_PERIOD
 				changes['relative_strength'].append(up_mean/down_mean)
 				rsi = 100 - (100 / (1 + changes['relative_strength'][-1]))
-				self.log("RSI", rsi, "\n")
+				self.log(rsi, "\n")
