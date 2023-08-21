@@ -1,7 +1,7 @@
 from cantools.util import log
 from backend import feed, rel
 
-LOG = False
+LOG = True
 
 class Observer(object):
 	def __init__(self, platform, symbol, observe, use_initial=False):
