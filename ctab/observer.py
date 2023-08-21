@@ -1,5 +1,4 @@
-from cantools.util import log
-from backend import events, feed, spew, stop
+from backend import log, events, feed, spew, stop
 
 LOG = True
 

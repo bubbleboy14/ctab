@@ -1,4 +1,4 @@
-from cantools.util import log
+from backend import log
 from observer import Observer
 from strategist import Strategist
 

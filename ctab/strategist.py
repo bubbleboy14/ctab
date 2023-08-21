@@ -1,4 +1,4 @@
-from cantools.util import log
+from backend import log
 
 INNER = 10
 OUTER = 40

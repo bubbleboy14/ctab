@@ -1,5 +1,4 @@
-from cantools.util import log
-from backend import rel, start
+from backend import log, rel, start
 from manager import Manager
 
 class Office(object):
