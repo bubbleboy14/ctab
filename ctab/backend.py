@@ -41,3 +41,12 @@ def feed(platname, streamname, **cbs): # {on_message,on_error,on_open,on_close}
 	ws.jsend = jsend(ws)
 	ws.run_forever(dispatcher=rel)
 	return ws
+
+def echofeed(platform="gemini", streamname="ETHBTC"):
+	return feed(platform, streamname,
+		on_message = lambda ws, msg : print(msg),
+		on_error = lambda *msg : print("error!", *msg))
+
+def start():
+	rel.signal(2, rel.abort)
+	rel.dispatch()
