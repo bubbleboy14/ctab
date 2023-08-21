@@ -1,0 +1,17 @@
+INNER = 10
+OUTER = 40
+RSI_PERIOD = 14
+
+class Base(object):
+	def __init__(self, symbol):
+		self.symbol = symbol
+
+	def log(self, *msg):
+		print("Strategist[%s:%s] %s"%(self.__class__.__name__,
+			self.symbol, " ".join([str(m) for m in msg])))
+
+	def process(self, event, history):
+		self.compare(event["side"], {
+			"price": float(event["price"]),
+			"remaining": float(event["remaining"])
+		}, history)
