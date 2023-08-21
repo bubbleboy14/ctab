@@ -3,8 +3,11 @@ from backend import feed, rel, json
 
 LOG = True
 
+def spew(event):
+	print(json.dumps(event))
+
 class Observer(object):
-	def __init__(self, platform, symbol, observe, use_initial=False):
+	def __init__(self, platform, symbol, observe=spew, use_initial=False):
 		self.symbol = symbol
 		self.observe = observe
 		self.use_initial = use_initial
