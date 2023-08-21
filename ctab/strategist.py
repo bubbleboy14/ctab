@@ -73,4 +73,3 @@ class Strategist(object):
 				changes['relative_strength'].append(up_mean/down_mean)
 				rsi = 100 - (100 / (1 + changes['relative_strength'][-1]))
 				self.log("RSI", rsi, "\n")
-		return True
