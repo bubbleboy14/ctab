@@ -47,6 +47,9 @@ def echofeed(platform="gemini", streamname="ETHBTC"):
 		on_message = lambda ws, msg : print(msg),
 		on_error = lambda *msg : print("error!", *msg))
 
+def events(message):
+	return json.loads(message)["events"]
+
 def spew(event):
 	print(json.dumps(event))
 

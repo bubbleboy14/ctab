@@ -1,6 +1,5 @@
-import json
 from cantools.util import log
-from backend import feed, spew, stop
+from backend import events, feed, spew, stop
 
 LOG = True
 
@@ -31,8 +30,7 @@ class Observer(object):
 		stop()
 
 	def on_message(self, ws, message):
-		data = json.loads(message)
-		for event in data["events"]:
+		for event in events(message):
 			if event.get("type") != "change" or not event.get("side"):
 				return self.log("skipping", event)
 			if self.use_initial or event.get("reason") != "initial":
