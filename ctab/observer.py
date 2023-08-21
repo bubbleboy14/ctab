@@ -1,10 +1,8 @@
+import json
 from cantools.util import log
-from backend import feed, rel, json
+from backend import feed, spew, stop
 
 LOG = True
-
-def spew(event):
-	print(json.dumps(event))
 
 class Observer(object):
 	def __init__(self, platform, symbol, observe=spew, use_initial=False):
@@ -30,7 +28,7 @@ class Observer(object):
 
 	def error(self, *msg):
 		self.log("ERROR", *msg)
-		rel.abort()
+		stop()
 
 	def on_message(self, ws, message):
 		data = json.loads(message)
