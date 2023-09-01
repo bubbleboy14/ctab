@@ -41,8 +41,8 @@ def feed(platname, streamname, **cbs): # {on_message,on_error,on_open,on_close}
 	plat = platforms[platname]
 	feed = getattr(plat, "feed", plat["feeder"](streamname,))
 	if "subber" in plat:
-		cbs["on_message"] = subber(streamname,
-			plat["subber"], getattr(cbs, "on_message"))
+		cbs["on_open"] = subber(streamname,
+			plat["subber"], getattr(cbs, "on_open"))
 	ws = websocket.WebSocketApp(feed, **cbs)
 	ws.jsend = jsend(ws)
 	ws.run_forever(dispatcher=rel)
