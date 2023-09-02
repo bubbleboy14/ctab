@@ -1,13 +1,7 @@
 import rel, json, websocket
 
-from dydx3 import Client
-from dydx3.helpers.request_helpers import generate_now_iso
-from dydx3.constants import API_HOST_GOERLI, NETWORK_ID_GOERLI, WS_HOST_GOERLI
-
 def log(*msg):
 	print(*msg)
-
-LOUD = True
 
 def crsub(streamname):
 	return {
@@ -15,30 +9,23 @@ def crsub(streamname):
 		"data": streamname
 	}
 
-def ddsub(streamname):
-	print("opened - sending sub block")
-	now = generate_now_iso()
-	dclient = Client(
-		network_id=NETWORK_ID_GOERLI,
-		host=API_HOST_GOERLI
-	)
-	sig = dclient.private.sign(
-		request_path='/ws/accounts',
-		method='GET',
-		iso_timestamp=now,
-		data={}
-	)
+def ddtrades(streamname):
 	return {
 		"type": "subscribe",
-		"channel": "v3_accounts",
-		"accountNumber": '0',
-		"market": streamname,
-		"timestamp": now,
-		"signature": sig
+		"channel": "v3_trades",
+		"id": streamname
+	}
+
+def ddorders(streamname):
+	return {
+		"type": "subscribe",
+		"channel": "v3_orderbook",
+		"id": streamname
 	}
 
 def subber(streamname, submaker, doafter=None):
 	def _subber(ws):
+		log("opened - sending sub block")
 		ws.jsend(submaker(streamname))
 		doafter and doafter()
 	return _subber
@@ -46,14 +33,14 @@ def subber(streamname, submaker, doafter=None):
 def jsend(ws):
 	def _jsend(jmsg):
 		msg = json.dumps(jmsg)
-		LOUD and log("sending:", msg)
+		log("sending:", msg)
 		ws.send(msg)
 	return _jsend
 
 platforms = {
 	"dydx": {
-		"feed": WS_HOST_GOERLI,
-		"subber": ddsub
+		"feed": "wss://api.stage.dydx.exchange/v3/ws",
+		"subber": ddtrades # or ddorders - both get "Invalid subscription id for channel"
 	},
 	"chainrift": {
 		"feed": "wss://ws.chainrift.com/v1",
