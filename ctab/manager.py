@@ -3,11 +3,11 @@ from observer import Observer
 from strategist import strategies
 
 class Manager(object):
-	def __init__(self, platform, symbol, strategy="rsi"):
+	def __init__(self, platform, symbol, strategist=None, strategy="rsi"):
 		self.platform = platform
 		self.symbol = symbol
 		self.observer = Observer(platform, symbol, self.observe)
-		self.strategist = strategies[strategy](symbol)
+		self.strategist = strategist or strategies[strategy](symbol)
 		# TODO: trader
 
 	def log(self, *msg):
