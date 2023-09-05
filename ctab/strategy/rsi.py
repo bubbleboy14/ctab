@@ -31,11 +31,11 @@ class RSI(Base):
 			self.log(side, "near average (last", INNER, "):", w_near)
 			if w_near > w_far:
 				self.log("near average > far average -> upswing!")
-				if side == "ask" and price < w_near:
+				if side in ["ask", "BUY", "SELL"] and price < w_near:
 					self.log("ask price < average -> BUY!!!!")
 			else:
 				self.log("near average < far average -> downswing!")
-				if side == "bid" and price > w_near:
+				if side in ["bid", "BUY", "SELL"] and price > w_near:
 					self.log("bid price > average -> SELL!!!!")
 
 	def tick(self, history):
