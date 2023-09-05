@@ -4,16 +4,17 @@ from manager import Manager
 from trader import Trader
 
 class Office(object):
-	def __init__(self, platform, symbols, strategist=None, trader=False):
+	def __init__(self, platform, symbols, strategy="rsi", globalStrategy=False, globalTrade=False):
 		self.platform = platform
 		self.symbols = symbols
-		self.trader = trader and Trader()
-		self.strategist = strategist and strategies[strategist](symbols,
-			self.trader and self.trader.recommend)
+		self.trader = globalTrade and Trader()
+		trec = self.trader and self.trader.recommend
+		strat = strategies[strategy]
+		self.strategist = globalStrategy and strat(symbols, trec)
 		self.managers = {}
 		for symbol in symbols:
-			self.managers[symbol] = Manager(platform,
-				symbol, self.strategist, self.trader)
+			self.managers[symbol] = Manager(platform, symbol,
+				self.strategist or strat(symbol, trec), self.trader)
 		self.log("initialized %s managers"%(len(symbols),))
 		rel.timeout(1, self.tick)
 
@@ -34,7 +35,7 @@ class Office(object):
 		return True
 
 if __name__ == "__main__":
-	Office("dydx", ["BTC-USD", "ETH-USD"], "slosh", True)
+	Office("dydx", ["BTC-USD", "ETH-USD"], "slosh", True, True)
 #	Office("dydx", ["BTC-USD"])
 #	Office("gemini", ["BTCUSD", "ETHUSD", "ETHBTC"])
 	start()
