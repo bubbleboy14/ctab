@@ -20,5 +20,6 @@ class Office(object):
 		return True
 
 if __name__ == "__main__":
-	Office("gemini", ["BTCUSD", "ETHUSD", "ETHBTC"])
+	Office("dydx", ["BTC-USD"])
+#	Office("gemini", ["BTCUSD", "ETHUSD", "ETHBTC"])
 	start()
