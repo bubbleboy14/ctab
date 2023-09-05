@@ -25,7 +25,7 @@ class Slosh(Base):
 	def tick(self, history=None): # calc ratios (ignore history...)
 		history = self.histories
 		if not self.shouldUpdate:
-			return# self.log("skipping tick (stale)")
+			return print(".", end=" ", flush=True)
 		self.shouldUpdate = False
 		if self.top not in history or self.bottom not in history:
 			return self.log("skipping tick (waiting for history)")
