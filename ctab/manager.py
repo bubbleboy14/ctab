@@ -8,12 +8,14 @@ class Manager(object):
 		self.platform = platform
 		self.symbol = symbol
 		self.trader = trader or Trader()
+		setrec = not trader
 		self.observer = Observer(platform, symbol, self.observe)
 		if type(strategist) == str:
 			self.strategist = strategies[strategist](symbol)
+			setrec = True
 		else:
 			self.strategist = strategist
-		self.strategist.setRecommender(self.trader.recommend)
+		setrec and self.strategist.setRecommender(self.trader.recommend)
 
 	def log(self, *msg):
 		log("Manager[%s:%s] %s"%(self.platform, self.symbol, " ".join(msg)))
