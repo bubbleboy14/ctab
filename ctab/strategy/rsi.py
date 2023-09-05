@@ -61,6 +61,7 @@ class RSI(Base):
 						changes['downward'].append(abs(s))
 				up_mean = sum(changes['upward']) / RSI_PERIOD
 				down_mean = sum(changes['downward']) / RSI_PERIOD
-				changes['relative_strength'].append(up_mean/down_mean)
-				rsi = 100 - (100 / (1 + changes['relative_strength'][-1]))
-				self.log(rsi, "\n")
+				if down_mean:
+					changes['relative_strength'].append(up_mean/down_mean)
+					rsi = 100 - (100 / (1 + changes['relative_strength'][-1]))
+					self.log(rsi, "\n")
