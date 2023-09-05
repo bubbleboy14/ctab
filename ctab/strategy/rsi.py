@@ -13,7 +13,7 @@ class RSI(Base):
 			remaining_total += hist['remaining']
 		return remaining_total and price_remaining / remaining_total or 0 # TODO: actual fix
 
-	def compare(self, side, price, eobj, history):
+	def compare(self, symbol, side, price, eobj, history):
 		remaining = float("remaining" in eobj and eobj["remaining"] or eobj["size"])
 		self.log("compare", side, price, remaining)
 		hs = history[side]
