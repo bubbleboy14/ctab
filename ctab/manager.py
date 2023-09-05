@@ -17,4 +17,4 @@ class Manager(object):
 		self.strategist.tick(self.observer.history)
 
 	def observe(self, event):
-		self.strategist.process(event, self.observer.history)
+		self.strategist.process(self.symbol, event, self.observer.history)
