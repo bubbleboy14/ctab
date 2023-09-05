@@ -15,6 +15,7 @@ class Slosh(Base):
 		}
 		self.allratios = []
 		self.histories = {}
+		self.shouldUpdate = False
 		Base.__init__(self, symbol)
 
 	def ave(self, limit=None):
@@ -23,6 +24,9 @@ class Slosh(Base):
 
 	def tick(self, history=None): # calc ratios (ignore history...)
 		history = self.histories
+		if not self.shouldUpdate:
+			return# self.log("skipping tick (stale)")
+		self.shouldUpdate = False
 		if self.top not in history or self.bottom not in history:
 			return self.log("skipping tick (waiting for history)")
 		cur = history[self.top]["current"] / history[self.bottom]["current"]
@@ -39,6 +43,7 @@ class Slosh(Base):
 		self.log("\n\n", self.ratios, "\n", self.averages, "\n\n")
 
 	def compare(self, symbol, side, price, eobj, history):
+		self.shouldUpdate = True
 		self.log("compare", symbol, side, price)
 		if symbol not in self.histories:
 			self.histories[symbol] = {
