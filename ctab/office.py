@@ -1,10 +1,10 @@
-from backend import log, rel, start
+from backend import log, rel, start, presets
 from strategist import strategies
 from manager import Manager
 from trader import Trader
 
 class Office(object):
-	def __init__(self, platform, symbols, strategy="rsi", globalStrategy=False, globalTrade=False):
+	def __init__(self, platform="dydx", symbols=[], strategy="rsi", globalStrategy=False, globalTrade=False):
 		self.platform = platform
 		self.symbols = symbols
 		self.trader = globalTrade and Trader()
@@ -35,7 +35,5 @@ class Office(object):
 		return True
 
 if __name__ == "__main__":
-	Office("dydx", ["BTC-USD", "ETH-USD"], "slosh", True, True)
-#	Office("dydx", ["BTC-USD"])
-#	Office("gemini", ["BTCUSD", "ETHUSD", "ETHBTC"])
+	Office(**presets())
 	start()
