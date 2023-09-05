@@ -4,13 +4,16 @@ from observer import Observer
 from trader import Trader
 
 class Manager(object):
-	def __init__(self, platform, symbol, strategist=None, trader=None, strategy="rsi"):
+	def __init__(self, platform, symbol, strategist="rsi", trader=None):
 		self.platform = platform
 		self.symbol = symbol
 		self.trader = trader or Trader()
 		self.observer = Observer(platform, symbol, self.observe)
-		self.strategist = strategist or strategies[strategy](symbol)
-		self.strategist.setRecommender(trader.recommend)
+		if type(strategist) == str:
+			self.strategist = strategies[strategist](symbol)
+		else:
+			self.strategist = strategist
+		self.strategist.setRecommender(self.trader.recommend)
 
 	def log(self, *msg):
 		log("Manager[%s:%s] %s"%(self.platform, self.symbol, " ".join(msg)))
