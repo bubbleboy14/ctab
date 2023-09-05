@@ -82,11 +82,13 @@ def events(message, use_initial=False):
 			if use_initial or event.get("reason") != "initial":
 				ez.append(event)
 		return ez
-	elif "contents" in msg:
-		return msg["contents"]["trades"] # dydx
-	else:
-		log("skipping event:", message)
-		return []
+	else: # dydx
+		log("\n\n\n", message, "\n\n\n")
+		if "contents" in msg:
+			return msg["contents"]["trades"]
+		else:
+			log("skipping event!!!")
+			return []
 
 def spew(event):
 	log(json.dumps(event))
