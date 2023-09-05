@@ -28,8 +28,9 @@ class Office(object):
 		if self.trader:
 			self.trader.tick()
 			manTrad = False
-		for manager in self.managers:
-			self.managers[manager].tick(manStrat, manTrad)
+		if manStrat or manTrad:
+			for manager in self.managers:
+				self.managers[manager].tick(manStrat, manTrad)
 		return True
 
 if __name__ == "__main__":
