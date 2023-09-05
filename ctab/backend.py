@@ -72,8 +72,21 @@ def dydxtest():
 	echofeed("dydx", "BTC-USD")
 	start()
 
-def events(message):
-	return json.loads(message)["events"]
+def events(message, use_initial=False):
+	msg = json.loads(message)
+	if "events" in msg: # gemini
+		ez = []
+		for event in msg["events"]:
+			if event.get("type") != "change" or not event.get("side"):
+				log("skipping", event)
+			if use_initial or event.get("reason") != "initial":
+				ez.append(event)
+		return ez
+	elif "contents" in msg:
+		return msg["contents"]["trades"] # dydx
+	else:
+		log("skipping event:", message)
+		return []
 
 def spew(event):
 	log(json.dumps(event))
