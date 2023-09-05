@@ -1,6 +1,5 @@
 INNER = 10
 OUTER = 40
-RSI_PERIOD = 14
 
 class Base(object):
 	def __init__(self, symbol):

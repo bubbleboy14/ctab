@@ -1,7 +1,5 @@
-from .base import Base
+from .base import Base, INNER, OUTER
 
-INNER = 10
-OUTER = 40
 RSI_PERIOD = 14
 
 class RSI(Base):
