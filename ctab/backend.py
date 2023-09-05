@@ -69,7 +69,7 @@ def echofeed(platform="gemini", streamname="ETHBTC"):
 		on_error = lambda ws, exc : log("error!", str(exc)))
 
 def dydxtest():
-	echofeed("dydx", "ETH-BTC")
+	echofeed("dydx", "BTC-USD")
 	start()
 
 def events(message):
