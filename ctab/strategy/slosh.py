@@ -1,7 +1,7 @@
 from .base import Base, INNER, OUTER
 
 class Slosh(Base):
-	def __init__(self, symbol): # len(symbol) == 2
+	def __init__(self, symbol, recommender=None):
 		self.top, self.bottom = symbol
 		self.ratios = {
 			"current": None,
@@ -16,7 +16,7 @@ class Slosh(Base):
 		self.allratios = []
 		self.histories = {}
 		self.shouldUpdate = False
-		Base.__init__(self, symbol)
+		Base.__init__(self, symbol, recommender)
 
 	def ave(self, limit=None):
 		rats = self.allratios[:limit]
