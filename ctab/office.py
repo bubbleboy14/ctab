@@ -17,11 +17,15 @@ class Office(object):
 		log("Office[%s] %s"%(self.platform, " ".join(msg)))
 
 	def tick(self):
-		for manager in self.managers:
-			self.managers[manager].tick()
+		if self.strategist:
+			self.strategist.tick()
+		else:
+			for manager in self.managers:
+				self.managers[manager].tick()
 		return True
 
 if __name__ == "__main__":
-	Office("dydx", ["BTC-USD"], "rsi")
+	Office("dydx", ["BTC-USD", "ETH-USD"], "slosh")
+#	Office("dydx", ["BTC-USD"])
 #	Office("gemini", ["BTCUSD", "ETHUSD", "ETHBTC"])
 	start()
