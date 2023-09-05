@@ -3,6 +3,27 @@ import rel, json, websocket
 def log(*msg):
 	print(*msg)
 
+_predefs = {
+	"strategy": "rsi",
+	"platform": "dydx"
+}
+_presets = [{
+	"strategy": "slosh",
+	"globalTrade": True,
+	"globalStrategy": True,
+	"symbols": ["BTC-USD", "ETH-USD"]
+}, {
+	"platform": "gemini",
+	"symbols": ["BTCUSD", "ETHUSD", "ETHBTC"]
+}, {
+	"symbols": ["BTC-USD"]
+}]
+
+def presets():
+	from cantools.util.io import selnum
+	print("noting Office defaults (%s), please select a configuration from the following presets.\n"%(_predefs,))
+	return selnum(_presets)
+
 def crsub(streamname):
 	return {
 		"name": "SubscribeTicker",
