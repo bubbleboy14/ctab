@@ -11,7 +11,4 @@ class Base(object):
 			self.symbol, " ".join([str(m) for m in msg])))
 
 	def process(self, event, history):
-		self.compare(event["side"], {
-			"price": float(event["price"]),
-			"remaining": float(event["remaining"])
-		}, history)
+		self.compare(event["side"], float(event["price"]), event, history)

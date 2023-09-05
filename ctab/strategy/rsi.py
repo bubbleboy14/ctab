@@ -13,11 +13,14 @@ class RSI(Base):
 			remaining_total += hist['remaining']
 		return remaining_total and price_remaining / remaining_total or 0 # TODO: actual fix
 
-	def compare(self, side, price, history):
-		self.log("compare", side, price["price"], price["remaining"])
+	def compare(self, side, price, eobj, history):
+		self.log("compare", side, price, eobj["remaining"])
 		hs = history[side]
 		hwa = history["w_average"]
-		hs.append(price)
+		hs.append({
+			"price": price,
+			"remaining": float(eobj["remaining"])
+		})
 		hwa.append(self.weighted_average(hs))
 		self.log(side, "weighted average (full):", hwa[-1])
 		if len(hs) >= OUTER:
@@ -27,11 +30,11 @@ class RSI(Base):
 			self.log(side, "near average (last", INNER, "):", w_near)
 			if w_near > w_far:
 				self.log("near average > far average -> upswing!")
-				if side == "ask" and price["price"] < w_near:
+				if side == "ask" and price < w_near:
 					self.log("ask price < average -> BUY!!!!")
 			else:
 				self.log("near average < far average -> downswing!")
-				if side == "bid" and price["price"] > w_near:
+				if side == "bid" and price > w_near:
 					self.log("bid price > average -> SELL!!!!")
 
 	def tick(self, history):
