@@ -14,12 +14,13 @@ class RSI(Base):
 		return remaining_total and price_remaining / remaining_total or 0 # TODO: actual fix
 
 	def compare(self, side, price, eobj, history):
-		self.log("compare", side, price, eobj["remaining"])
+		remaining = float("remaining" in eobj and eobj["remaining"] or eobj["size"])
+		self.log("compare", side, price, remaining)
 		hs = history[side]
 		hwa = history["w_average"]
 		hs.append({
 			"price": price,
-			"remaining": float(eobj["remaining"])
+			"remaining": remaining
 		})
 		hwa.append(self.weighted_average(hs))
 		self.log(side, "weighted average (full):", hwa[-1])
