@@ -39,7 +39,8 @@ def jsend(ws):
 
 platforms = {
 	"dydx": {
-		"feed": "wss://api.stage.dydx.exchange/v3/ws",
+#		"feed": "wss://api.stage.dydx.exchange/v3/ws",
+		"feed": "wss://api.dydx.exchange/v3/ws",
 		"subber": ddtrades # or ddorders - both get "Invalid subscription id for channel"
 	},
 	"chainrift": {
