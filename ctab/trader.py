@@ -4,7 +4,7 @@ class Trader(object):
 		self.recommendations = []
 
 	def log(self, *msg):
-		print("Trader %s"%(" ".join([str(m) for m in msg]),))
+		print("\nTrader %s\n"%(" ".join([str(m) for m in msg]),))
 
 	def recommend(self, recommendation):
 		self.log("recommended:", recommendation)
