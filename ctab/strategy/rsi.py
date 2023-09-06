@@ -27,14 +27,23 @@ class RSI(Base):
 			w_near = self.weighted_average(hs[-INNER:])
 			self.log(side, "far average (last", OUTER, "):", w_far)
 			self.log(side, "near average (last", INNER, "):", w_near)
+			rec = False
 			if w_near > w_far:
 				self.log("near average > far average -> upswing!")
 				if side in ["ask", "BUY", "SELL"] and price < w_near:
 					self.log("ask price < average -> BUY!!!!")
+					rec = "BUY"
 			else:
 				self.log("near average < far average -> downswing!")
 				if side in ["bid", "BUY", "SELL"] and price > w_near:
 					self.log("bid price > average -> SELL!!!!")
+					rec = "SELL"
+			rec and self.recommender({
+				"side": side,
+				"action": rec,
+				"price": price,
+				"symbol": symbol
+			})
 
 	def tick(self, history):
 		_was = history['w_average']
