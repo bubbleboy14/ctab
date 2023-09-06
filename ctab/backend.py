@@ -99,7 +99,10 @@ def events(message, use_initial=False):
 	if "events" in msg: # gemini
 		ez = []
 		for event in msg["events"]:
-			if event.get("type") != "change" or not event.get("side"):
+			if not event.get("side"):
+				log("using makerSide")
+				event["side"] = event.get("makerSide")
+			if event.get("type") != "trade" or not event.get("side"):
 				log("skipping", event)
 			if use_initial or event.get("reason") != "initial":
 				ez.append(event)
