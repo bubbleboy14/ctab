@@ -94,18 +94,33 @@ def dydxtest():
 	echofeed("dydx", "BTC-USD")
 	start()
 
+edata = {
+	"lastReason": None
+}
+
 def events(message, use_initial=False):
 	msg = json.loads(message)
 	if "events" in msg: # gemini
 		ez = []
 		for event in msg["events"]:
-			if not event.get("side"):
-				log("using makerSide")
-				event["side"] = event.get("makerSide")
-			if event.get("type") != "trade" or not event.get("side"):
-				log("skipping", event)
-			if use_initial or event.get("reason") != "initial":
-				ez.append(event)
+			reason = event.get("reason")
+			goodinit = reason == "initial" and use_initial
+			if reason != "place" and not goodinit:
+				if reason == edata["lastReason"]:
+					print(".", end="")
+				else:
+					print("\nskipping reason:", reason, end="")
+					edata["lastReason"] = reason
+			else:
+				if not event.get("side"):
+					log("using makerSide")
+					event["side"] = event.get("makerSide")
+				if not event.get("side"):
+					log("skipping sideless", event)
+				elif event.get("type") == "change":
+					ez.append(event)
+				else:
+					log("skipping", event)
 		return ez
 	else: # dydx
 		log("\n\n\n", message, "\n\n\n")

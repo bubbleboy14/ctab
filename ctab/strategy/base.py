@@ -1,5 +1,6 @@
 INNER = 10
 OUTER = 40
+LOUD = False
 
 class Base(object):
 	def __init__(self, symbol, recommender=None):
@@ -7,7 +8,7 @@ class Base(object):
 		self.recommender = recommender
 
 	def log(self, *msg):
-		print("Strategist[%s:%s] %s"%(self.__class__.__name__,
+		LOUD and print("Strategist[%s:%s] %s"%(self.__class__.__name__,
 			self.symbol, " ".join([str(m) for m in msg])))
 
 	def setRecommender(self, recommender):
