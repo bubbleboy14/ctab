@@ -1,6 +1,6 @@
 INNER = 10
 OUTER = 40
-LOUD = False
+LOUD = True
 
 class Base(object):
 	def __init__(self, symbol, recommender=None):
