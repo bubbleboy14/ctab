@@ -10,6 +10,8 @@ class Observer(object):
 		self.history = {
 			"ask": [],
 			"bid": [],
+			"BUY": [],
+			"SELL": [],
 			"w_average": [],
 			"1_w_average": []
 		}
@@ -29,11 +31,8 @@ class Observer(object):
 		stop()
 
 	def on_message(self, ws, message):
-		for event in events(message):
-			if event.get("type") != "change" or not event.get("side"):
-				return self.log("skipping", event)
-			if self.use_initial or event.get("reason") != "initial":
-				self.observe(event)
+		for event in events(message, self.use_initial):
+			self.observe(event)
 
 	def on_close(self, ws):
 		self.log("closed!!")

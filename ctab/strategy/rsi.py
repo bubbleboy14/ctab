@@ -1,7 +1,5 @@
-from .base import Base
+from .base import Base, INNER, OUTER
 
-INNER = 10
-OUTER = 40
 RSI_PERIOD = 14
 
 class RSI(Base):
@@ -13,11 +11,15 @@ class RSI(Base):
 			remaining_total += hist['remaining']
 		return remaining_total and price_remaining / remaining_total or 0 # TODO: actual fix
 
-	def compare(self, side, price, history):
-		self.log("compare", side, price["price"], price["remaining"])
+	def compare(self, symbol, side, price, eobj, history):
+		remaining = float("remaining" in eobj and eobj["remaining"] or eobj["size"])
+		self.log("compare", side, price, remaining)
 		hs = history[side]
 		hwa = history["w_average"]
-		hs.append(price)
+		hs.append({
+			"price": price,
+			"remaining": remaining
+		})
 		hwa.append(self.weighted_average(hs))
 		self.log(side, "weighted average (full):", hwa[-1])
 		if len(hs) >= OUTER:
@@ -25,14 +27,23 @@ class RSI(Base):
 			w_near = self.weighted_average(hs[-INNER:])
 			self.log(side, "far average (last", OUTER, "):", w_far)
 			self.log(side, "near average (last", INNER, "):", w_near)
+			rec = False
 			if w_near > w_far:
 				self.log("near average > far average -> upswing!")
-				if side == "ask" and price["price"] < w_near:
+				if side in ["ask", "BUY", "SELL"] and price < w_near:
 					self.log("ask price < average -> BUY!!!!")
+					rec = "BUY"
 			else:
 				self.log("near average < far average -> downswing!")
-				if side == "bid" and price["price"] > w_near:
+				if side in ["bid", "BUY", "SELL"] and price > w_near:
 					self.log("bid price > average -> SELL!!!!")
+					rec = "SELL"
+			rec and self.recommender({
+				"side": side,
+				"action": rec,
+				"price": price,
+				"symbol": symbol
+			})
 
 	def tick(self, history):
 		_was = history['w_average']
@@ -57,6 +68,7 @@ class RSI(Base):
 						changes['downward'].append(abs(s))
 				up_mean = sum(changes['upward']) / RSI_PERIOD
 				down_mean = sum(changes['downward']) / RSI_PERIOD
-				changes['relative_strength'].append(up_mean/down_mean)
-				rsi = 100 - (100 / (1 + changes['relative_strength'][-1]))
-				self.log(rsi, "\n")
+				if down_mean:
+					changes['relative_strength'].append(up_mean/down_mean)
+					rsi = 100 - (100 / (1 + changes['relative_strength'][-1]))
+					self.log(rsi, "\n")
