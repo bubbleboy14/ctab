@@ -2,14 +2,14 @@ from dydx3 import Client
 from dydx3.constants import API_HOST_GOERLI
 from dydx3.constants import NETWORK_ID_GOERLI
 from web3 import Web3
-from backend import log
+from backend import log, remember, recall
 
 PROVIDER = "http://localhost:7545"
 
 class Agent(object):
 	def __init__(self, stark=None):
 		self.w3 = Web3(Web3.HTTPProvider(PROVIDER))
-		self.stark = stark
+		self.stark = stark or recall("stark")
 		self.client = self.buildClient()
 		self.stark or self.onboard()
 
@@ -25,6 +25,9 @@ class Agent(object):
 			stark_public_key_y_coordinate=keymap["public_key_y_coordinate"]
 		)
 		self.log(obresp.headers, "\n\n", obresp.data, "\n\n")
+		self.log("created new stark key")
+		if not input("should i save it? [Y/n] ").lower().startswith("n"):
+			remember("stark", self.stark)
 
 	def buildClient(self):
 		clargs = {
