@@ -20,7 +20,9 @@ membank = {}
 remembered = read(".membank")
 remembered and membank.update(remembered)
 
-def remember(key, data):
+def remember(key, data, ask=True):
+	if ask and input("remember %s for next time? [Y/n] "%(key,)).lower().startswith("n"):
+		return log("ok, not remembering", key)
 	membank[key] = data
 	write(".membank", membank)
 
