@@ -20,10 +20,11 @@ class Agent(object):
 		self.log("onboarding")
 		keymap = self.client.onboarding.derive_stark_key()
 		self.stark = self.client.stark_private_key = keymap["private_key"]
-		self.log(self.client.onboarding.create_user(
+		obresp = self.client.onboarding.create_user(
 			stark_public_key=keymap["public_key"],
 			stark_public_key_y_coordinate=keymap["public_key_y_coordinate"]
-		))
+		)
+		self.log(obresp.headers, "\n\n", obresp.data, "\n\n")
 
 	def buildClient(self):
 		clargs = {
