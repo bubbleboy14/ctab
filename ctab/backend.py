@@ -40,6 +40,8 @@ _presets = [{
 	"platform": "gemini",
 	"symbols": ["BTCUSD", "ETHUSD", "ETHBTC"]
 }, {
+	"symbols": ["ETH-USD"]
+}, {
 	"symbols": ["BTC-USD"]
 }]
 
