@@ -1,5 +1,6 @@
-from dydx3 import Client, constants, epoch_seconds_to_iso
+import time
 from web3 import Web3
+from dydx3 import Client, constants, epoch_seconds_to_iso
 from backend import log, remember, recall
 
 PROVIDER = "http://localhost:7545"
@@ -55,11 +56,11 @@ class Agent(object):
 			"size": '10',
 			"post_only": False,
 			"limit_fee": '0.1',
-			"price": trade['price'],
+			"price": str(trade['price']),
 			"order_type": constants.ORDER_TYPE_LIMIT,
 			"position_id": self.account['positionId'],
 			"expiration": epoch_seconds_to_iso(time.time() + 61),
-			"side": getattr(constants, "ORDER_SIDE_%s"%(action,)),
+			"side": getattr(constants, "ORDER_SIDE_%s"%(trade["action"],)),
 			"market": getattr(constants, "MARKET_%s_%s"%tuple(trade["symbol"].split("-")))
 		}
 		self.log("creating order:", trargs)
