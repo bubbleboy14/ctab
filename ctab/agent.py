@@ -35,7 +35,11 @@ class Agent(object):
 		if self.stark:
 			clargs["stark_private_key"] = self.stark
 		else:
-			clargs["eth_private_key"] = input("private key? ")
+			pk = input("private key? ")
+			if pk:
+				clargs["eth_private_key"] = pk
+			else:
+				clargs["default_ethereum_address"] = input("ok, public address? ")
 		self.log("building client with clargs:", clargs)
 		return Client(**clargs)
 
