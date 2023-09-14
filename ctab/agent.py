@@ -3,11 +3,11 @@ from web3 import Web3
 from dydx3 import Client, constants, epoch_seconds_to_iso
 from backend import log, remember, recall
 
-PROVIDER = "http://localhost:7545"
+PRODEF = "http://localhost:7545"
 
 class Agent(object):
 	def __init__(self, stark=None):
-		self.w3 = Web3(Web3.HTTPProvider(PROVIDER))
+		self.w3 = Web3(Web3.HTTPProvider(self.getProvider()))
 		self.stark = stark or recall("stark")
 		self.client = self.buildClient()
 		self.stark or self.onboard()
@@ -17,6 +17,13 @@ class Agent(object):
 
 	def log(self, *msg):
 		log("Agent %s"%(" ".join([str(m) for m in msg]),))
+
+	def getProvider(self):
+		provider = recall("provider")
+		if not provider:
+			provider = input("provider? [default: %s] "%(PRODEF,)) or PRODEF
+			remember("provider", provider)
+		return provider
 
 	def onboard(self):
 		self.log("onboarding")
@@ -28,8 +35,7 @@ class Agent(object):
 		)
 		self.log(obresp.headers, "\n\n", obresp.data, "\n\n")
 		self.log("created new stark key")
-		if not input("should i save it? [Y/n] ").lower().startswith("n"):
-			remember("stark", self.stark)
+		remember("stark", self.stark)
 
 	def buildClient(self):
 		clargs = {
