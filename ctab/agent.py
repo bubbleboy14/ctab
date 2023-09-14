@@ -1,6 +1,4 @@
-from dydx3 import Client
-from dydx3.constants import API_HOST_GOERLI
-from dydx3.constants import NETWORK_ID_GOERLI
+from dydx3 import Client, constants, epoch_seconds_to_iso
 from web3 import Web3
 from backend import log, remember, recall
 
@@ -12,6 +10,9 @@ class Agent(object):
 		self.stark = stark or recall("stark")
 		self.client = self.buildClient()
 		self.stark or self.onboard()
+		self.account = self.client.private.get_account(
+			ethereum_address=self.client.default_address
+		).data['account']
 
 	def log(self, *msg):
 		log("Agent %s"%(" ".join([str(m) for m in msg]),))
@@ -32,8 +33,8 @@ class Agent(object):
 	def buildClient(self):
 		clargs = {
 			"web3": self.w3,
-			"host": API_HOST_GOERLI,
-			"network_id": NETWORK_ID_GOERLI
+			"host": constants.API_HOST_GOERLI,
+			"network_id": constants.NETWORK_ID_GOERLI
 		}
 		self.stark = self.stark or input("stark key? ")
 		if self.stark:
@@ -47,5 +48,19 @@ class Agent(object):
 		self.log("building client with clargs:", clargs)
 		return Client(**clargs)
 
-	def trade(self, recommendation):
-		self.log("ACTUALLY DO THE TRADE!", recommendation)
+	#{'side': 'BUY', 'action': 'BUY', 'price': 26296.0, 'symbol': 'BTC-USD'}
+	def trade(self, trade):
+		self.log("TRADE!", trade)
+		trargs = {
+			"size": '10',
+			"post_only": False,
+			"limit_fee": '0.1',
+			"price": trade['price'],
+			"order_type": constants.ORDER_TYPE_LIMIT,
+			"position_id": self.account['positionId'],
+			"expiration": epoch_seconds_to_iso(time.time() + 61),
+			"side": getattr(constants, "ORDER_SIDE_%s"%(action,)),
+			"market": getattr(constants, "MARKET_%s_%s"%tuple(trade["symbol"].split("-")))
+		}
+		self.log("creating order:", trargs)
+		self.client.private.create_order(**trargs)
