@@ -4,12 +4,13 @@ from observer import Observer
 from trader import Trader
 
 class Manager(object):
-	def __init__(self, platform, symbol, strategist="rsi", trader=None):
+	def __init__(self, platform, symbol, reviewer, strategist="rsi", trader=None):
 		self.latest = {
 			"price": None
 		}
 		self.platform = platform
 		self.symbol = symbol
+		self.reviewer = reviewer
 		self.trader = trader or Trader()
 		setrec = not trader
 		self.observer = Observer(platform, symbol, self.observe)
@@ -30,22 +31,7 @@ class Manager(object):
 			self.review()
 
 	def review(self):
-		tz = self.trader.trades
-		curprice = self.latest["price"]
-		if not curprice:
-			return self.log("skipping review (waiting for price)")
-		if not tz:
-			return self.log("skipping review (waiting for trades)")
-		self.log("review %s trades - current price is %s"%(len(tz), curprice))
-		for trade in tz:
-			action = trade["action"]
-			price = trade["price"]
-			if action == "BUY":
-				isgood = curprice > price
-			else: # SELL
-				isgood = curprice < price
-			self.log("%s at %s - %s trade!"%(action,
-				price, isgood and "GOOD" or "BAD"))
+		self.reviewer(symbol=self.symbol)
 
 	def observe(self, event):
 		self.latest["price"] = float(event["price"])
