@@ -3,6 +3,7 @@ from web3 import Web3
 from dydx3 import Client, constants, epoch_seconds_to_iso
 from backend import log, remember, recall
 
+LIVE = False
 PRODEF = "http://localhost:7545"
 
 class Agent(object):
@@ -58,6 +59,7 @@ class Agent(object):
 	#{'side': 'BUY', 'action': 'BUY', 'price': 26296.0, 'symbol': 'BTC-USD'}
 	def trade(self, trade):
 		self.log("TRADE!", trade)
+		if not LIVE: return
 		trargs = {
 			"size": '10',
 			"post_only": False,
