@@ -18,8 +18,8 @@ class Slosh(Base):
 		self.shouldUpdate = False
 		Base.__init__(self, symbol, recommender)
 
-	def ave(self, limit=None):
-		rats = self.allratios[:limit]
+	def ave(self, limit=None, collection=None):
+		rats = (collection or self.allratios)[:limit]
 		return sum(rats) / len(rats)
 
 	def tick(self, history=None): # calc ratios (ignore history...)
@@ -52,5 +52,5 @@ class Slosh(Base):
 		symhis = self.histories[symbol]
 		symhis["current"] = price
 		symhis["all"].append(price)
-		symhis["average"] = sum(symhis["all"])
+		symhis["average"] = self.ave(collection=symhis["all"])
 		# TODO: high/low
