@@ -19,7 +19,7 @@ class Office(object):
 		rel.timeout(1, self.tick)
 
 	def log(self, *msg):
-		log("Office[%s] %s"%(self.platform, " ".join(msg)))
+		log("Office[%s] %s"%(self.platform, " ".join([str(m) for m in msg])))
 
 	def assess(self, trade, curprice=None):
 		action = trade["action"]
@@ -34,6 +34,7 @@ class Office(object):
 			isgood = curprice < price
 		self.log("%s %s at %s - %s trade!"%(action,
 			symbol, price, isgood and "GOOD" or "BAD"))
+		return isgood and 1 or -1
 
 	def review(self, symbol=None, trader=None, curprice=None):
 		mans = self.managers
@@ -57,8 +58,10 @@ class Office(object):
 			lstr.append("prices are:")
 			lstr.append("; ".join(["%s at %s"%(sym, mans[sym].latest["price"]) for sym in mans.keys()]))
 		self.log(*lstr)
+		score = 0
 		for trade in tz:
-			self.assess(trade, curprice)
+			score += self.assess(trade, curprice)
+		self.log("trade score:", score)
 
 	def tick(self):
 		manStrat = manTrad = True
