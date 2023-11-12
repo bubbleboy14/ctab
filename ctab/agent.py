@@ -61,7 +61,7 @@ class Agent(object):
 		self.log("TRADE!", trade)
 		if not LIVE: return
 		trargs = {
-			"size": '10',
+			"size": str(trade.get("size", 10)),
 			"post_only": False,
 			"limit_fee": '0.1',
 			"price": str(trade['price']),
