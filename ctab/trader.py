@@ -1,9 +1,11 @@
+from agent import Agent
 
 class Trader(object):
-	def __init__(self, live=False):
+	def __init__(self, live=True):
 		self.recommendations = []
 		self.live = live
 		self.trades = []
+		self.agent = Agent()
 
 	def log(self, *msg):
 		print("\nTrader %s\n"%(" ".join([str(m) for m in msg]),))
@@ -18,12 +20,12 @@ class Trader(object):
 
 	def shouldTrade(self, recommendation):
 		self.log("assessing recommendation:", recommendation)
+		return True # TODO: actually evaluate
 
 	def trade(self, recommendation):
 		self.log("\n\n\n", "TRADING", recommendation, "\n\n\n")
 		self.note(recommendation)
-		if self.live:
-			pass # do the trade via Agent
+		self.live and self.agent.trade(recommendation)
 
 	def tick(self):
 		# first rank in terms of payout
