@@ -54,8 +54,7 @@ class Slosh(Base):
 		for ave in ["inner", "outer", "total"]:
 			if cur > az[ave]:
 				size += 1
-		for ave in ["inner", "outer", "total"]:
-			if cur < az[ave]:
+			elif cur < az[ave]:
 				size -= 1
 		if not size: return
 		if size > 0:
