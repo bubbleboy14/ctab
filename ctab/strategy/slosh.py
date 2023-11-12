@@ -59,9 +59,9 @@ class Slosh(Base):
 				size -= 1
 		if not size: return
 		if size > 0:
-			self.swap(self.top, self.bottom, size)
-		else:
 			self.swap(self.bottom, self.top, size)
+		else:
+			self.swap(self.top, self.bottom, -size)
 
 	def tick(self, history=None): # calc ratios (ignore history...)
 		history = self.histories
