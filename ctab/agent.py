@@ -7,9 +7,10 @@ LIVE = False
 PRODEF = "http://localhost:7545"
 
 class Agent(object):
-	def __init__(self, stark=None):
+	def __init__(self, stark=None, creds=None):
 		self.w3 = Web3(Web3.HTTPProvider(self.getProvider()))
 		self.stark = stark or recall("stark")
+		self.creds = creds or recall("stark_creds")
 		self.client = self.buildClient()
 		self.stark or self.onboard()
 		self.account = self.client.private.get_account(
@@ -34,9 +35,18 @@ class Agent(object):
 			stark_public_key=keymap["public_key"],
 			stark_public_key_y_coordinate=keymap["public_key_y_coordinate"]
 		)
+		self.creds = obresp.data["apiKey"]
 		self.log(obresp.headers, "\n\n", obresp.data, "\n\n")
 		self.log("created new stark key")
 		remember("stark", self.stark)
+		remember("stark_creds", self.creds)
+
+	def getPub(self):
+		pub = recall("ethereum_address")
+		if not pub:
+			pub = input("ok, public address? ")
+			remember("ethereum_address", pub)
+		return pub
 
 	def buildClient(self):
 		clargs = {
@@ -47,12 +57,14 @@ class Agent(object):
 		self.stark = self.stark or input("stark key? ")
 		if self.stark:
 			clargs["stark_private_key"] = self.stark
+			clargs["api_key_credentials"] = self.creds
+			clargs["default_ethereum_address"] = self.getPub()
 		else:
 			pk = input("private key? ")
 			if pk:
 				clargs["eth_private_key"] = pk
 			else:
-				clargs["default_ethereum_address"] = input("ok, public address? ")
+				clargs["default_ethereum_address"] = self.getPub()
 		self.log("building client with clargs:", clargs)
 		return Client(**clargs)
 
