@@ -1,3 +1,4 @@
+from math import sqrt
 from .base import Base, INNER, OUTER
 
 class Slosh(Base):
@@ -40,10 +41,22 @@ class Slosh(Base):
 			"size": size
 		})
 
+	def volatility(self, cur):
+		sqds = []
+		for r in self.allratios:
+			d = r - cur
+			sqds.append(d * d)
+		return sqrt(self.ave(collection=sqds))
+
 	def hilo(self, cur):
 		size = 0
 		rz = self.ratios
 		az = self.averages
+		volatility = self.volatility(cur)
+		print("\n\nvolatility", volatility)
+
+		# TODO: standard deviations!
+
 		rz["current"] = cur
 		if cur > rz["high"]:
 			rz["high"] = cur
