@@ -23,7 +23,7 @@ class Slosh(Base):
 		rats = (collection or self.allratios)[:limit]
 		return sum(rats) / len(rats)
 
-	def swap(self, buysym, sellsym, size=10):
+	def buysell(self, buysym, sellsym, size=10):
 		hz = self.histories
 		bcur = hz[buysym]["current"]
 		scur = hz[sellsym]["current"]
@@ -41,6 +41,12 @@ class Slosh(Base):
 			"size": size
 		})
 
+	def swap(self, size=10):
+		if size > 0:
+			self.buysell(self.bottom, self.top, size)
+		else:
+			self.buysell(self.top, self.bottom, -size)
+
 	def sigma(self):
 		sqds = []
 		cur = self.allratios[-1]
@@ -50,11 +56,9 @@ class Slosh(Base):
 		return sqrt(self.ave(collection=sqds))
 
 	def volatility(self, cur, sigma):
-		d = abs(cur - self.averages["total"])
-		return d / sigma
+		return (cur - self.averages["total"]) / sigma
 
 	def hilo(self, cur):
-		size = 0
 		rz = self.ratios
 		az = self.averages
 		sigma = self.sigma()
@@ -65,25 +69,8 @@ class Slosh(Base):
 			"\naverage", az["total"],
 			"\ndifference", cur - az["total"], "\n\n")
 		rz["current"] = cur
-		if volatility < 0.6:
-			return print("skipping (low volatility)")
-		if cur > rz["high"]:
-			rz["high"] = cur
-			size += 10
-		elif cur < rz["low"]:
-			rz["low"] = cur
-			size -= 10
-		for ave in ["inner", "outer", "total"]:
-			if cur > az[ave]:
-				size += 1
-			elif cur < az[ave]:
-				size -= 1
-		if not size: return
-		size = size * volatility
-		if size > 0:
-			self.swap(self.bottom, self.top, size)
-		else:
-			self.swap(self.top, self.bottom, -size)
+		if abs(volatility) > 0.5:
+			self.swap(volatility)
 
 	def tick(self, history=None): # calc ratios (ignore history...)
 		history = self.histories
