@@ -28,15 +28,17 @@ class Office(object):
 		price = trade["price"]
 		symbol = trade["symbol"]
 		curprice = curprice or self.managers[symbol].latest["price"]
+		diff = curprice - price
 		if not curprice: # can this even happen?
 			return self.log("skipping assessment (waiting for %s price)"%(symbol,))
 		if action == "BUY":
-			isgood = curprice > price
+			isgood = diff > 0
 		else: # SELL
-			isgood = curprice < price
+			isgood = diff < 0
 		VERBOSE and self.log("%s %s at %s - %s trade!"%(action,
 			symbol, price, isgood and "GOOD" or "BAD"))
-		return isgood and 1 or -1
+		direction = isgood and 1 or -1
+		return direction, abs(diff) * trade["size"] * direction
 
 	def review(self, symbol=None, trader=None, curprice=None):
 		mans = self.managers
@@ -61,9 +63,12 @@ class Office(object):
 			lstr.append("; ".join(["%s at %s"%(sym, mans[sym].latest["price"]) for sym in mans.keys()]))
 		self.log(*lstr)
 		score = 0
+		rate = 0
 		for trade in tz:
-			score += self.assess(trade, curprice)
-		self.log("trade score:", score)
+			r, s = self.assess(trade, curprice)
+			rate += r
+			score += s
+		self.log("trade score:", rate, "(", score, ")")
 
 	def tick(self):
 		manStrat = manTrad = True
