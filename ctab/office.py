@@ -3,6 +3,8 @@ from strategist import strategies
 from manager import Manager
 from trader import Trader
 
+VERBOSE = False
+
 class Office(object):
 	def __init__(self, platform="dydx", symbols=[], strategy="rsi", globalStrategy=False, globalTrade=False):
 		self.platform = platform
@@ -32,7 +34,7 @@ class Office(object):
 			isgood = curprice > price
 		else: # SELL
 			isgood = curprice < price
-		self.log("%s %s at %s - %s trade!"%(action,
+		VERBOSE and self.log("%s %s at %s - %s trade!"%(action,
 			symbol, price, isgood and "GOOD" or "BAD"))
 		return isgood and 1 or -1
 
