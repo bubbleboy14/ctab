@@ -70,10 +70,12 @@ class Agent(object):
 
 	#{'side': 'BUY', 'action': 'BUY', 'price': 26296.0, 'symbol': 'BTC-USD'}
 	def trade(self, trade):
+		if "size" not in trade:
+			trade["size"] = 10
 		self.log("TRADE!", trade)
 		if not LIVE: return
 		trargs = {
-			"size": str(trade.get("size", 10)),
+			"size": str(trade["size"]),
 			"post_only": False,
 			"limit_fee": '0.1',
 			"price": str(trade['price']),
