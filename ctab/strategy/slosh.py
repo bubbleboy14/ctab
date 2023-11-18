@@ -41,23 +41,32 @@ class Slosh(Base):
 			"size": size
 		})
 
-	def volatility(self, cur):
+	def sigma(self):
 		sqds = []
-		for r in self.allratios:
+		cur = self.allratios[-1]
+		for r in self.allratios[:-1]:
 			d = r - cur
 			sqds.append(d * d)
 		return sqrt(self.ave(collection=sqds))
+
+	def volatility(self, cur, sigma):
+		d = abs(cur - self.averages["total"])
+		return d / sigma
 
 	def hilo(self, cur):
 		size = 0
 		rz = self.ratios
 		az = self.averages
-		volatility = self.volatility(cur)
-		print("\n\nvolatility", volatility)
-
-		# TODO: standard deviations!
-
+		sigma = self.sigma()
+		volatility = self.volatility(cur, sigma)
+		print("\n\nsigma", sigma,
+			"\nvolatility", volatility,
+			"\ncurrent", cur,
+			"\naverage", az["total"],
+			"\ndifference", cur - az["total"], "\n\n")
 		rz["current"] = cur
+		if volatility < 0.6:
+			return print("skipping (low volatility)")
 		if cur > rz["high"]:
 			rz["high"] = cur
 			size += 10
@@ -70,6 +79,7 @@ class Slosh(Base):
 			elif cur < az[ave]:
 				size -= 1
 		if not size: return
+		size = size * volatility
 		if size > 0:
 			self.swap(self.bottom, self.top, size)
 		else:
