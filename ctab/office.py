@@ -10,7 +10,7 @@ class Office(object):
 	def __init__(self, platform="dydx", symbols=[], strategy="rsi", globalStrategy=False, globalTrade=False):
 		self.platform = platform
 		self.symbols = symbols
-		self.accountant = Accountant(platform)
+		self.accountant = Accountant()
 		self.trader = globalTrade and Trader()
 		trec = self.trader and self.trader.recommend
 		strat = strategies[strategy]
