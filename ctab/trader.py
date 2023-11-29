@@ -1,4 +1,4 @@
-from backend import getoffice
+from backend import ask
 from agent import Agent
 
 class Trader(object):
@@ -21,7 +21,7 @@ class Trader(object):
 
 	def shouldTrade(self, recommendation): # TODO: actually evaluate
 		self.log("assessing recommendation:", recommendation)
-		return getoffice("accountant").possible(recommendation)
+		return ask("affordable", recommendation)
 
 	def trade(self, recommendation):
 		self.log("\n\n\n", "TRADING", recommendation, "\n\n\n")

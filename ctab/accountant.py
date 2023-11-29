@@ -1,11 +1,11 @@
-from backend import log, feed
+from backend import log, feed, listen
 
 class Accountant(object):
 	def __init__(self, platform):
 		# TODO : establish feed ... signature?
 		#ws = feed(platform, ...)
-		pass
+		listen("affordable", self.affordable)
 
-	def possible(self, proposal):
+	def affordable(self, proposal):
 		log("Accountant just saying yes")
 		return True
