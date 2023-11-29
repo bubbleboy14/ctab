@@ -29,6 +29,16 @@ def remember(key, data, ask=True):
 def recall(key):
 	return membank.get(key, None)
 
+def memget(key, default=None):
+	val = recall(key)
+	if not val:
+		pstr = "%s? "%(key,)
+		if default:
+			pstr = "%s[default: %s] "%(pstr, default)
+		val = input(pstr) or default
+		remember(key, val)
+	return val
+
 _predefs = {
 	"strategy": "rsi",
 	"platform": "dydx"
