@@ -1,14 +1,14 @@
 import time
 from web3 import Web3
 from dydx3 import Client, constants, epoch_seconds_to_iso
-from backend import log, remember, recall
+from backend import log, remember, recall, memget
 
 LIVE = False
 PRODEF = "http://localhost:8545"
 
 class Agent(object):
 	def __init__(self, stark=None, creds=None):
-		self.w3 = Web3(Web3.HTTPProvider(self.getProvider()))
+		self.w3 = Web3(Web3.HTTPProvider(memget("provider", PRODEF)))
 		self.stark = stark or recall("stark")
 		self.creds = creds or recall("stark_creds")
 		self.client = self.buildClient()
@@ -19,13 +19,6 @@ class Agent(object):
 
 	def log(self, *msg):
 		log("Agent %s"%(" ".join([str(m) for m in msg]),))
-
-	def getProvider(self):
-		provider = recall("provider")
-		if not provider:
-			provider = input("provider? [default: %s] "%(PRODEF,)) or PRODEF
-			remember("provider", provider)
-		return provider
 
 	def onboard(self):
 		self.log("onboarding")
@@ -41,20 +34,12 @@ class Agent(object):
 		remember("stark", self.stark)
 		remember("stark_creds", self.creds)
 
-	def getPub(self):
-		pub = recall("ethereum_address")
-		if not pub:
-			pub = input("ok, public address? ")
-			remember("ethereum_address", pub)
-		return pub
-
 	def setCreds(self, clargs):
 		if self.creds:
 			clargs["api_key_credentials"] = self.creds
 		else:
-			clargs["eth_private_key"] = input("private key? ")
-			clargs["stark_public_key"] = input("stark_public_key? ")
-			clargs["stark_public_key_y_coordinate"] = input("stark_public_key_y_coordinate? ")
+			for key in ["eth_private_key", "stark_public_key", "stark_public_key_y_coordinate"]:
+				clargs[key] = memget(key)
 
 	def buildClient(self):
 		clargs = {
@@ -65,14 +50,14 @@ class Agent(object):
 		self.stark = self.stark or input("stark key? ")
 		if self.stark:
 			clargs["stark_private_key"] = self.stark
-			clargs["default_ethereum_address"] = self.getPub()
+			clargs["default_ethereum_address"] = memget("ethereum_address")
 			self.setCreds(clargs)
 		else:
 			pk = input("private key? ")
 			if pk:
 				clargs["eth_private_key"] = pk
 			else:
-				clargs["default_ethereum_address"] = self.getPub()
+				clargs["default_ethereum_address"] = memget("ethereum_address")
 		self.log("building client with clargs:", clargs)
 		return Client(**clargs)
 
