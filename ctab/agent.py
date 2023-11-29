@@ -22,7 +22,7 @@ class Agent(Worker):
 		emit("clientReady")
 
 	def apiKey(self):
-		return self.account["apiKey"]
+		return self.client.api_key_credentials
 
 	def signature(self, path, ts):
 		return self.client.private.sign(
