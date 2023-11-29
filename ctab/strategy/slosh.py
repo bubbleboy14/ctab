@@ -56,7 +56,10 @@ class Slosh(Base):
 		return sqrt(self.ave(collection=sqds))
 
 	def volatility(self, cur, sigma):
-		return (cur - self.averages["total"]) / sigma
+		if sigma:
+			return (cur - self.averages["total"]) / sigma
+		print("sigma is 0 - volatility() returning 0")
+		return 0
 
 	def hilo(self, cur):
 		rz = self.ratios
