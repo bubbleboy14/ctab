@@ -34,8 +34,8 @@ class Observer(object):
 		for event in events(message, self.use_initial):
 			self.observe(event)
 
-	def on_close(self, ws):
-		self.log("closed!!")
+	def on_close(self, ws, code, message):
+		self.log("closed!!", code, message)
 
 	def on_open(self, ws):
 		self.log("opened!!")
