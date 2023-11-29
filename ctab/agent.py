@@ -4,7 +4,7 @@ from dydx3 import Client, constants, epoch_seconds_to_iso
 from backend import log, remember, recall
 
 LIVE = False
-PRODEF = "http://localhost:7545"
+PRODEF = "http://localhost:8545"
 
 class Agent(object):
 	def __init__(self, stark=None, creds=None):
@@ -48,6 +48,14 @@ class Agent(object):
 			remember("ethereum_address", pub)
 		return pub
 
+	def setCreds(self, clargs):
+		if self.creds:
+			clargs["api_key_credentials"] = self.creds
+		else:
+			clargs["eth_private_key"] = input("private key? ")
+			clargs["stark_public_key"] = input("stark_public_key? ")
+			clargs["stark_public_key_y_coordinate"] = input("stark_public_key_y_coordinate? ")
+
 	def buildClient(self):
 		clargs = {
 			"web3": self.w3,
@@ -57,8 +65,8 @@ class Agent(object):
 		self.stark = self.stark or input("stark key? ")
 		if self.stark:
 			clargs["stark_private_key"] = self.stark
-			clargs["api_key_credentials"] = self.creds
 			clargs["default_ethereum_address"] = self.getPub()
+			self.setCreds(clargs)
 		else:
 			pk = input("private key? ")
 			if pk:
@@ -76,12 +84,12 @@ class Agent(object):
 		if not LIVE: return
 		trargs = {
 			"size": str(trade["size"]),
-			"post_only": False,
-			"limit_fee": '0.1',
+			"post_only": True,
+			"limit_fee": '0.0015',
 			"price": str(trade['price']),
 			"order_type": constants.ORDER_TYPE_LIMIT,
 			"position_id": self.account['positionId'],
-			"expiration": epoch_seconds_to_iso(time.time() + 61),
+			"expiration_epoch_seconds": epoch_seconds_to_iso(time.time() + 61),
 			"side": getattr(constants, "ORDER_SIDE_%s"%(trade["action"],)),
 			"market": getattr(constants, "MARKET_%s_%s"%tuple(trade["symbol"].split("-")))
 		}
