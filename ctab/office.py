@@ -1,4 +1,4 @@
-from backend import log, rel, start, presets, setoffice
+from backend import log, rel, start, presets
 from strategist import strategies
 from accountant import Accountant
 from manager import Manager
@@ -87,5 +87,5 @@ class Office(object):
 		return True
 
 if __name__ == "__main__":
-	setoffice(Office(**presets()))
+	Office(**presets())
 	start()
