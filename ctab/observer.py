@@ -17,7 +17,7 @@ class Observer(object):
 		}
 		self._log_file = open(symbol + ".log", "w")
 		ws = feed(platform, symbol,
-			on_message=self.on_message, on_error=self.error,
+			on_message=self.on_message, on_error=self.on_error,
 			on_open=self.on_open, on_close=self.on_close)
 
 	def log(self, *msg):
@@ -26,8 +26,8 @@ class Observer(object):
 		if LOG:
 			log("Observer[%s] %s"%(self.symbol, line))
 
-	def error(self, *msg):
-		self.log("ERROR", *msg)
+	def on_error(self, ws, msg):
+		self.log("ERROR", msg)
 		stop()
 
 	def on_message(self, ws, message):
