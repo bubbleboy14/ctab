@@ -10,7 +10,7 @@ class Worker(object):
 
 	def error(self, *msg):
 		self.log("ERROR", *msg)
-#		stop()
+		stop()
 
 class Feeder(Worker):
 	def feed(self, platform, channel):
