@@ -47,7 +47,11 @@ class Agent(object):
 			"host": constants.API_HOST_GOERLI,
 			"network_id": constants.NETWORK_ID_GOERLI
 		}
-		self.stark = self.stark or input("stark key? ")
+		if not self.stark:
+			stark = input("stark key? ")
+			if stark:
+				remember("stark", stark)
+				self.stark = stark
 		if self.stark:
 			clargs["stark_private_key"] = self.stark
 			clargs["default_ethereum_address"] = memget("ethereum_address")
