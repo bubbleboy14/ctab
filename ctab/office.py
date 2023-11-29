@@ -1,5 +1,6 @@
-from backend import log, rel, start, presets
+from backend import log, rel, start, presets, setoffice
 from strategist import strategies
+from accountant import Accountant
 from manager import Manager
 from trader import Trader
 
@@ -9,6 +10,7 @@ class Office(object):
 	def __init__(self, platform="dydx", symbols=[], strategy="rsi", globalStrategy=False, globalTrade=False):
 		self.platform = platform
 		self.symbols = symbols
+		self.accountant = Accountant(platform)
 		self.trader = globalTrade and Trader()
 		trec = self.trader and self.trader.recommend
 		strat = strategies[strategy]
@@ -85,5 +87,5 @@ class Office(object):
 		return True
 
 if __name__ == "__main__":
-	Office(**presets())
+	setoffice(Office(**presets()))
 	start()
