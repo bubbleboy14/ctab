@@ -1,4 +1,4 @@
-from backend import events, feed, spew
+from backend import events, spew
 from base import Feeder
 
 class Observer(Feeder):
@@ -14,9 +14,7 @@ class Observer(Feeder):
 			"w_average": [],
 			"1_w_average": []
 		}
-		ws = feed(platform, symbol,
-			on_message=self.on_message, on_error=self.on_error,
-			on_open=self.on_open, on_close=self.on_close)
+		self.feed(platform, symbol)
 
 	def sig(self):
 		return "Observer[%s]"%(self.symbol,)
