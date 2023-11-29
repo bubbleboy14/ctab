@@ -1,7 +1,7 @@
 import time
 from web3 import Web3
 from dydx3 import Client, constants, epoch_seconds_to_iso
-from backend import log, remember, recall, memget
+from backend import log, remember, recall, memget, listen, emit
 
 LIVE = False
 PRODEF = "http://localhost:8545"
@@ -16,9 +16,23 @@ class Agent(object):
 		self.account = self.client.private.get_account(
 			ethereum_address=self.client.default_address
 		).data['account']
+		listen("apiKey", self.apiKey)
+		listen("signature", self.signature)
+		emit("clientReady")
 
 	def log(self, *msg):
 		log("Agent %s"%(" ".join([str(m) for m in msg]),))
+
+	def apiKey(self):
+		return self.account["apiKey"]
+
+	def signature(self, path, ts):
+		return self.client.private.sign(
+			data={},
+			method="GET",
+			iso_timestamp=ts,
+			request_path=path
+		)
 
 	def onboard(self):
 		self.log("onboarding")
