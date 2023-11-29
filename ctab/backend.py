@@ -40,17 +40,17 @@ def memget(key, default=None):
 	return val
 
 listeners = {}
-def emit(channel, data): # all cbs called, no return value
+def emit(channel, *data): # all cbs called, no return value
 	if channel not in listeners:
 		return print("%s: no one's listening"%(channel,))
 	for cb in listeners[channel]:
-		cb(data)
+		cb(*data)
 
-def ask(channel, data): # only 1st cb called, data returned
+def ask(channel, *data): # only 1st cb called, data returned
 	if channel not in listeners:
 		return print("%s: no one's listening"%(channel,))
 	for cb in listeners[channel]:
-		return cb(data)
+		return cb(*data)
 
 def listen(channel, cb):
 	if channel not in listeners:
@@ -110,6 +110,16 @@ def ddorders(streamname):
 		"id": streamname
 	}
 
+def ddaccount(ts):
+	return {
+		"timestamp": ts,
+		"accountNumber": 0,
+		"type": "subscribe",
+		"channel": "v3_accounts",
+		"apiKey": ask("apiKey"),
+		"signature": ask("signature", "/ws/accounts", ts)
+	}
+
 def subber(streamname, submaker, doafter=None):
 	def _subber(ws):
 		log("opened - sending sub block")
@@ -125,6 +135,11 @@ def jsend(ws):
 	return _jsend
 
 platforms = {
+	"dacc": {
+#		"feed": "wss://api.stage.dydx.exchange/v3/ws",
+		"feed": "wss://api.dydx.exchange/v3/ws",
+		"subber": ddaccount
+	},
 	"dydx": {
 #		"feed": "wss://api.stage.dydx.exchange/v3/ws",
 		"feed": "wss://api.dydx.exchange/v3/ws",
