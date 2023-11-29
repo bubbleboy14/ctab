@@ -27,12 +27,12 @@ class Slosh(Base):
 		hz = self.histories
 		bcur = hz[buysym]["current"]
 		scur = hz[sellsym]["current"]
-		sellsize = size * scur / bcur
+#		sellsize = size * scur / bcur
 		self.recommender({
 			"action": "SELL",
 			"symbol": sellsym,
 			"price": scur,
-			"size": sellsize
+			"size": size#sellsize
 		})
 		self.recommender({
 			"action": "BUY",
@@ -73,7 +73,7 @@ class Slosh(Base):
 			"\ndifference", cur - az["total"], "\n\n")
 		rz["current"] = cur
 		if abs(volatility) > 0.5:
-			self.swap(volatility)
+			self.swap(volatility * 10)
 
 	def tick(self, history=None): # calc ratios (ignore history...)
 		history = self.histories
