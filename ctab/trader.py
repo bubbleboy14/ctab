@@ -1,3 +1,4 @@
+from backend import getoffice
 from agent import Agent
 
 class Trader(object):
@@ -18,9 +19,9 @@ class Trader(object):
 		self.log("recommended:", recommendation)
 		self.recommendations.append(recommendation)
 
-	def shouldTrade(self, recommendation):
+	def shouldTrade(self, recommendation): # TODO: actually evaluate
 		self.log("assessing recommendation:", recommendation)
-		return True # TODO: actually evaluate
+		return getoffice("accountant").possible(recommendation)
 
 	def trade(self, recommendation):
 		self.log("\n\n\n", "TRADING", recommendation, "\n\n\n")
