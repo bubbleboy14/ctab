@@ -1,8 +1,7 @@
-from backend import log, events, feed, spew, stop
+from backend import events, feed, spew
+from base import Feeder
 
-LOG = True
-
-class Observer(object):
+class Observer(Feeder):
 	def __init__(self, platform, symbol, observe=spew, use_initial=False):
 		self.symbol = symbol
 		self.observe = observe
@@ -15,27 +14,13 @@ class Observer(object):
 			"w_average": [],
 			"1_w_average": []
 		}
-		self._log_file = open(symbol + ".log", "w")
 		ws = feed(platform, symbol,
 			on_message=self.on_message, on_error=self.on_error,
 			on_open=self.on_open, on_close=self.on_close)
 
-	def log(self, *msg):
-		line = " ".join([str(m) for m in msg])
-		self._log_file.write(line + "\n")
-		if LOG:
-			log("Observer[%s] %s"%(self.symbol, line))
-
-	def on_error(self, ws, msg):
-		self.log("ERROR", msg)
-		stop()
+	def sig(self):
+		return "Observer[%s]"%(self.symbol,)
 
 	def on_message(self, ws, message):
 		for event in events(message, self.use_initial):
 			self.observe(event)
-
-	def on_close(self, ws, code, message):
-		self.log("closed!!", code, message)
-
-	def on_open(self, ws):
-		self.log("opened!!")
