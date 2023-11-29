@@ -1,9 +1,9 @@
-from backend import log
 from strategist import strategies
 from observer import Observer
 from trader import Trader
+from base import Worker
 
-class Manager(object):
+class Manager(Worker):
 	def __init__(self, platform, symbol, reviewer, strategist="rsi", trader=None):
 		self.latest = {
 			"price": None
@@ -21,8 +21,8 @@ class Manager(object):
 			self.strategist = strategist
 		setrec and self.strategist.setRecommender(self.trader.recommend)
 
-	def log(self, *msg):
-		log("Manager[%s:%s] %s"%(self.platform, self.symbol, " ".join(msg)))
+	def sig(self):
+		return "Manager[%s:%s]"%(self.platform, self.symbol)
 
 	def tick(self, strat=True, trad=True):
 		strat and self.strategist.tick(self.observer.history)

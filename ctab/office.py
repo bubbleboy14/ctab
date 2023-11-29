@@ -1,12 +1,13 @@
-from backend import log, rel, start, presets
+from backend import rel, start, presets
 from strategist import strategies
 from accountant import Accountant
 from manager import Manager
 from trader import Trader
+from base import Worker
 
 VERBOSE = False
 
-class Office(object):
+class Office(Worker):
 	def __init__(self, platform="dydx", symbols=[], strategy="rsi", globalStrategy=False, globalTrade=False):
 		self.platform = platform
 		self.symbols = symbols
@@ -22,8 +23,8 @@ class Office(object):
 		self.log("initialized %s managers"%(len(symbols),))
 		rel.timeout(1, self.tick)
 
-	def log(self, *msg):
-		log("Office[%s] %s"%(self.platform, " ".join([str(m) for m in msg])))
+	def sig(self):
+		return "Office[%s]"%(self.platform,)
 
 	def assess(self, trade, curprice=None):
 		action = trade["action"]

@@ -1,12 +1,13 @@
 import time
 from web3 import Web3
 from dydx3 import Client, constants, epoch_seconds_to_iso
-from backend import log, remember, recall, memget, listen, emit
+from backend import remember, recall, memget, listen, emit
+from base import Worker
 
 LIVE = False
 PRODEF = "http://localhost:8545"
 
-class Agent(object):
+class Agent(Worker):
 	def __init__(self, stark=None, creds=None):
 		self.w3 = Web3(Web3.HTTPProvider(memget("provider", PRODEF)))
 		self.stark = stark or recall("stark")
@@ -19,9 +20,6 @@ class Agent(object):
 		listen("apiKey", self.apiKey)
 		listen("signature", self.signature)
 		emit("clientReady")
-
-	def log(self, *msg):
-		log("Agent %s"%(" ".join([str(m) for m in msg]),))
 
 	def apiKey(self):
 		return self.account["apiKey"]

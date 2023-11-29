@@ -1,15 +1,13 @@
 from backend import ask
 from agent import Agent
+from base import Worker
 
-class Trader(object):
+class Trader(Worker):
 	def __init__(self, live=True):
 		self.recommendations = []
 		self.live = live
 		self.trades = []
 		self.agent = Agent()
-
-	def log(self, *msg):
-		print("\nTrader %s\n"%(" ".join([str(m) for m in msg]),))
 
 	def note(self, recommendation):
 		# TODO: wrap in timestamped object...?
@@ -24,7 +22,7 @@ class Trader(object):
 		return ask("affordable", recommendation)
 
 	def trade(self, recommendation):
-		self.log("\n\n\n", "TRADING", recommendation, "\n\n\n")
+		self.log("TRADING", recommendation, "\n\n\n")
 		self.note(recommendation)
 		self.live and self.agent.trade(recommendation)
 
@@ -33,4 +31,3 @@ class Trader(object):
 		for recommendation in self.recommendations:
 			self.shouldTrade(recommendation) and self.trade(recommendation)
 		self.recommendations = []
-		# TODO: review trades[] (track wins/losses)
