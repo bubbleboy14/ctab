@@ -39,6 +39,16 @@ def memget(key, default=None):
 		remember(key, val)
 	return val
 
+OFFICE = None
+def getoffice(sub=None):
+	if sub:
+		return getattr(OFFICE, sub)
+	return OFFICE
+
+def setoffice(office):
+	global OFFICE
+	OFFICE = office
+
 _predefs = {
 	"strategy": "rsi",
 	"platform": "dydx"
