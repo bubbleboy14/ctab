@@ -1,4 +1,4 @@
-import os, base64, rel, json, websocket
+import os, sys, rel, json, base64, websocket
 
 def log(*msg):
 	print(*msg)
@@ -220,4 +220,7 @@ def start():
 
 def stop():
 	log("goodbye")
-	rel.abort()
+	if rel.is_running():
+		rel.abort()
+	else:
+		sys.exit()
