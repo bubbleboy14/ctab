@@ -1,12 +1,19 @@
 from pprint import pprint
 from backend import log, stop, feed
 
+UNSPAMMED = True
+
 class Worker(object):
 	def sig(self):
 		return self.__class__.__name__
 
 	def log(self, *msg):
-		log("%s %s"%(self.sig(), " ".join([str(m) for m in msg])))
+		line = "\n%s %s"%(self.sig(), " ".join([str(m) for m in msg]))
+		if UNSPAMMED:
+			if getattr(self, "_lastlog", None) == line:
+				return print(".", end="", flush=True)
+			self._lastlog = line
+		log(line)
 
 	def error(self, *msg):
 		self.log("ERROR", *msg)
