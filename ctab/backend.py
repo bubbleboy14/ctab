@@ -77,12 +77,12 @@ _presets = [{
 	"globalStrategy": True,
 	"symbols": ["BTC-USD", "ETH-USD"]
 }, {
-	"platform": "gemini",
-	"symbols": ["BTCUSD", "ETHUSD", "ETHBTC"]
-}, {
 	"symbols": ["ETH-USD"]
 }, {
 	"symbols": ["BTC-USD"]
+}, {
+	"platform": "gemini",
+	"symbols": ["BTCUSD", "ETHUSD", "ETHBTC"]
 }]
 
 def presets():
