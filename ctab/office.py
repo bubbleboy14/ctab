@@ -64,14 +64,14 @@ class Office(Worker):
 		else:
 			lstr.append("prices are:")
 			lstr.append("; ".join(["%s at %s"%(sym, mans[sym].latest["price"]) for sym in mans.keys()]))
-		self.log(*lstr)
 		score = 0
 		rate = 0
 		for trade in tz:
 			r, s = self.assess(trade, curprice)
 			rate += r
 			score += s
-		self.log("trade score:", rate, "(", score, ")")
+		lstr.extend(["- score:", rate, "(", score, ")"])
+		self.log(*lstr)
 
 	def tick(self):
 		manStrat = manTrad = True

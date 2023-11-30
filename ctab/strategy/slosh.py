@@ -91,7 +91,7 @@ class Slosh(Base):
 			self.hilo(cur)
 		else:
 			self.ratios["current"] = self.ratios["high"] = self.ratios["low"] = cur
-		self.log("\n\n", self.ratios, "\n", self.averages, "\n\n")
+		self.log(self.ratios, "\n", self.averages)
 
 	def compare(self, symbol, side, price, eobj, history):
 		self.shouldUpdate = True
