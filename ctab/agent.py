@@ -1,6 +1,7 @@
 import time
 from web3 import Web3
 from dydx3 import Client, constants, epoch_seconds_to_iso
+from dydx3.helpers.request_helpers import generate_now_iso
 from backend import remember, recall, memget, listen, emit
 from base import Worker
 
@@ -19,6 +20,7 @@ class Agent(Worker):
 		).data['account']
 		listen("id", self.id)
 		listen("apiCreds", self.apiCreds)
+		listen("credHead", self.credHead)
 		listen("signature", self.signature)
 		emit("clientReady")
 
@@ -31,6 +33,16 @@ class Agent(Worker):
 	def signature(self, path, ts, data={}):
 		self.log("signature", path, data)
 		return self.client.private.sign(path, "GET", ts, data)
+
+	def credHead(self, path="/v3/accounts"):
+		hz = {}
+		ak = self.apiCreds()
+		hz["DYDX-API-KEY"] = ak["key"]
+		hz["DYDX-PASSPHRASE"] = ak["passphrase"]
+		ts = hz["DYDX-TIMESTAMP"] = generate_now_iso()
+		hz["DYDX-SIGNATURE"] = self.signature(path, ts)
+		self.log("credHead", path, hz)
+		return hz
 
 	def onboard(self):
 		self.log("onboarding")
