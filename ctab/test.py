@@ -1,5 +1,5 @@
 from dydx3 import constants
-from accountant import Accountant, generate_now_iso
+from accountant import Accountant
 from agent import Agent
 from backend import start, spew
 
