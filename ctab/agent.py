@@ -28,14 +28,9 @@ class Agent(Worker):
 	def apiCreds(self):
 		return self.client.api_key_credentials
 
-	def signature(self, path, ts):
-		self.log("signature", path, ts)
-		return self.client.private.sign(
-			data={},
-			method="GET",
-			iso_timestamp=ts,
-			request_path=path
-		)
+	def signature(self, path, ts, data={}):
+		self.log("signature", path, data)
+		return self.client.private.sign(path, "GET", ts, data)
 
 	def onboard(self):
 		self.log("onboarding")
