@@ -141,7 +141,8 @@ platforms = {
 	"dacc": {
 		"feed": "wss://api.stage.dydx.exchange/v3/ws",
 #		"feed": "wss://api.dydx.exchange/v3/ws",
-		"subber": ddaccount
+		"subber": ddaccount,
+		"credHead": "/ws/accounts"
 	},
 	"dydx": {
 		"feed": "wss://api.stage.dydx.exchange/v3/ws",
@@ -163,6 +164,8 @@ def feed(platname, streamname, **cbs): # {on_message,on_error,on_open,on_close}
 	if "subber" in plat:
 		cbs["on_open"] = subber(streamname,
 			plat["subber"], getattr(cbs, "on_open", None))
+	if "credHead" in plat:
+		cbs["header"] = ask("credHead", plat["credHead"])
 	ws = websocket.WebSocketApp(feed, **cbs)
 	ws.jsend = jsend(ws)
 	ws.run_forever(dispatcher=rel)
