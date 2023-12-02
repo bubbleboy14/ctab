@@ -1,10 +1,10 @@
 from dydx3 import constants
-from dez.http import fetch
 from accountant import Accountant, generate_now_iso
 from agent import Agent
 from backend import start, spew
 
 def get(path, ag=None):
+	from dez.http import fetch
 	hz = {}
 	ag = ag or Agent()
 	ak = ag.apiCreds()
@@ -30,6 +30,6 @@ def accounts(): # works
 	get("/v3/accounts")
 
 if __name__ == "__main__":
-	#accountant()
+	accountant()
 	#accountById()
-	accounts()
+	#accounts()
