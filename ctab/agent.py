@@ -17,14 +17,19 @@ class Agent(Worker):
 		self.account = self.client.private.get_account(
 			ethereum_address=self.client.default_address
 		).data['account']
-		listen("apiKey", self.apiKey)
+		listen("id", self.id)
+		listen("apiCreds", self.apiCreds)
 		listen("signature", self.signature)
 		emit("clientReady")
 
-	def apiKey(self):
+	def id(self):
+		return self.account["id"]# + "/" + self.account["accountNumber"]
+
+	def apiCreds(self):
 		return self.client.api_key_credentials
 
 	def signature(self, path, ts):
+		self.log("signature", path, ts)
 		return self.client.private.sign(
 			data={},
 			method="GET",
