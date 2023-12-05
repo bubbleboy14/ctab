@@ -22,7 +22,7 @@ class Accountant(Feeder):
 		obz = self._obals
 		for sym in bz:
 			amount = bz[sym] - obz[sym]
-			if sym != "USD":
+			if amount and sym != "USD":
 				amount *= pricer(sym + "-USD")
 			total += amount
 		return "%s -> %s"%(bz, total)
