@@ -26,11 +26,14 @@ class Office(Worker):
 	def sig(self):
 		return "Office[%s]"%(self.platform,)
 
+	def price(self, symbol):
+		return self.managers[symbol].latest["price"]
+
 	def assess(self, trade, curprice=None):
 		action = trade["action"]
 		price = trade["price"]
 		symbol = trade["symbol"]
-		curprice = curprice or self.managers[symbol].latest["price"]
+		curprice = curprice or self.price(symbol)
 		diff = curprice - price
 		if not curprice: # can this even happen?
 			return self.log("skipping assessment (waiting for %s price)"%(symbol,))
@@ -65,7 +68,7 @@ class Office(Worker):
 			lstr.append("prices are:")
 			lstr.append("; ".join(["%s at %s"%(sym, mans[sym].latest["price"]) for sym in mans.keys()]))
 		lstr.append("\n- current balances are:")
-		lstr.append(self.accountant.balances)
+		lstr.append(self.accountant.balances(self.price))
 		score = 0
 		rate = 0
 		for trade in tz:
