@@ -3,9 +3,9 @@ from backend import listen
 from base import Feeder
 
 defbals = {
-	"USD": 1000,
-	"ETH": 0,
-	"BTC": 0
+	"ETH": 0.1,
+	"BTC": 0.01,
+	"USD": 1000
 }
 
 class Accountant(Feeder):
@@ -27,7 +27,7 @@ class Accountant(Feeder):
 			bz["USD"] -= s
 			bz[sym] += v
 		else:
-			if s > bz[sym]:
+			if v > bz[sym]:
 				self.log("not enough %s!"%(sym,))
 				return False
 			bz["USD"] += s
