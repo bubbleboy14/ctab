@@ -81,7 +81,7 @@ class Slosh(Base):
 			self.log("ratio is too low:", cur)
 			rz["low"] = cur;
 		elif abs(volatility) > 0.5:
-			self.swap(volatility * 10)
+			self.swap(volatility)# * 10)
 
 	def tick(self, history=None): # calc ratios (ignore history...)
 		history = self.histories
