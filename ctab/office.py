@@ -58,19 +58,21 @@ class Office(Worker):
 			return self.log("skipping review (waiting for trades)")
 		lstr = ["review %s"%(len(tz),)]
 		symbol and lstr.append(symbol)
-		lstr.append("trades - current")
+		lstr.append("trades\n- current")
 		if curprice:
 			lstr.append("price is %s"%(curprice,))
 		else:
 			lstr.append("prices are:")
 			lstr.append("; ".join(["%s at %s"%(sym, mans[sym].latest["price"]) for sym in mans.keys()]))
+		lstr.append("\n- current balances are:")
+		lstr.append(self.accountant.balances)
 		score = 0
 		rate = 0
 		for trade in tz:
 			r, s = self.assess(trade, curprice)
 			rate += r
 			score += s
-		lstr.extend(["- score:", rate, "(", score, ")"])
+		lstr.extend(["\n- score:", rate, "(", score, ")"])
 		self.log(*lstr)
 
 	def tick(self):
