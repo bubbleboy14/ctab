@@ -112,8 +112,9 @@ def ddorders(streamname):
 
 def ddaccount(ts):
 	creds = ask("apiCreds")
+	spew(creds)
 	return {
-		"id": ask("id"),
+#		"id": ask("id"),
 		"timestamp": ts,
 		"accountNumber": 0,
 		"type": "subscribe",
@@ -137,16 +138,18 @@ def jsend(ws):
 		ws.send(msg)
 	return _jsend
 
+STAGING = True
+DFP = "wss://api.dydx.exchange/v3/ws"
+if STAGING:
+	DFP = DFP.replace("api.", "api.stage.")
 platforms = {
 	"dacc": {
-		"feed": "wss://api.stage.dydx.exchange/v3/ws",
-#		"feed": "wss://api.dydx.exchange/v3/ws",
+		"feed": DFP,
 		"subber": ddaccount,
 		"credHead": "/ws/accounts"
 	},
 	"dydx": {
-		"feed": "wss://api.stage.dydx.exchange/v3/ws",
-#		"feed": "wss://api.dydx.exchange/v3/ws",
+		"feed": DFP,
 		"subber": ddtrades # or ddorders
 	},
 	"chainrift": {
