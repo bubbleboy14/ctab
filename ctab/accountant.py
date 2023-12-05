@@ -10,14 +10,27 @@ defbals = {
 
 class Accountant(Feeder):
 	def __init__(self, balances=defbals):
-		self.balances = balances
+		self._obals = {}
+		self._balances = balances
+		self._obals.update(balances)
 		listen("clientReady", self.load)
 		listen("affordable", self.affordable)
+
+	def balances(self, pricer):
+		total = 0
+		bz = self._balances
+		obz = self._obals
+		for sym in bz:
+			amount = bz[sym] - obz[sym]
+			if sym != "USD":
+				amount *= pricer(sym + "-USD")
+			total += amount
+		return "%s -> %s"%(bz, total)
 
 	def affordable(self, prop):
 		s = prop.get("size", 10)
 		v = s / prop["price"]
-		bz = self.balances
+		bz = self._balances
 		sym = prop["symbol"].split("-")[0]
 		self.log("balances", bz)
 		if prop["action"] == "BUY":
