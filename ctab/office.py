@@ -66,7 +66,7 @@ class Office(Worker):
 			lstr.append("price is %s"%(curprice,))
 		else:
 			lstr.append("prices are:")
-			lstr.append("; ".join(["%s at %s"%(sym, mans[sym].latest["price"]) for sym in mans.keys()]))
+			lstr.append("; ".join(["%s at %s"%(sym, self.price(sym)) for sym in mans.keys()]))
 		lstr.append("\n- current balances are:")
 		lstr.append(self.accountant.balances(self.price))
 		score = 0
