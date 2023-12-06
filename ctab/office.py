@@ -1,3 +1,4 @@
+from pprint import pformat
 from backend import rel, start, presets
 from strategist import strategies
 from accountant import Accountant
@@ -26,11 +27,14 @@ class Office(Worker):
 	def sig(self):
 		return "Office[%s]"%(self.platform,)
 
+	def price(self, symbol):
+		return self.managers[symbol].latest["price"]
+
 	def assess(self, trade, curprice=None):
 		action = trade["action"]
 		price = trade["price"]
 		symbol = trade["symbol"]
-		curprice = curprice or self.managers[symbol].latest["price"]
+		curprice = curprice or self.price(symbol)
 		diff = curprice - price
 		if not curprice: # can this even happen?
 			return self.log("skipping assessment (waiting for %s price)"%(symbol,))
@@ -58,19 +62,21 @@ class Office(Worker):
 			return self.log("skipping review (waiting for trades)")
 		lstr = ["review %s"%(len(tz),)]
 		symbol and lstr.append(symbol)
-		lstr.append("trades - current")
+		lstr.append("trades\n-")
 		if curprice:
 			lstr.append("price is %s"%(curprice,))
 		else:
 			lstr.append("prices are:")
-			lstr.append("; ".join(["%s at %s"%(sym, mans[sym].latest["price"]) for sym in mans.keys()]))
+			lstr.append("; ".join(["%s at %s"%(sym, self.price(sym)) for sym in mans.keys()]))
 		score = 0
 		rate = 0
 		for trade in tz:
 			r, s = self.assess(trade, curprice)
 			rate += r
 			score += s
-		lstr.extend(["- score:", rate, "(", score, ")"])
+		lstr.extend(["\n- trade score:", rate, "(", score, ")"])
+		lstr.append("\n- balances are:")
+		lstr.append(pformat(self.accountant.balances(self.price)))
 		self.log(*lstr)
 
 	def tick(self):

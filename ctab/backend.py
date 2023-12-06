@@ -111,12 +111,16 @@ def ddorders(streamname):
 	}
 
 def ddaccount(ts):
+	creds = ask("apiCreds")
+	spew(creds)
 	return {
+		"id": ask("id"),
 		"timestamp": ts,
 		"accountNumber": 0,
 		"type": "subscribe",
+		"apiKey": creds["key"],
 		"channel": "v3_accounts",
-		"apiKey": ask("apiKey"),
+		"passphrase": creds["passphrase"],
 		"signature": ask("signature", "/ws/accounts", ts)
 	}
 
@@ -134,15 +138,18 @@ def jsend(ws):
 		ws.send(msg)
 	return _jsend
 
+STAGING = True
+DFP = "wss://api.dydx.exchange/v3/ws"
+if STAGING:
+	DFP = DFP.replace("api.", "api.stage.")
 platforms = {
 	"dacc": {
-#		"feed": "wss://api.stage.dydx.exchange/v3/ws",
-		"feed": "wss://api.dydx.exchange/v3/ws",
-		"subber": ddaccount
+		"feed": DFP,
+		"subber": ddaccount,
+		"credHead": "/ws/accounts"
 	},
 	"dydx": {
-#		"feed": "wss://api.stage.dydx.exchange/v3/ws",
-		"feed": "wss://api.dydx.exchange/v3/ws",
+		"feed": DFP,
 		"subber": ddtrades # or ddorders
 	},
 	"chainrift": {
@@ -160,6 +167,8 @@ def feed(platname, streamname, **cbs): # {on_message,on_error,on_open,on_close}
 	if "subber" in plat:
 		cbs["on_open"] = subber(streamname,
 			plat["subber"], getattr(cbs, "on_open", None))
+	if "credHead" in plat:
+		cbs["header"] = ask("credHead", plat["credHead"])
 	ws = websocket.WebSocketApp(feed, **cbs)
 	ws.jsend = jsend(ws)
 	ws.run_forever(dispatcher=rel)

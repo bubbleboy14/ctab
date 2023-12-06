@@ -20,7 +20,9 @@ class Slosh(Base):
 		Base.__init__(self, symbol, recommender)
 
 	def ave(self, limit=None, collection=None):
-		rats = (collection or self.allratios)[:limit]
+		rats = collection or self.allratios
+		if limit:
+			rats = rats[-limit:]
 		return sum(rats) / len(rats)
 
 	def buysell(self, buysym, sellsym, size=10):
@@ -50,14 +52,14 @@ class Slosh(Base):
 	def sigma(self):
 		sqds = []
 		cur = self.allratios[-1]
-		for r in self.allratios[:-1]:
+		for r in self.allratios[-INNER:-1]:
 			d = r - cur
 			sqds.append(d * d)
 		return sqrt(self.ave(collection=sqds))
 
 	def volatility(self, cur, sigma):
 		if sigma:
-			return (cur - self.averages["total"]) / sigma
+			return (cur - self.averages["inner"]) / sigma
 		print("sigma is 0 - volatility() returning 0")
 		return 0
 
@@ -72,6 +74,12 @@ class Slosh(Base):
 			"\naverage", az["total"],
 			"\ndifference", cur - az["total"], "\n\n")
 		rz["current"] = cur
+		if cur > rz["high"]:
+			self.log("ratio is new high:", cur)
+			rz["high"] = cur;
+		elif cur < rz["low"]:
+			self.log("ratio is new low:", cur)
+			rz["low"] = cur;
 		if abs(volatility) > 0.5:
 			self.swap(volatility * 10)
 
