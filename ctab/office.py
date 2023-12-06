@@ -1,3 +1,4 @@
+from pprint import pformat
 from backend import rel, start, presets
 from strategist import strategies
 from accountant import Accountant
@@ -61,21 +62,21 @@ class Office(Worker):
 			return self.log("skipping review (waiting for trades)")
 		lstr = ["review %s"%(len(tz),)]
 		symbol and lstr.append(symbol)
-		lstr.append("trades\n- current")
+		lstr.append("trades\n-")
 		if curprice:
 			lstr.append("price is %s"%(curprice,))
 		else:
 			lstr.append("prices are:")
 			lstr.append("; ".join(["%s at %s"%(sym, self.price(sym)) for sym in mans.keys()]))
-		lstr.append("\n- current balances are:")
-		lstr.append(self.accountant.balances(self.price))
 		score = 0
 		rate = 0
 		for trade in tz:
 			r, s = self.assess(trade, curprice)
 			rate += r
 			score += s
-		lstr.extend(["\n- score:", rate, "(", score, ")"])
+		lstr.extend(["\n- trade score:", rate, "(", score, ")"])
+		lstr.append("\n- balances are:")
+		lstr.append(pformat(self.accountant.balances(self.price)))
 		self.log(*lstr)
 
 	def tick(self):
