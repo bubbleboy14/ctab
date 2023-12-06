@@ -52,14 +52,14 @@ class Slosh(Base):
 	def sigma(self):
 		sqds = []
 		cur = self.allratios[-1]
-		for r in self.allratios[:-1]:
+		for r in self.allratios[-INNER:-1]:
 			d = r - cur
 			sqds.append(d * d)
 		return sqrt(self.ave(collection=sqds))
 
 	def volatility(self, cur, sigma):
 		if sigma:
-			return (cur - self.averages["total"]) / sigma
+			return (cur - self.averages["inner"]) / sigma
 		print("sigma is 0 - volatility() returning 0")
 		return 0
 
@@ -81,7 +81,7 @@ class Slosh(Base):
 			self.log("ratio is new low:", cur)
 			rz["low"] = cur;
 		if abs(volatility) > 0.5:
-			self.swap(volatility)# * 10)
+			self.swap(volatility * 10)
 
 	def tick(self, history=None): # calc ratios (ignore history...)
 		history = self.histories
