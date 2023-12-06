@@ -3,9 +3,9 @@ from backend import listen
 from base import Feeder
 
 defbals = {
-	"ETH": 0.1,
-	"BTC": 0.01,
-	"USD": 1000
+	"USD": 100,
+	"ETH": 0.2,
+	"BTC": 0.01
 }
 
 class Accountant(Feeder):
