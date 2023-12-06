@@ -114,7 +114,7 @@ def ddaccount(ts):
 	creds = ask("apiCreds")
 	spew(creds)
 	return {
-#		"id": ask("id"),
+		"id": ask("id"),
 		"timestamp": ts,
 		"accountNumber": 0,
 		"type": "subscribe",
