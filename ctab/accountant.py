@@ -20,12 +20,17 @@ class Accountant(Feeder):
 		total = 0
 		bz = self._balances
 		obz = self._obals
+		vz = {}
 		for sym in bz:
 			amount = bz[sym] - obz[sym]
+			v = vz[sym] = bz[sym]
 			if amount and sym != "USD":
-				amount *= pricer(sym + "-USD")
+				price = pricer(sym + "-USD")
+				amount *= price
+				vz[sym] = "%s ($%s)"%(v, v * price)
 			total += amount
-		return "%s -> %s"%(bz, total)
+		vz["diff"] = total
+		return vz
 
 	def affordable(self, prop):
 		s = prop.get("size", 10)
