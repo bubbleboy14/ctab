@@ -75,12 +75,12 @@ class Slosh(Base):
 			"\ndifference", cur - az["total"], "\n\n")
 		rz["current"] = cur
 		if cur > rz["high"]:
-			self.log("ratio is too high:", cur)
+			self.log("ratio is new high:", cur)
 			rz["high"] = cur;
 		elif cur < rz["low"]:
-			self.log("ratio is too low:", cur)
+			self.log("ratio is new low:", cur)
 			rz["low"] = cur;
-		elif abs(volatility) > 0.5:
+		if abs(volatility) > 0.5:
 			self.swap(volatility)# * 10)
 
 	def tick(self, history=None): # calc ratios (ignore history...)
