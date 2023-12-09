@@ -16,22 +16,30 @@ ab.dash.Dash = CT.Class({
 				series: Object.values(_.data)
 			});
 		},
-		leg: function(data) {
-			var _ = this._;
-			return CT.dom.flex(Object.keys(data).map(function(d) {
+		leg: function(data, colored) {
+			var _ = this._, labs = [], lab, n = CT.dom.flex(Object.keys(data).map(function(d) {
 				if (typeof data[d] == "object") {
 					return CT.dom.div([
 						CT.dom.div(d, "centered"),
 						_.leg(data[d])
 					], "w1");
 				}
-				return CT.dom.div("<b>" + d + "</b>: " + data[d], "padded");
+				lab = CT.dom.span(d, "bold");
+				labs.push(lab);
+				return CT.dom.div([lab, CT.dom.pad(), CT.dom.span(data[d])], "padded");
 			}), "bordered row jcbetween");
+			colored && setTimeout(function() {
+				CT.dom.className("ct-line", _.nodes.charts).forEach(function(n, i) {
+					labs[i].style.color
+						= window.getComputedStyle(n).getPropertyValue("stroke");
+				});
+			});
+			return n;
 		},
 		legend: function(data) {
 			var _ = this._;
 			CT.dom.setContent(_.nodes.legend, [
-				_.leg(data.balances),
+				_.leg(data.balances, true),
 				_.leg(data.strategists)
 			]);
 		},
@@ -61,8 +69,8 @@ ab.dash.Dash = CT.Class({
 	update: function(data) {
 		this.log(data);
 		this._.up(data.message.balances);
-		this._.legend(data.message);
 		this._.charts(data.message);
+		this._.legend(data.message);
 	},
 	load: function() {
 		CT.pubsub.set_autohistory(true);
