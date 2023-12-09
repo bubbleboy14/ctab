@@ -19,10 +19,14 @@ ab.dash.Dash = CT.Class({
 		leg: function(data) {
 			var _ = this._;
 			return CT.dom.flex(Object.keys(data).map(function(d) {
-				if (typeof data[d] == "object")
-					return [d, _.leg(data[d])];
+				if (typeof data[d] == "object") {
+					return CT.dom.div([
+						CT.dom.div(d, "centered"),
+						_.leg(data[d])
+					], "w1");
+				}
 				return "<b>" + d + "</b>: " + data[d];
-			}), "bordered row");
+			}), "bordered row jcbetween");
 		},
 		legend: function(data) {
 			var _ = this._;
