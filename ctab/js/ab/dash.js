@@ -46,8 +46,9 @@ ab.dash.Dash = CT.Class({
 	},
 	build: function() {
 		var nz = this._.nodes;
-		nz.charts = CT.dom.div();
 		nz.legend = CT.dom.div();
+		nz.charts = CT.dom.div();
+		nz.charts.style.height = "calc(100vh - 220px)";
 		CT.dom.setMain([
 			nz.charts,
 			nz.legend
