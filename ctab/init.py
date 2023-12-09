@@ -12,6 +12,7 @@ routes = {
     "/_ab": "_ab.py"
 }
 cfg = {
+	"office": 0,
 	"mon": {
 		"interval": 1
 	}
