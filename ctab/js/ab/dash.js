@@ -30,7 +30,7 @@ ab.dash.Dash = CT.Class({
 				}
 				lab = CT.dom.span(d, "bold");
 				labs.push(lab);
-				return CT.dom.div([lab, CT.dom.pad(), CT.dom.span(data[d])], "padded");
+				return CT.dom.div([lab, CT.dom.pad(), CT.dom.span(data[d])], "smallpadded");
 			}), "bordered row jcbetween");
 			colored && CT.dom.className("ct-line", _.nodes.charts).forEach(function(n, i) {
 				labs[i].style.color
