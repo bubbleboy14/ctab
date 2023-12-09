@@ -32,11 +32,9 @@ ab.dash.Dash = CT.Class({
 				labs.push(lab);
 				return CT.dom.div([lab, CT.dom.pad(), CT.dom.span(data[d])], "padded");
 			}), "bordered row jcbetween");
-			colored && setTimeout(function() {
-				CT.dom.className("ct-line", _.nodes.charts).forEach(function(n, i) {
-					labs[i].style.color
-						= window.getComputedStyle(n).getPropertyValue("stroke");
-				});
+			colored && CT.dom.className("ct-line", _.nodes.charts).forEach(function(n, i) {
+				labs[i].style.color
+					= window.getComputedStyle(n).getPropertyValue("stroke");
 			});
 			return n;
 		},
