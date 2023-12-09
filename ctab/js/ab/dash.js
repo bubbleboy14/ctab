@@ -39,7 +39,8 @@ ab.dash.Dash = CT.Class({
 				v = upd[k];
 				if (isNaN(v))
 					v = parseFloat(v.slice(0, -1).split(" ($").pop());
-				d[k].push(v)
+				d[k].push(v);
+				d[k] = d[k].slice(-10);
 			}
 		}
 	},
