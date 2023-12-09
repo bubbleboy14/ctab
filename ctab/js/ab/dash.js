@@ -34,7 +34,7 @@ ab.dash.Dash = CT.Class({
 	build: function() {
 		CT.dom.setMain([
 			CT.dom.div("dash", "bigger"),
-			this._.nodes.legend
+			this._.nodes.legend,
 			this._.nodes.charts
 		]);
 	},
