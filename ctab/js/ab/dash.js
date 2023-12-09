@@ -8,11 +8,13 @@ ab.dash = {
 ab.dash.Dash = CT.Class({
 	CLASSNAME: "ab.dash.Dash",
 	_: {
+		data: {},
 		nodes: {},
 		charts: function(data) {
-			CT.dom.setContent(this._.nodes.charts, [
-				"CHARTS (TODO)"
-			]);
+			var _ = this._;
+			new Chartist.Line(_.nodes.charts, {
+				series: Object.values(_.data)
+			});
 		},
 		leg: function(data) {
 			var _ = this._;
@@ -28,6 +30,17 @@ ab.dash.Dash = CT.Class({
 				_.leg(data.balances),
 				_.leg(data.strategists)
 			]);
+		},
+		up: function(upd) {
+			var k, v, d = this._.data;
+			for (k in upd) {
+				if (!d[k])
+					d[k] = [];
+				v = upd[k];
+				if (isNaN(v))
+					v = parseFloat(v.slice(0, -1).split(" ($").pop());
+				d[k].push(v)
+			}
 		}
 	},
 	build: function() {
@@ -41,6 +54,7 @@ ab.dash.Dash = CT.Class({
 	},
 	update: function(data) {
 		this.log(data);
+		this._.up(data.message.balances);
 		this._.legend(data.message);
 		this._.charts(data.message);
 	},
