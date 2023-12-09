@@ -15,7 +15,7 @@ ab.dash.Dash = CT.Class({
 		leg: function(data) {
 			var _ = this._;
 			return Object.keys(data).map(function(d) {
-				if (isNaN(data[d]))
+				if (typeof data[d] == "object")
 					return [d, _.leg(data[d])];
 				return d + ": " + data[d];
 			});
@@ -56,4 +56,4 @@ ab.dash.Dash = CT.Class({
 		this.load();
 		this.build();
 	}
-})
+});
