@@ -10,10 +10,14 @@ ab.dash.Dash = CT.Class({
 	_: {
 		data: {},
 		nodes: {},
-		charts: function(data) {
+		chart2: ["diff", "dph"],
+		charts: function() {
 			var _ = this._;
-			new Chartist.Line(_.nodes.charts, {
-				series: Object.values(_.data)
+			new Chartist.Line(_.nodes.chart1, {
+				series: Object.keys(_.data).filter(k => !_.chart2.includes(k)).map(k => _.data[k])
+			});
+			new Chartist.Line(_.nodes.chart2, {
+				series: _.chart2.map(k => _.data[k])
 			});
 		},
 		leg: function(data, colored) {
@@ -59,7 +63,9 @@ ab.dash.Dash = CT.Class({
 	build: function() {
 		var nz = this._.nodes;
 		nz.legend = CT.dom.div();
-		nz.charts = CT.dom.div();
+		nz.chart1 = CT.dom.div(null, "w1-2");
+		nz.chart2 = CT.dom.div(null, "w1-2");
+		nz.charts = CT.dom.flex([nz.chart1, nz.chart2]);
 		nz.charts.style.height = "calc(100vh - 256px)";
 		CT.dom.setMain([
 			nz.charts,
@@ -69,7 +75,7 @@ ab.dash.Dash = CT.Class({
 	update: function(data) {
 		this.log(data);
 		this._.up(data.message.balances);
-		this._.charts(data.message);
+		this._.charts();
 		this._.legend(data.message);
 	},
 	load: function() {
