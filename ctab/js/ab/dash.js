@@ -25,7 +25,7 @@ ab.dash.Dash = CT.Class({
 						_.leg(data[d])
 					], "w1");
 				}
-				return "<b>" + d + "</b>: " + data[d];
+				return CT.dom.div("<b>" + d + "</b>: " + data[d], "padded");
 			}), "bordered row jcbetween");
 		},
 		legend: function(data) {
@@ -52,7 +52,7 @@ ab.dash.Dash = CT.Class({
 		var nz = this._.nodes;
 		nz.legend = CT.dom.div();
 		nz.charts = CT.dom.div();
-		nz.charts.style.height = "calc(100vh - 220px)";
+		nz.charts.style.height = "calc(100vh - 256px)";
 		CT.dom.setMain([
 			nz.charts,
 			nz.legend
