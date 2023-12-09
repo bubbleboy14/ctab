@@ -1,17 +1,14 @@
 ab.dash = {
 	_: {},
 	init: function() {
-		ab.dash._.dash = new ab.dash.Dash(core.config.ab.dash);
+		ab.dash._.dash = new ab.dash.Dash(core.config.ctab.dash);
 	}
 };
 
 ab.dash.Dash = CT.Class({
 	CLASSNAME: "ab.dash.Dash",
 	_: {
-		nodes: {
-			charts: CT.dom.div(),
-			legend: CT.dom.div()
-		},
+		nodes: {},
 		charts: function(data) {
 
 		},
@@ -32,18 +29,22 @@ ab.dash.Dash = CT.Class({
 		}
 	},
 	build: function() {
+		var nz = this._.nodes;
+		nz.charts = CT.dom.div();
+		nz.legend = CT.dom.div();
 		CT.dom.setMain([
 			CT.dom.div("dash", "bigger"),
-			this._.nodes.legend,
-			this._.nodes.charts
+			nz.legend,
+			nz.charts
 		]);
 	},
-	update: function(message) {
-		this.log(message);
-		this._.legend(message.data);
-		this._.charts(message.data);
+	update: function(data) {
+		this.log(data);
+		this._.legend(data.message);
+		this._.charts(data.message);
 	},
 	load: function() {
+		CT.pubsub.set_autohistory(true);
 		CT.pubsub.connect(location.hostname, this.opts.port);
 		CT.pubsub.set_cb("message", this.update);
 		CT.pubsub.subscribe("swapmon");
