@@ -30,7 +30,7 @@ ab.dash.Dash = CT.Class({
 				}
 				lab = CT.dom.span(d, "bold");
 				labs.push(lab);
-				return CT.dom.div([lab, CT.dom.pad(), CT.dom.span(data[d])], "smallpadded");
+				return CT.dom.div([lab, CT.dom.pad(), CT.dom.span(data[d])], "p1");
 			}), "bordered row jcbetween");
 			colored && CT.dom.className("ct-line", _.nodes.charts).forEach(function(n, i) {
 				labs[i].style.color
@@ -64,7 +64,7 @@ ab.dash.Dash = CT.Class({
 		nz.chart1 = CT.dom.div(null, "w1-2");
 		nz.chart2 = CT.dom.div(null, "w1-2");
 		nz.charts = CT.dom.flex([nz.chart1, nz.chart2]);
-		nz.charts.style.height = "calc(100vh - 256px)";
+		nz.charts.style.height = "calc(100vh - 220px)";
 		CT.dom.setMain([
 			nz.charts,
 			nz.legend
