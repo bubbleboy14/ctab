@@ -10,21 +10,23 @@ ab.dash.Dash = CT.Class({
 	_: {
 		nodes: {},
 		charts: function(data) {
-
+			CT.dom.setContent(this._.nodes.charts, [
+				"CHARTS (TODO)"
+			]);
 		},
 		leg: function(data) {
 			var _ = this._;
-			return Object.keys(data).map(function(d) {
+			return CT.dom.flex(Object.keys(data).map(function(d) {
 				if (typeof data[d] == "object")
 					return [d, _.leg(data[d])];
-				return d + ": " + data[d];
-			});
+				return "<b>" + d + "</b>: " + data[d];
+			}), "bordered row");
 		},
 		legend: function(data) {
 			var _ = this._;
 			CT.dom.setContent(_.nodes.legend, [
-				CT.dom.div("legend", "big"),
-				_.leg(data)
+				_.leg(data.balances),
+				_.leg(data.strategists)
 			]);
 		}
 	},
@@ -33,9 +35,8 @@ ab.dash.Dash = CT.Class({
 		nz.charts = CT.dom.div();
 		nz.legend = CT.dom.div();
 		CT.dom.setMain([
-			CT.dom.div("dash", "bigger"),
-			nz.legend,
-			nz.charts
+			nz.charts,
+			nz.legend
 		]);
 	},
 	update: function(data) {
