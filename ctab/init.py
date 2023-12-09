@@ -1,3 +1,4 @@
+dirs = ["bots"]
 syms = {
     ".": ["_ab.py"],
     "js": ["ab"],
