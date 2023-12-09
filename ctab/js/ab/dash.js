@@ -20,6 +20,9 @@ ab.dash.Dash = CT.Class({
 				series: _.chart2.map(k => _.data[k])
 			});
 		},
+		counts: function(data) {
+			return CT.dom.div("orders: " + data.approved + " approved; " + data.filled + " filled", "up20 right");
+		},
 		leg: function(data, colored) {
 			var _ = this._, labs = [], lab, n = CT.dom.flex(Object.keys(data).map(function(d) {
 				if (typeof data[d] == "object") {
@@ -41,6 +44,7 @@ ab.dash.Dash = CT.Class({
 		legend: function(data) {
 			var _ = this._;
 			CT.dom.setContent(_.nodes.legend, [
+				_.counts(data.counts),
 				_.leg(data.balances, true),
 				_.leg(data.strategists)
 			]);
