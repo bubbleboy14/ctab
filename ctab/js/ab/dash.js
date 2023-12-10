@@ -24,6 +24,7 @@ ab.dash.Dash = CT.Class({
 			return CT.dom.div("orders: " + data.approved + " approved; " + data.filled + " filled", "up20 right");
 		},
 		leg: function(data, colored) {
+			if (!data) return "0";
 			var _ = this._, labs = [], lab, n = CT.dom.flex(Object.keys(data).map(function(d) {
 				if (typeof data[d] == "object") {
 					return CT.dom.div([
