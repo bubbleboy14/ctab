@@ -20,8 +20,9 @@ ab.dash.Dash = CT.Class({
 				series: _.chart2.map(k => _.data[k])
 			});
 		},
-		counts: function(data) {
-			return CT.dom.div("orders: " + data.approved + " approved; " + data.filled + " filled", "up20 right");
+		counts: function(d) {
+			return CT.dom.div("orders: " + d.approved + " approved; " + d.filled
+				+ " filled; " + d.cancelled + " cancelled", "up20 right");
 		},
 		leg: function(data, colored) {
 			if (!data) return "0";
