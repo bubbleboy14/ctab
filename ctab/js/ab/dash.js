@@ -24,9 +24,9 @@ ab.dash.Dash = CT.Class({
 			return CT.dom.div("orders: " + d.approved + " approved; " + d.filled
 				+ " filled; " + d.cancelled + " cancelled", "up20 right");
 		},
-		leg: function(data, colored) {
+		leg: function(data, colored, parenthetical) {
 			if (!data) return "0";
-			var _ = this._, labs = [], lab, n = CT.dom.flex(Object.keys(data).map(function(d) {
+			var _ = this._, labs = [], lab, val, n = CT.dom.flex(Object.keys(data).map(function(d) {
 				if (typeof data[d] == "object") {
 					return CT.dom.div([
 						CT.dom.div(d, "centered"),
@@ -35,7 +35,10 @@ ab.dash.Dash = CT.Class({
 				}
 				lab = CT.dom.span(d, "bold");
 				labs.push(lab);
-				return CT.dom.div([lab, CT.dom.pad(), CT.dom.span(data[d])], "p1");
+				val = data[d];
+				if (parenthetical)
+					val += " - actual: " + parenthetical[d];
+				return CT.dom.div([lab, CT.dom.pad(), CT.dom.span(val)], "p1");
 			}), "bordered row jcbetween");
 			colored && CT.dom.className("ct-line", _.nodes.charts).forEach(function(n, i) {
 				labs[i].style.color
@@ -47,7 +50,7 @@ ab.dash.Dash = CT.Class({
 			var _ = this._;
 			CT.dom.setContent(_.nodes.legend, [
 				_.counts(data.counts),
-				_.leg(data.balances, true),
+				_.leg(data.balances.theoretical, true, data.balances.actual),
 				_.leg(data.strategists)
 			]);
 		},
@@ -70,7 +73,7 @@ ab.dash.Dash = CT.Class({
 		nz.chart1 = CT.dom.div(null, "w1-2");
 		nz.chart2 = CT.dom.div(null, "w1-2");
 		nz.charts = CT.dom.flex([nz.chart1, nz.chart2]);
-		nz.charts.style.height = "calc(100vh - 220px)";
+		nz.charts.style.height = "calc(100vh - 238px)";
 		CT.dom.setMain([
 			nz.charts,
 			nz.legend
@@ -78,7 +81,8 @@ ab.dash.Dash = CT.Class({
 	},
 	update: function(data) {
 		this.log(data);
-		this._.up(data.message.balances);
+		this._.up(data.message.balances.actual);
+		this._.up(data.message.balances.theoretical);
 		this._.charts();
 		this._.legend(data.message);
 	},
