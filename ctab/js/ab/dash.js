@@ -49,19 +49,17 @@ ab.dash.Dash = CT.Class({
 			return n;
 		},
 		trades: function(data) {
-			var nz = this._.nodes, proc = function(t, bold) {
-				tsig = t.amount + " " + t.symbol + " @ " + t.price;
-				if (bold)
-					tsig = "<b>" + tsig + "</b>";
+			var nz = this._.nodes, proc = function(t, cname) {
+				tnode = CT.dom.div(t.amount + " " + t.symbol + " @ " + t.price, cname);
 				if (t.side == "sell")
-					sells.push(tsig);
+					sells.push(tnode);
 				else
-					buys.push(tsig);
-			}, sells = [], buys = [], trade, tsig;
+					buys.push(tnode);
+			}, sells = [], buys = [], trade, tnode;
 			for (trade in data.actives)
-				proc(data.actives[trade], true);
+				proc(data.actives[trade], "bold");
 			for (trade of data.backlog)
-				proc(trade);
+				proc(trade, "yellow");
 			CT.dom.setContent(nz.sells, sells);
 			CT.dom.setContent(nz.buys, buys);
 		},
