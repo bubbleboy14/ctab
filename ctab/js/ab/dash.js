@@ -46,6 +46,21 @@ ab.dash.Dash = CT.Class({
 			});
 			return n;
 		},
+		trades: function(data) {
+			var nz = this._.nodes, proc = function(t) {
+				tsig = t.amount + " " + t.symbol + " @ " + t.price;
+				if (t.side == "sell")
+					sells.push(tsig);
+				else
+					buys.push(tsig);
+			}, sells = [], buys = [], trade, tsig;
+			for (trade of data.backlog)
+				proc(trade);
+			for (trade in data.actives)
+				proc(data.actives[trade]);
+			CT.dom.setContent(nz.sells, sells);
+			CT.dom.setContent(nz.buys, buys);
+		},
 		legend: function(data) {
 			var _ = this._;
 			CT.dom.setContent(_.nodes.legend, [
@@ -72,19 +87,26 @@ ab.dash.Dash = CT.Class({
 		nz.legend = CT.dom.div();
 		nz.chart1 = CT.dom.div(null, "w1-2");
 		nz.chart2 = CT.dom.div(null, "w1-2");
-		nz.charts = CT.dom.flex([nz.chart1, nz.chart2]);
-		nz.charts.style.height = "calc(100vh - 238px)";
-		CT.dom.setMain([
-			nz.charts,
-			nz.legend
-		]);
+		nz.sells = CT.dom.div(null, "scrolly red sidecol");
+		nz.buys = CT.dom.div(null, "scrolly green sidecol");
+		nz.charts = CT.dom.flex([nz.chart1, nz.chart2], "midcharts");
+		CT.dom.setMain(CT.dom.flex([
+			nz.sells,
+			CT.dom.div([
+				nz.charts,
+				nz.legend
+			], "maincol"),
+			nz.buys
+		]));
 	},
 	update: function(data) {
+		var _ = this._, m = data.message;
 		this.log(data);
-		this._.up(data.message.balances.actual);
-		this._.up(data.message.balances.theoretical);
-		this._.charts();
-		this._.legend(data.message);
+		_.up(m.balances.actual);
+		_.up(m.balances.theoretical);
+		_.trades(m);
+		_.charts();
+		_.legend(m);
 	},
 	load: function() {
 		CT.pubsub.set_autohistory(true);
