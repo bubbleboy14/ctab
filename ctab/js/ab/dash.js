@@ -106,7 +106,6 @@ ab.dash.Dash = CT.Class({
 	update: function(data) {
 		var _ = this._, m = data.message;
 		this.log(data);
-		_.up(m.balances.actual);
 		_.up(m.balances.theoretical);
 		_.trades(m);
 		_.charts();
