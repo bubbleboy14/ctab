@@ -24,13 +24,13 @@ ab.dash.Dash = CT.Class({
 			return CT.dom.div("orders: " + d.approved + " approved; " + d.filled
 				+ " filled; " + d.cancelled + " cancelled", "up20 right");
 		},
-		leg: function(data, colored, parenthetical) {
+		leg: function(data, colored, parenthetical, round) {
 			if (!data) return "0";
 			var _ = this._, labs = [], lab, val, n = CT.dom.flex(Object.keys(data).map(function(d) {
 				if (typeof data[d] == "object") {
 					return CT.dom.div([
 						CT.dom.div(d, "centered"),
-						_.leg(data[d])
+						_.leg(data[d], colored, parenthetical && parenthetical[d], round)
 					], "w1");
 				}
 				lab = CT.dom.span(d, "bold");
@@ -38,6 +38,8 @@ ab.dash.Dash = CT.Class({
 				val = data[d];
 				if (parenthetical)
 					val += " - actual: " + parenthetical[d];
+				else if (round)
+					val = parseInt(val * 100000) / 100000;
 				return CT.dom.div([lab, CT.dom.pad(), CT.dom.span(val)], "p1");
 			}), "bordered row jcbetween");
 			colored && CT.dom.className("ct-line", _.nodes.charts).forEach(function(n, i) {
@@ -66,7 +68,7 @@ ab.dash.Dash = CT.Class({
 			CT.dom.setContent(_.nodes.legend, [
 				_.counts(data.counts),
 				_.leg(data.balances.theoretical, true, data.balances.actual),
-				_.leg(data.strategists)
+				_.leg(data.strategists, false, null, true)
 			]);
 		},
 		up: function(upd) {
