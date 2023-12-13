@@ -1,10 +1,10 @@
 .midcharts {
-	height: calc(100vh - 256px);
+	height: calc(100vh - 238px);
 }
 
 .sidecol {
-	height: 100%;
 	width: 140px;
+	height: calc(100vh - 100px);
 }
 
 .maincol {
