@@ -1,23 +1,28 @@
 ab.dash = {
-	_: {},
+	_: {
+		chart1: ["USD", "ETH", "BTC", "USD actual", "ETH actual", "BTC actual"],
+		chart2: ["diff", "dph", "diff actual", "dph actual"]
+	},
 	init: function() {
 		ab.dash._.dash = new ab.dash.Dash(core.config.ctab.dash);
 	}
 };
+
+var d_  = ab.dash._;
+d_.charts = d_.chart1.concat(d_.chart2);
 
 ab.dash.Dash = CT.Class({
 	CLASSNAME: "ab.dash.Dash",
 	_: {
 		data: {},
 		nodes: {},
-		chart2: ["diff", "dph"],
 		charts: function() {
 			var _ = this._;
 			new Chartist.Line(_.nodes.chart1, {
-				series: Object.keys(_.data).filter(k => !_.chart2.includes(k)).map(k => _.data[k])
+				series: d_.chart1.map(k => _.data[k])
 			});
 			new Chartist.Line(_.nodes.chart2, {
-				series: _.chart2.map(k => _.data[k])
+				series: d_.chart2.map(k => _.data[k])
 			});
 		},
 		counts: function(d) {
@@ -26,7 +31,8 @@ ab.dash.Dash = CT.Class({
 		},
 		leg: function(data, colored, parenthetical, round) {
 			if (!data) return "0";
-			var _ = this._, labs = [], lab, val, n = CT.dom.flex(Object.keys(data).map(function(d) {
+			var _ = this._, val, cont, lab, labs = {
+			}, n = CT.dom.flex(Object.keys(data).map(function(d) {
 				if (typeof data[d] == "object") {
 					return CT.dom.div([
 						CT.dom.div(d, "centered"),
@@ -34,16 +40,24 @@ ab.dash.Dash = CT.Class({
 					], "w1");
 				}
 				lab = CT.dom.span(d, "bold");
-				labs.push(lab);
+				cont = [lab, CT.dom.pad()];
+				labs[d] = lab;
 				val = data[d];
-				if (parenthetical)
-					val += " - actual: " + parenthetical[d];
-				else if (round)
-					val = parseInt(val * 100000) / 100000;
-				return CT.dom.div([lab, CT.dom.pad(), CT.dom.span(val)], "p1");
+				if (round)
+					val = _.rounder(val);
+				cont.push(CT.dom.span(val));
+				if (parenthetical) {
+					lab = CT.dom.span("actual", "bold");
+					labs[d + " actual"] = lab;
+					cont.push(CT.dom.pad());
+					cont.push(lab);
+					cont.push(CT.dom.pad());
+					cont.push(CT.dom.span(parenthetical[d]));
+				}
+				return CT.dom.div(cont, "p1");
 			}), "bordered row jcbetween");
 			colored && CT.dom.className("ct-line", _.nodes.charts).forEach(function(n, i) {
-				labs[i].style.color
+				labs[d_.charts[i]].style.color
 					= window.getComputedStyle(n).getPropertyValue("stroke");
 			});
 			return n;
@@ -82,6 +96,32 @@ ab.dash.Dash = CT.Class({
 				d[k].push(v);
 				d[k] = d[k].slice(-10);
 			}
+		},
+		rounder: function(val, factor) {
+			factor = factor || 10000;
+			return parseInt(val * factor) / factor;
+		},
+		round: function(bals) {
+			var k, v, a, b, r = this._.rounder;
+			for (k in bals) {
+				v = bals[k];
+				if (isNaN(v)) {
+					[a, b] = v.slice(0, -1).split(" ($");
+					v = r(a, 1000) + " ($" + r(b, 100) + ")";
+				} else
+					v = r(v);
+				bals[k] = v;
+			}
+		},
+		balup: function(bals) {
+			var k, all = {}, _ = this._;
+			_.round(bals.theoretical);
+			_.round(bals.actual);
+			Object.assign(all, bals.theoretical);
+			for (k in bals.actual)
+				all[k + " actual"] = bals.actual[k];
+			this.log("updated balances:", Object.keys(all));
+			_.up(all);
 		}
 	},
 	build: function() {
@@ -104,7 +144,7 @@ ab.dash.Dash = CT.Class({
 	update: function(data) {
 		var _ = this._, m = data.message;
 		this.log(data);
-		_.up(m.balances.theoretical);
+		_.balup(m.balances);
 		_.trades(m);
 		_.charts();
 		_.legend(m);
