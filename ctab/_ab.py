@@ -1,8 +1,8 @@
-from mkswap import presets, Office
+from mkswap import presets, getOffice
 from cantools.web import respond, succeed
 from cantools import config
 
-office = Office(**presets[int(config.ctab.office)])
+office = getOffice(**presets[int(config.ctab.office)])
 
 def response():
 	succeed(office.status())
