@@ -26,8 +26,8 @@ ab.dash.Dash = CT.Class({
 			});
 		},
 		counts: function(d) {
-			return CT.dom.div("orders: " + d.approved + " approved; " + d.filled
-				+ " filled; " + d.cancelled + " cancelled", "up20 right");
+			return CT.dom.div("orders: " + d.approved + " approved; " + d.active + " active; "
+				+ d.filled + " filled; " + d.cancelled + " cancelled", "up20 right");
 		},
 		leg: function(data, colored, parenthetical, round) {
 			if (!data) return "0";
