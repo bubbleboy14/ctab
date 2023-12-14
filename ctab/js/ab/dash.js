@@ -54,7 +54,7 @@ ab.dash.Dash = CT.Class({
 					cont.push(CT.dom.pad());
 					cont.push(CT.dom.span(parenthetical[d]));
 				}
-				return CT.dom.div(cont, "p1");
+				return CT.dom.div(cont, "slightlysmall p1");
 			}), "bordered row jcbetween");
 			colored && CT.dom.className("ct-line", _.nodes.charts).forEach(function(n, i) {
 				labs[d_.charts[i]].style.color
@@ -92,13 +92,13 @@ ab.dash.Dash = CT.Class({
 					d[k] = [];
 				v = upd[k];
 				if (isNaN(v))
-					v = parseFloat(v.slice(0, -1).split(" ($").pop());
+					v = parseFloat(v.split(" $").pop());
 				d[k].push(v);
 				d[k] = d[k].slice(-10);
 			}
 		},
 		rounder: function(val, factor) {
-			factor = factor || 10000;
+			factor = factor || 100000;
 			return parseInt(val * factor) / factor;
 		},
 		round: function(bals) {
@@ -107,7 +107,7 @@ ab.dash.Dash = CT.Class({
 				v = bals[k];
 				if (isNaN(v)) {
 					[a, b] = v.slice(0, -1).split(" ($");
-					v = r(a, 1000) + " ($" + r(b, 100) + ")";
+					v = r(a) + " $" + r(b, 100);
 				} else
 					v = r(v);
 				bals[k] = v;
