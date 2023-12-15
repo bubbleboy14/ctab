@@ -2,7 +2,8 @@ ab.dash = {
 	_: {
 		chart1: ["USD", "ETH", "BTC", "USD actual", "ETH actual", "BTC actual"],
 		chart2: ["diff", "dph", "diff actual", "dph actual"],
-		noclix: ["staging", "live"]
+		noclix: ["staging", "live"],
+		slice: 10
 	},
 	init: function() {
 		ab.dash._.dash = new ab.dash.Dash(core.config.ctab.dash);
@@ -85,8 +86,10 @@ ab.dash.Dash = CT.Class({
 							prompt: "select a value for " + d,
 							cb: function(rval) {
 								CT.dom.setContent(vnode, rval);
-								onclick(_.tp2o(tpath, isbool ?
-									(rval == "true") : parseInt(rval)));
+								rval = isbool ? (rval == "true") : parseInt(rval);
+								if (d == "actives")
+									d_.slice = rval;
+								onclick(_.tp2o(tpath, rval));
 							}
 						};
 						if (isbool) {
@@ -138,7 +141,7 @@ ab.dash.Dash = CT.Class({
 				if (isNaN(v))
 					v = parseFloat(v.split(" $").pop());
 				d[k].push(v);
-				d[k] = d[k].slice(-10);
+				d[k] = d[k].slice(-d_.slice);
 			}
 		},
 		rounder: function(val, factor) {
