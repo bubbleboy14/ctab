@@ -1,7 +1,8 @@
 ab.dash = {
 	_: {
 		chart1: ["USD", "ETH", "BTC", "USD actual", "ETH actual", "BTC actual"],
-		chart2: ["diff", "dph", "diff actual", "dph actual"]
+		chart2: ["diff", "dph", "diff actual", "dph actual"],
+		noclix: ["staging", "live"]
 	},
 	init: function() {
 		ab.dash._.dash = new ab.dash.Dash(core.config.ctab.dash);
@@ -16,6 +17,15 @@ ab.dash.Dash = CT.Class({
 	_: {
 		data: {},
 		nodes: {},
+		ab: function(cb, action, params) {
+			CT.net.post({
+				path: "/_ab",
+				params: CT.merge(params, {
+					action: action || "curconf"
+				}),
+				cb: cb
+			});
+		},
 		charts: function() {
 			var _ = this._;
 			new Chartist.Line(_.nodes.chart1, {
@@ -29,23 +39,37 @@ ab.dash.Dash = CT.Class({
 			return CT.dom.div("orders: " + d.approved + " approved; " + d.active + " active; "
 				+ d.filled + " filled; " + d.cancelled + " cancelled", "up20 right");
 		},
-		leg: function(data, colored, parenthetical, round) {
+		tp2o: function(tpath, val) {
+			var t, full = o = {};
+			for (t of tpath.slice(0, -1))
+				o = o[t] = {};
+			o[tpath.pop()] = val;
+			return full;
+		},
+		leg: function(data, colored, parenthetical, round, onclick, tpath) {
 			if (!data) return "0";
-			var _ = this._, val, cont, lab, labs = {
+			tpath = tpath || [];
+			var _ = this._, val, cont, vnode, dnode, isbool, lab, labs = {
 			}, n = CT.dom.flex(Object.keys(data).map(function(d) {
+				tpath = tpath.slice();
+				tpath.push(d);
 				if (typeof data[d] == "object") {
 					return CT.dom.div([
 						CT.dom.div(d, "centered"),
-						_.leg(data[d], colored, parenthetical && parenthetical[d], round)
+						_.leg(data[d], colored, parenthetical && parenthetical[d], round, onclick, tpath)
 					], "w1");
 				}
 				lab = CT.dom.span(d, "bold");
 				cont = [lab, CT.dom.pad()];
 				labs[d] = lab;
 				val = data[d];
+				isbool = typeof(val) == "boolean";
 				if (round)
 					val = _.rounder(val);
-				cont.push(CT.dom.span(val));
+				else if (isbool)
+					val = val.toString();
+				vnode = CT.dom.span(val);
+				cont.push(vnode);
 				if (parenthetical) {
 					lab = CT.dom.span("actual", "bold");
 					labs[d + " actual"] = lab;
@@ -54,7 +78,27 @@ ab.dash.Dash = CT.Class({
 					cont.push(CT.dom.pad());
 					cont.push(CT.dom.span(parenthetical[d]));
 				}
-				return CT.dom.div(cont, "slightlysmall p1");
+				dnode = CT.dom.div(cont, "slightlysmall p1");
+				if (onclick && !d_.noclix.includes(d)) {
+					dnode.onclick = function() {
+						var popts = {
+							prompt: "select a value for " + d,
+							cb: function(rval) {
+								CT.dom.setContent(vnode, rval);
+								onclick(_.tp2o(tpath, isbool ?
+									(rval == "true") : parseInt(rval)));
+							}
+						};
+						if (isbool) {
+							popts.style = "single-choice";
+							popts.data = ["true", "false"];
+						}
+						CT.modal.prompt(popts);
+					};
+					dnode.classList.add("hoverglow");
+					dnode.classList.add("pointer");
+				}
+				return dnode;
 			}), "bordered row jcbetween");
 			colored && CT.dom.className("ct-line", _.nodes.charts).forEach(function(n, i) {
 				labs[d_.charts[i]].style.color
@@ -120,19 +164,25 @@ ab.dash.Dash = CT.Class({
 			Object.assign(all, bals.theoretical);
 			for (k in bals.actual)
 				all[k + " actual"] = bals.actual[k];
-			this.log("updated balances:", Object.keys(all));
+//			this.log("updated balances:", Object.keys(all));
 			_.up(all);
 		},
-		setConf: function(curconf) {
+		upConf: function(cobj) {
+			this._.ab(() => this.log("conf updated!"), "setconf", {
+				mod: cobj
+			});
+		},
+		loadConf: function(curconf) {
 			var _ = this._;
 			_.curconf = curconf;
 			_.nodes.conf = CT.dom.div();
-			CT.dom.setContent(_.nodes.conf, _.leg(curconf));
+			CT.dom.setContent(_.nodes.conf, _.leg(curconf,
+				false, null, false, _.upConf));
 		}
 	},
 	build: function(curconf) {
 		var _ = this._, nz = _.nodes;
-		_.setConf(curconf);
+		_.loadConf(curconf);
 		nz.legend = CT.dom.div();
 		nz.chart1 = CT.dom.div(null, "w1-2");
 		nz.chart2 = CT.dom.div(null, "w1-2");
@@ -151,7 +201,7 @@ ab.dash.Dash = CT.Class({
 	},
 	update: function(data) {
 		var _ = this._, m = data.message;
-		this.log(data);
+//		this.log(data);
 		_.balup(m.balances);
 		_.trades(m);
 		_.charts();
@@ -162,13 +212,7 @@ ab.dash.Dash = CT.Class({
 		CT.pubsub.connect(location.hostname, this.opts.port);
 		CT.pubsub.set_cb("message", this.update);
 		CT.pubsub.subscribe("swapmon");
-		CT.net.post({
-			path: "/_ab",
-			params: {
-				action: "curconf"
-			},
-			cb: this.build
-		})
+		this._.ab(this.build);
 	},
 	init: function(opts) {
 		this.opts = opts = CT.merge(opts, {
