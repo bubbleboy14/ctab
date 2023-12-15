@@ -1,6 +1,6 @@
 dirs = ["bots"]
 syms = {
-    ".": ["_ab.py"],
+    ".": ["_ab.py", "swapper.py"],
     "js": ["ab"],
     "css": ["ab.css"],
     "html": ["ab"],
