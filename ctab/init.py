@@ -22,7 +22,7 @@ cfg = {
     },
     "office": {
         "index": 0,
-        "verbose": True
+        "verbose": False
     },
     "base": {
         "unspammed": True
@@ -31,7 +31,7 @@ cfg = {
         "base": {
             "inner": 10,
             "outer": 40,
-            "loud": True
+            "loud": False
         },
         "rsi": {
             "size": 10,
