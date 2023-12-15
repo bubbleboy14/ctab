@@ -122,10 +122,17 @@ ab.dash.Dash = CT.Class({
 				all[k + " actual"] = bals.actual[k];
 			this.log("updated balances:", Object.keys(all));
 			_.up(all);
+		},
+		setConf: function(curconf) {
+			var _ = this._;
+			_.curconf = curconf;
+			_.nodes.conf = CT.dom.div();
+			CT.dom.setContent(_.nodes.conf, _.leg(curconf));
 		}
 	},
-	build: function() {
-		var nz = this._.nodes;
+	build: function(curconf) {
+		var _ = this._, nz = _.nodes;
+		_.setConf(curconf);
 		nz.legend = CT.dom.div();
 		nz.chart1 = CT.dom.div(null, "w1-2");
 		nz.chart2 = CT.dom.div(null, "w1-2");
@@ -135,6 +142,7 @@ ab.dash.Dash = CT.Class({
 		CT.dom.setMain(CT.dom.flex([
 			nz.sells,
 			CT.dom.div([
+				nz.conf,
 				nz.charts,
 				nz.legend
 			], "maincol"),
@@ -154,12 +162,18 @@ ab.dash.Dash = CT.Class({
 		CT.pubsub.connect(location.hostname, this.opts.port);
 		CT.pubsub.set_cb("message", this.update);
 		CT.pubsub.subscribe("swapmon");
+		CT.net.post({
+			path: "/_ab",
+			params: {
+				action: "curconf"
+			},
+			cb: this.build
+		})
 	},
 	init: function(opts) {
 		this.opts = opts = CT.merge(opts, {
 
 		});
 		this.load();
-		this.build();
 	}
 });
