@@ -44,20 +44,19 @@ ab.dash.Dash = CT.Class({
 			var t, full = o = {};
 			for (t of tpath.slice(0, -1))
 				o = o[t] = {};
-			o[tpath.pop()] = val;
+			o[tpath[tpath.length - 1]] = val;
 			return full;
 		},
 		leg: function(data, colored, parenthetical, round, onclick, tpath) {
 			if (!data) return "0";
 			tpath = tpath || [];
-			var _ = this._, val, cont, vnode, dnode, isbool, lab, labs = {
-			}, n = CT.dom.flex(Object.keys(data).map(function(d) {
-				tpath = tpath.slice();
-				tpath.push(d);
+			var _ = this._, cont, dnode, lab, labs = {}, d2n = function(d) {
+				var val, vnode, isbool, mypath = tpath.slice();
+				mypath.push(d);
 				if (typeof data[d] == "object") {
 					return CT.dom.div([
 						CT.dom.div(d, "centered"),
-						_.leg(data[d], colored, parenthetical && parenthetical[d], round, onclick, tpath)
+						_.leg(data[d], colored, parenthetical && parenthetical[d], round, onclick, mypath)
 					], "w1");
 				}
 				lab = CT.dom.span(d, "bold");
@@ -69,6 +68,8 @@ ab.dash.Dash = CT.Class({
 					val = _.rounder(val);
 				else if (isbool)
 					val = val.toString();
+				else if (d == "actives")
+					d_.slice = val;
 				vnode = CT.dom.span(val);
 				cont.push(vnode);
 				if (parenthetical) {
@@ -89,7 +90,7 @@ ab.dash.Dash = CT.Class({
 								rval = isbool ? (rval == "true") : parseInt(rval);
 								if (d == "actives")
 									d_.slice = rval;
-								onclick(_.tp2o(tpath, rval));
+								onclick(_.tp2o(mypath, rval));
 							}
 						};
 						if (isbool) {
@@ -102,7 +103,7 @@ ab.dash.Dash = CT.Class({
 					dnode.classList.add("pointer");
 				}
 				return dnode;
-			}), "bordered row jcbetween");
+			}, n = CT.dom.flex(Object.keys(data).map(d2n), "bordered row jcbetween");
 			colored && CT.dom.className("ct-line", _.nodes.charts).forEach(function(n, i) {
 				labs[d_.charts[i]].style.color
 					= window.getComputedStyle(n).getPropertyValue("stroke");
