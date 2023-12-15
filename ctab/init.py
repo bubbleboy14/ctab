@@ -13,9 +13,17 @@ routes = {
     "/_ab": "_ab.py"
 }
 cfg = {
-    "office": 0,
-    "live": False,
-    "staging": True,
+    "comptroller": {
+        "actives": 10,
+        "live": False
+    },
+    "backend": {
+        "staging": True
+    },
+    "office": {
+        "index": 0,
+        "verbose": True
+    },
     "mon": {
         "interval": 1
     }
