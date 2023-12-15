@@ -24,6 +24,23 @@ cfg = {
         "index": 0,
         "verbose": True
     },
+    "base": {
+        "unspammed": True
+    },
+    "strategy": {
+        "base": {
+            "inner": 10,
+            "outer": 40,
+            "loud": True
+        },
+        "rsi": {
+            "size": 10,
+            "period": 14
+        },
+        "slosh": {
+            "vmult": 10
+        }
+    },
     "mon": {
         "interval": 1
     }
