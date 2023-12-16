@@ -22,7 +22,8 @@ cfg = {
     },
     "office": {
         "index": 0,
-        "verbose": False
+        "verbose": False,
+        "stagish": False
     },
     "base": {
         "unspammed": True

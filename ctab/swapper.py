@@ -1,6 +1,6 @@
 from mkswap import presets, getOffice
 from mkswap.base import setUnspammed
-from mkswap.office import setVerbose
+from mkswap.office import setVerbose, setStagish
 from mkswap.backend import setStaging
 from mkswap.comptroller import setLive, setActives
 from mkswap.strategy.base import setInner, setOuter, setLoud
@@ -22,6 +22,7 @@ def s2i(cfg, key):
 def prep():
 	s2b(tcfg.base, "unspammed")
 	s2b(tcfg.office, "verbose")
+	s2b(tcfg.office, "stagish")
 	s2b(tcfg.backend, "staging")
 	s2b(tcfg.comptroller, "live")
 	s2b(tcfg.strategy.base, "loud")
@@ -36,6 +37,7 @@ def prep():
 def setem():
 	setLive(tcfg.comptroller.live)
 	setVerbose(tcfg.office.verbose)
+	setStagish(tcfg.office.stagish)
 	setStaging(tcfg.backend.staging)
 	setUnspammed(tcfg.base.unspammed)
 	setActives(tcfg.comptroller.actives)
