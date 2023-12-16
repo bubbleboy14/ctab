@@ -68,7 +68,7 @@ ab.dash.Dash = CT.Class({
 					val = _.rounder(val);
 				else if (isbool)
 					val = val.toString();
-				else if (d == "inner")
+				else if (d == "outer")
 					d_.slice = val;
 				vnode = CT.dom.span(val);
 				cont.push(vnode);
@@ -88,7 +88,7 @@ ab.dash.Dash = CT.Class({
 							cb: function(rval) {
 								CT.dom.setContent(vnode, rval);
 								rval = isbool ? (rval == "true") : parseInt(rval);
-								if (d == "inner")
+								if (d == "outer")
 									d_.slice = rval;
 								onclick(_.tp2o(mypath, rval));
 							}
