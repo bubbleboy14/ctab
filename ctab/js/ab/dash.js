@@ -83,21 +83,25 @@ ab.dash.Dash = CT.Class({
 				dnode = CT.dom.div(cont, "slightlysmall p1");
 				if (onclick && !d_.noclix.includes(d)) {
 					dnode.onclick = function() {
-						var popts = {
+						if (isbool) {
+							val = (val == "true") ? "false" : "true";
+							CT.dom.setContent(vnode, val);
+							return onclick(_.tp2o(mypath, val == "true"));
+						}
+						CT.modal.prompt({
 							prompt: "select a value for " + d,
+							style: "number",
+							initial: val,
+							step: 1,
+							max: 40,
+							min: 1,
 							cb: function(rval) {
 								CT.dom.setContent(vnode, rval);
-								rval = isbool ? (rval == "true") : parseInt(rval);
 								if (d == "outer")
 									d_.slice = rval;
 								onclick(_.tp2o(mypath, rval));
 							}
-						};
-						if (isbool) {
-							popts.style = "single-choice";
-							popts.data = ["true", "false"];
-						}
-						CT.modal.prompt(popts);
+						});
 					};
 					dnode.classList.add("hoverglow");
 					dnode.classList.add("pointer");
