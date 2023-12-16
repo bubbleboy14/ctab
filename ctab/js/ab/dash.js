@@ -88,7 +88,7 @@ ab.dash.Dash = CT.Class({
 							cb: function(rval) {
 								CT.dom.setContent(vnode, rval);
 								rval = isbool ? (rval == "true") : parseInt(rval);
-								if (d == "actives")
+								if (d == "inner")
 									d_.slice = rval;
 								onclick(_.tp2o(mypath, rval));
 							}
