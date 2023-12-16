@@ -68,7 +68,7 @@ ab.dash.Dash = CT.Class({
 					val = _.rounder(val);
 				else if (isbool)
 					val = val.toString();
-				else if (d == "actives")
+				else if (d == "inner")
 					d_.slice = val;
 				vnode = CT.dom.span(val);
 				cont.push(vnode);
