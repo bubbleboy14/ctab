@@ -14,7 +14,7 @@ routes = {
 }
 cfg = {
     "comptroller": {
-        "actives": 10,
+        "actives": 20,
         "live": False
     },
     "backend": {
@@ -29,7 +29,7 @@ cfg = {
     },
     "strategy": {
         "base": {
-            "inner": 10,
+            "inner": 5,
             "outer": 40,
             "loud": False
         },
