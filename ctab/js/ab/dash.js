@@ -159,7 +159,7 @@ ab.dash.Dash = CT.Class({
 				v = bals[k];
 				if (isNaN(v)) {
 					[a, b] = v.slice(0, -1).split(" ($");
-					v = r(a) + " $" + r(b, 100);
+					v = r(a, 10000) + " $" + r(b, 100);
 				} else
 					v = r(v);
 				bals[k] = v;
