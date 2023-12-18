@@ -13,6 +13,11 @@ routes = {
     "/_ab": "_ab.py"
 }
 cfg = {
+    "harvester": {
+        "batch": 10,
+        "balance": False,
+        "network": "bitcoin"
+    },
     "comptroller": {
         "actives": 20,
         "live": False
