@@ -6,7 +6,8 @@ ab.dash = {
 		ofloro: ["strategy"],
 		orders: ["approved", "active", "filled", "cancelled"],
 		harvester: ["hauls", "harvest"],
-		slice: 10
+		slice: 10,
+		loud: false
 	},
 	init: function() {
 		ab.dash._.dash = new ab.dash.Dash(core.config.ctab.dash);
@@ -220,7 +221,7 @@ ab.dash.Dash = CT.Class({
 	},
 	update: function(data) {
 		var _ = this._, m = data.message;
-//		this.log(data);
+		d_.loud && this.log(data);
 		_.balup(m.balances);
 		_.trades(m);
 		_.charts();
@@ -232,6 +233,9 @@ ab.dash.Dash = CT.Class({
 		CT.pubsub.set_cb("message", this.update);
 		CT.pubsub.subscribe("swapmon");
 		this._.ab(this.build);
+	},
+	setLoud: function(isloud) {
+		d_.loud = isloud;
 	},
 	init: function(opts) {
 		this.opts = opts = CT.merge(opts, {
