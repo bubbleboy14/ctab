@@ -1,9 +1,10 @@
-from mkswap import presets, getOffice
 from mkswap.base import setUnspammed
-from mkswap.office import setVerbose, setStagish
+from mkswap import presets, getOffice
 from mkswap.backend import setStaging
+from mkswap.office import setVerbose, setStagish
 from mkswap.comptroller import setLive, setActives
 from mkswap.strategy.base import setInner, setOuter, setLoud
+from mkswap.harvester import setBatch, setBalance, setNetwork
 from mkswap.strategy.slosh import setVolatilityMult
 from mkswap.strategy.rsi import setSize, setPeriod
 from cantools.web import respond
@@ -13,8 +14,11 @@ from cantools import config
 tcfg = config.ctab
 
 def s2b(cfg, key):
-	if cfg[key] == "False":
+	v = cfg[key]
+	if v == "False":
 		cfg.update(key, False)
+	elif v == "True":
+		cfg.update(key, True)
 
 def s2i(cfg, key):
 	cfg[key] and cfg.update(key, int(cfg[key]))
@@ -25,6 +29,7 @@ def prep():
 	s2b(tcfg.office, "stagish")
 	s2b(tcfg.backend, "staging")
 	s2b(tcfg.comptroller, "live")
+	s2b(tcfg.harvester, "balance")
 	s2b(tcfg.strategy.base, "loud")
 	s2i(tcfg.comptroller, "actives")
 	s2i(tcfg.strategy.slosh, "vmult")
@@ -32,6 +37,7 @@ def prep():
 	s2i(tcfg.strategy.base, "outer")
 	s2i(tcfg.strategy.rsi, "period")
 	s2i(tcfg.strategy.rsi, "size")
+	s2i(tcfg.harvester, "batch")
 	s2i(tcfg.office, "index")
 
 def setem():
@@ -40,6 +46,9 @@ def setem():
 	setStagish(tcfg.office.stagish)
 	setStaging(tcfg.backend.staging)
 	setUnspammed(tcfg.base.unspammed)
+	setBatch(tcfg.harvester.batch)
+	setBalance(tcfg.harvester.balance)
+	setNetwork(tcfg.harvester.network)
 	setActives(tcfg.comptroller.actives)
 	setLoud(tcfg.strategy.base.loud)
 	setInner(tcfg.strategy.base.inner)

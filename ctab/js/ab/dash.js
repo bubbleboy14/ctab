@@ -2,8 +2,13 @@ ab.dash = {
 	_: {
 		chart1: ["USD", "ETH", "BTC", "USD actual", "ETH actual", "BTC actual"],
 		chart2: ["diff", "dph", "diff actual", "dph actual"],
-		noclix: ["staging", "stagish", "live"],
-		slice: 10
+		noclix: ["staging", "stagish", "live", "network"],
+		ofloro: ["strategy"],
+		orders: ["approved", "active", "filled", "cancelled"],
+		harvester: ["hauls", "harvest"],
+		csides: {harvester: "left", orders: "right"},
+		slice: 10,
+		loud: false
 	},
 	init: function() {
 		ab.dash._.dash = new ab.dash.Dash(core.config.ctab.dash);
@@ -36,9 +41,9 @@ ab.dash.Dash = CT.Class({
 				series: d_.chart2.map(k => _.data[k])
 			});
 		},
-		counts: function(d) {
-			return CT.dom.div("orders: " + d.approved + " approved; " + d.active + " active; "
-				+ d.filled + " filled; " + d.cancelled + " cancelled", "up20 right");
+		counts: function(data, prop) {
+			var d = data[prop], cname = "up20 " + d_.csides[prop];
+			return CT.dom.div(prop + ": " + d_[prop].map(p => d[p] + " " + p).join("; "), cname);
 		},
 		tp2o: function(tpath, val) {
 			var t, full = o = {};
@@ -132,7 +137,8 @@ ab.dash.Dash = CT.Class({
 		legend: function(data) {
 			var _ = this._;
 			CT.dom.setContent(_.nodes.legend, [
-				_.counts(data.counts),
+				_.counts(data, "orders"),
+				_.counts(data, "harvester"),
 				_.leg(data.balances.theoretical, true, data.balances.actual),
 				_.leg(data.strategists, false, null, true)
 			]);
@@ -181,11 +187,16 @@ ab.dash.Dash = CT.Class({
 			});
 		},
 		loadConf: function(curconf) {
-			var _ = this._;
-			_.curconf = curconf;
+			var _ = this._, prop, row2 = {};
+			for (prop of d_.ofloro) {
+				row2[prop] = curconf[prop];
+				delete curconf[prop];
+			}
 			_.nodes.conf = CT.dom.div();
-			CT.dom.setContent(_.nodes.conf, _.leg(curconf,
-				false, null, false, _.upConf));
+			CT.dom.setContent(_.nodes.conf, [
+				_.leg(curconf, false, null, false, _.upConf),
+				_.leg(row2, false, null, false, _.upConf)
+			]);
 		}
 	},
 	build: function(curconf) {
@@ -209,7 +220,7 @@ ab.dash.Dash = CT.Class({
 	},
 	update: function(data) {
 		var _ = this._, m = data.message;
-//		this.log(data);
+		d_.loud && this.log(data);
 		_.balup(m.balances);
 		_.trades(m);
 		_.charts();
@@ -221,6 +232,9 @@ ab.dash.Dash = CT.Class({
 		CT.pubsub.set_cb("message", this.update);
 		CT.pubsub.subscribe("swapmon");
 		this._.ab(this.build);
+	},
+	setLoud: function(isloud) {
+		d_.loud = isloud;
 	},
 	init: function(opts) {
 		this.opts = opts = CT.merge(opts, {
