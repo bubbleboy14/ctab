@@ -2,7 +2,7 @@ ab.dash = {
 	_: {
 		chart1: ["USD", "ETH", "BTC", "USD actual", "ETH actual", "BTC actual"],
 		chart2: ["diff", "dph", "diff actual", "dph actual"],
-		noclix: ["staging", "stagish", "live"],
+		noclix: ["staging", "stagish", "live", "network"],
 		slice: 10
 	},
 	init: function() {
