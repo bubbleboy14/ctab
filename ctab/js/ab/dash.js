@@ -6,6 +6,7 @@ ab.dash = {
 		ofloro: ["strategy"],
 		orders: ["approved", "active", "filled", "cancelled"],
 		harvester: ["hauls", "harvest"],
+		csides: {harvester: "left", orders: "right"},
 		slice: 10,
 		loud: false
 	},
@@ -41,9 +42,7 @@ ab.dash.Dash = CT.Class({
 			});
 		},
 		counts: function(data, prop) {
-			var d, cname = "up20 " + (prop ? "left" : "right");
-			prop = prop || "orders";
-			d = data[prop];
+			var d = data[prop], cname = "up20 " + d_.csides[prop];
 			return CT.dom.div(prop + ": " + d_[prop].map(p => d[p] + " " + p).join("; "), cname);
 		},
 		tp2o: function(tpath, val) {
@@ -138,7 +137,7 @@ ab.dash.Dash = CT.Class({
 		legend: function(data) {
 			var _ = this._;
 			CT.dom.setContent(_.nodes.legend, [
-				_.counts(data),
+				_.counts(data, "orders"),
 				_.counts(data, "harvester"),
 				_.leg(data.balances.theoretical, true, data.balances.actual),
 				_.leg(data.strategists, false, null, true)
