@@ -41,9 +41,10 @@ ab.dash.Dash = CT.Class({
 				series: d_.chart2.map(k => _.data[k])
 			});
 		},
-		counts: function(data, prop) {
-			var d = data[prop], cname = "up20 " + d_.csides[prop];
-			return CT.dom.div(prop + ": " + d_[prop].map(p => d[p] + " " + p).join("; "), cname);
+		counts: function(data, prop, round) {
+			var d = data[prop], cname = "up20 " + d_.csides[prop], r = this._.rounder,
+				parts = d_[prop].map(p => (round ? r(d[p]) : d[p]) + " " + p);
+			return CT.dom.div(prop + ": " + parts.join("; "), cname);
 		},
 		tp2o: function(tpath, val) {
 			var t, full = o = {};
@@ -138,7 +139,7 @@ ab.dash.Dash = CT.Class({
 			var _ = this._;
 			CT.dom.setContent(_.nodes.legend, [
 				_.counts(data, "orders"),
-				_.counts(data, "harvester"),
+				_.counts(data, "harvester", true),
 				_.leg(data.balances.theoretical, true, data.balances.actual),
 				_.leg(data.strategists, false, null, true)
 			]);
