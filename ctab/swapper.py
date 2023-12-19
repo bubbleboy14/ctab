@@ -4,7 +4,7 @@ from mkswap.backend import setStaging
 from mkswap.office import setVerbose, setStagish
 from mkswap.comptroller import setLive, setActives
 from mkswap.strategy.base import setInner, setOuter, setLoud
-from mkswap.harvester import setBatch, setBalance, setNetwork
+from mkswap.harvester import setSkim, setBatch, setBalance, setNetwork
 from mkswap.strategy.slosh import setVolatilityMult
 from mkswap.strategy.rsi import setSize, setPeriod
 from cantools.web import respond
@@ -29,6 +29,7 @@ def prep():
 	s2b(tcfg.office, "stagish")
 	s2b(tcfg.backend, "staging")
 	s2b(tcfg.comptroller, "live")
+	s2b(tcfg.harvester, "skim")
 	s2b(tcfg.harvester, "balance")
 	s2b(tcfg.strategy.base, "loud")
 	s2i(tcfg.comptroller, "actives")
@@ -46,6 +47,7 @@ def setem():
 	setStagish(tcfg.office.stagish)
 	setStaging(tcfg.backend.staging)
 	setUnspammed(tcfg.base.unspammed)
+	setSkim(tcfg.harvester.skim)
 	setBatch(tcfg.harvester.batch)
 	setBalance(tcfg.harvester.balance)
 	setNetwork(tcfg.harvester.network)
