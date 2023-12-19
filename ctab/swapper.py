@@ -3,7 +3,7 @@ from mkswap import presets, getOffice
 from mkswap.backend import setStaging
 from mkswap.office import setVerbose, setStagish
 from mkswap.comptroller import setLive, setActives
-from mkswap.strategy.base import setInner, setOuter, setLoud
+from mkswap.strategy.base import setInner, setOuter, setLong, setLoud
 from mkswap.harvester import setSkim, setBatch, setBalance, setNetwork
 from mkswap.strategy.slosh import setVolatilityMult
 from mkswap.strategy.rsi import setSize, setPeriod
@@ -36,6 +36,7 @@ def prep():
 	s2i(tcfg.strategy.slosh, "vmult")
 	s2i(tcfg.strategy.base, "inner")
 	s2i(tcfg.strategy.base, "outer")
+	s2i(tcfg.strategy.base, "long")
 	s2i(tcfg.strategy.rsi, "period")
 	s2i(tcfg.strategy.rsi, "size")
 	s2i(tcfg.harvester, "batch")
@@ -52,11 +53,12 @@ def setem():
 	setBalance(tcfg.harvester.balance)
 	setNetwork(tcfg.harvester.network)
 	setActives(tcfg.comptroller.actives)
-	setLoud(tcfg.strategy.base.loud)
 	setInner(tcfg.strategy.base.inner)
 	setOuter(tcfg.strategy.base.outer)
-	setPeriod(tcfg.strategy.rsi.period)
+	setLong(tcfg.strategy.base.long)
+	setLoud(tcfg.strategy.base.loud)
 	setSize(tcfg.strategy.rsi.size)
+	setPeriod(tcfg.strategy.rsi.period)
 	setVolatilityMult(tcfg.strategy.slosh.vmult)
 
 def response():

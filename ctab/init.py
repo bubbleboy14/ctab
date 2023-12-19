@@ -37,7 +37,8 @@ cfg = {
     "strategy": {
         "base": {
             "inner": 3,
-            "outer": 20,
+            "outer": 10,
+            "long": 40,
             "loud": False
         },
         "rsi": {
