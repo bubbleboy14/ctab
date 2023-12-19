@@ -5,7 +5,7 @@ from mkswap.office import setVerbose, setStagish
 from mkswap.comptroller import setLive, setActives, setPruneLimit
 from mkswap.strategy.base import setInner, setOuter, setLong, setLoud
 from mkswap.harvester import setSkim, setBatch, setBalance, setNetwork
-from mkswap.strategy.slosh import setVolatilityMult
+from mkswap.strategy.slosh import setVolatilityMult, setVolatilityCutoff
 from mkswap.strategy.rsi import setSize, setPeriod
 from cantools.web import respond
 from cantools.util import log
@@ -45,6 +45,7 @@ def prep():
 	s2i(tcfg.harvester, "batch")
 	s2i(tcfg.office, "index")
 	s2f(tcfg.comptroller, "prunelimit")
+	s2f(tcfg.strategy.slosh, "vcutoff")
 
 def setem():
 	setLive(tcfg.comptroller.live)
@@ -65,6 +66,7 @@ def setem():
 	setPeriod(tcfg.strategy.rsi.period)
 	setPruneLimit(tcfg.comptroller.prunelimit)
 	setVolatilityMult(tcfg.strategy.slosh.vmult)
+	setVolatilityCutoff(tcfg.strategy.slosh.vcutoff)
 
 def response():
 	log("initializing mkswap office", important=True)

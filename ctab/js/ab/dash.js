@@ -2,10 +2,11 @@ ab.dash = {
 	_: {
 		chart1: ["USD", "ETH", "BTC", "USD actual", "ETH actual", "BTC actual"],
 		chart2: ["diff", "dph", "diff actual", "dph actual"],
-		noclix: ["staging", "stagish", "live", "network", "prunelimit"],
+		noclix: ["staging", "stagish", "live", "network"],
 		ofloro: ["strategy"],
 		orders: ["approved", "active", "filled", "cancelled"],
 		harvester: ["hauls", "harvest"],
+		floats: ["prunelimit", "vcutoff"],
 		csides: {harvester: "left", orders: "right"},
 		slice: 10,
 		loud: false
@@ -56,7 +57,7 @@ ab.dash.Dash = CT.Class({
 		leg: function(data, colored, parenthetical, round, onclick, tpath) {
 			if (!data) return "0";
 			tpath = tpath || [];
-			var _ = this._, cont, dnode, lab, labs = {}, d2n = function(d) {
+			var _ = this._, cont, dnode, lab, labs = {}, popts, d2n = function(d) {
 				var val, vnode, isbool, mypath = tpath.slice();
 				mypath.push(d);
 				if (typeof data[d] == "object") {
@@ -94,7 +95,7 @@ ab.dash.Dash = CT.Class({
 							CT.dom.setContent(vnode, val);
 							return onclick(_.tp2o(mypath, val == "true"));
 						}
-						CT.modal.prompt({
+						popts = {
 							prompt: "select a value for " + d,
 							style: "number",
 							initial: val,
@@ -107,7 +108,13 @@ ab.dash.Dash = CT.Class({
 									d_.slice = rval;
 								onclick(_.tp2o(mypath, rval));
 							}
+						};
+						d_.floats.includes(d) && Object.assign(popts, {
+							max: 1,
+							min: 0.1,
+							step: 0.1
 						});
+						CT.modal.prompt(popts);
 					};
 					dnode.classList.add("hoverglow");
 					dnode.classList.add("pointer");
