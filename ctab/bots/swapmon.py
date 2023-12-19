@@ -4,14 +4,18 @@ from cantools.util import log
 from cantools.web import fetch
 
 wcfg = config.web
+mcfg = config.ctab.mon
+for ikey in ["interval", "timeout"]:
+	if type(mcfg[ikey]) is not int:
+		mcfg.update(ikey, int(mcfg[ikey]))
 
 class SwapMon(pubsub.Bot):
 	def __init__(self, server, channel, name="SwapMon"): # only one SwapMon..
 		pubsub.Bot.__init__(self, server, channel, name)
-		rel.timeout(config.ctab.mon.interval, self._tick)
+		rel.timeout(mcfg.interval, self._tick)
 
 	def _tick(self):
-		data = fetch(wcfg.host, "/_ab", wcfg.port, timeout=8, protocol=wcfg.protocol, ctjson=True)
+		data = fetch(wcfg.host, "/_ab", wcfg.port, timeout=mcfg.timeout, protocol=wcfg.protocol, ctjson=True)
 		log(data)
 		self.pub(data)
 		return True
