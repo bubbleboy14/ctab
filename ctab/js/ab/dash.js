@@ -2,7 +2,7 @@ ab.dash = {
 	_: {
 		chart1: ["USD", "ETH", "BTC", "USD actual", "ETH actual", "BTC actual"],
 		chart2: ["diff", "dph", "diff actual", "dph actual"],
-		noclix: ["staging", "stagish", "live", "network"],
+		noclix: ["staging", "stagish", "live", "network", "prunelimit"],
 		ofloro: ["strategy"],
 		orders: ["approved", "active", "filled", "cancelled"],
 		harvester: ["hauls", "harvest"],

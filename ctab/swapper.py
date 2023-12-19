@@ -2,7 +2,7 @@ from mkswap.base import setUnspammed
 from mkswap import presets, getOffice
 from mkswap.backend import setStaging
 from mkswap.office import setVerbose, setStagish
-from mkswap.comptroller import setLive, setActives
+from mkswap.comptroller import setLive, setActives, setPruneLimit
 from mkswap.strategy.base import setInner, setOuter, setLong, setLoud
 from mkswap.harvester import setSkim, setBatch, setBalance, setNetwork
 from mkswap.strategy.slosh import setVolatilityMult
@@ -23,6 +23,9 @@ def s2b(cfg, key):
 def s2i(cfg, key):
 	cfg[key] and cfg.update(key, int(cfg[key]))
 
+def s2f(cfg, key):
+	cfg[key] and cfg.update(key, float(cfg[key]))
+
 def prep():
 	s2b(tcfg.base, "unspammed")
 	s2b(tcfg.office, "verbose")
@@ -41,6 +44,7 @@ def prep():
 	s2i(tcfg.strategy.rsi, "size")
 	s2i(tcfg.harvester, "batch")
 	s2i(tcfg.office, "index")
+	s2f(tcfg.comptroller, "prunelimit")
 
 def setem():
 	setLive(tcfg.comptroller.live)
@@ -59,6 +63,7 @@ def setem():
 	setLoud(tcfg.strategy.base.loud)
 	setSize(tcfg.strategy.rsi.size)
 	setPeriod(tcfg.strategy.rsi.period)
+	setPruneLimit(tcfg.comptroller.prunelimit)
 	setVolatilityMult(tcfg.strategy.slosh.vmult)
 
 def response():

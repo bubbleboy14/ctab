@@ -20,8 +20,9 @@ cfg = {
         "network": "bitcoin"
     },
     "comptroller": {
+        "live": False,
         "actives": 20,
-        "live": False
+        "prunelimit": 0.1
     },
     "backend": {
         "staging": True
