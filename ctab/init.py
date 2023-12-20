@@ -17,7 +17,7 @@ cfg = {
         "batch": 10,
         "bottom": 50,
         "skim": False,
-        "balance": True,
+        "balance": False,
         "network": "bitcoin"
     },
     "comptroller": {
