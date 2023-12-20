@@ -48,7 +48,7 @@ cfg = {
             "period": 14
         },
         "slosh": {
-            "vmult": 8,
+            "vmult": 10,
             "vcutoff": 0.5
         }
     },
