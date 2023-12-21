@@ -151,6 +151,9 @@ ab.dash.Dash = CT.Class({
 				_.leg(data.strategists, false, null, true)
 			]);
 		},
+		cancels: function(cancels) {
+			CT.dom.setContent(this._.nodes.cancels, cancels);
+		},
 		up: function(upd) {
 			var k, v, d = this._.data;
 			for (k in upd) {
@@ -213,10 +216,12 @@ ab.dash.Dash = CT.Class({
 		nz.legend = CT.dom.div();
 		nz.chart1 = CT.dom.div(null, "w1-2");
 		nz.chart2 = CT.dom.div(null, "w1-2");
+		nz.cancels = CT.dom.div(null, "abs cbl");
 		nz.sells = CT.dom.div(null, "scrolly red sidecol");
 		nz.buys = CT.dom.div(null, "scrolly green sidecol");
 		nz.charts = CT.dom.flex([nz.chart1, nz.chart2], "midcharts");
 		CT.dom.setMain(CT.dom.flex([
+			nz.cancels,
 			nz.sells,
 			CT.dom.div([
 				nz.conf,
@@ -229,6 +234,7 @@ ab.dash.Dash = CT.Class({
 	update: function(data) {
 		var _ = this._, m = data.message;
 		d_.loud && this.log(data);
+		_.cancels(m.cancels);
 		_.balup(m.balances);
 		_.trades(m);
 		_.charts();
