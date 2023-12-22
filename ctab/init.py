@@ -53,7 +53,7 @@ cfg = {
         }
     },
     "mon": {
-        "timeout": 10,
+        "timeout": 20,
         "interval": 1
     }
 }
