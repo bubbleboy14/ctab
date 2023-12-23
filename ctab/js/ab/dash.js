@@ -1,7 +1,6 @@
 ab.dash = {
 	_: {
 		counts: {
-			gem: ["requests", "trades", "cancels", "retries", "active", "pending", "pauses", "paused"],
 			orders: ["approved", "active", "filled", "cancelled"],
 			harvester: ["hauls", "harvest", "refills"]
 		},
@@ -155,9 +154,9 @@ ab.dash.Dash = CT.Class({
 			CT.dom.setContent(_.nodes.legend, [
 				_.counts(data, "orders"),
 				_.counts(data, "harvester", true),
-				_.counts(data, "gem"),
 				_.leg(data.balances.theoretical, true, data.balances.actual),
-				_.leg(data.strategists, false, null, true)
+				_.leg(data.strategists, false, null, true),
+				_.leg(data.gem)
 			]);
 		},
 		alerts: function(data) {
