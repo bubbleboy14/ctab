@@ -1,14 +1,21 @@
 ab.dash = {
 	_: {
+		counts: {
+			gem: ["requests", "trades", "cancels", "retries", "active", "pending", "pauses", "paused"],
+			orders: ["approved", "active", "filled", "cancelled"],
+			harvester: ["hauls", "harvest", "refills"]
+		},
+		csides: {
+			orders: "right",
+			harvester: "left",
+			gem: "justified clearnode"
+		},
 		chart1: ["USD", "ETH", "BTC", "USD actual", "ETH actual", "BTC actual"],
 		chart2: ["diff", "dph", "diff actual", "dph actual"],
 		noclix: ["staging", "stagish", "live", "network"],
 		ofloro: ["strategy", "harvester"],
-		orders: ["approved", "active", "filled", "cancelled"],
-		harvester: ["hauls", "harvest", "refills"],
 		floats: ["prunelimit", "vcutoff"],
 		alerts: ["warnings", "cancels"],
-		csides: {harvester: "left", orders: "right"},
 		slice: 10,
 		loud: false
 	},
@@ -45,7 +52,7 @@ ab.dash.Dash = CT.Class({
 		},
 		counts: function(data, prop, round) {
 			var d = data[prop], cname = "up20 " + d_.csides[prop], r = this._.rounder,
-				parts = d_[prop].map(p => (round ? r(d[p]) : d[p]) + " " + p);
+				parts = d_.counts[prop].map(p => (round ? r(d[p]) : d[p]) + " " + p);
 			return CT.dom.div(prop + ": " + parts.join("; "), cname);
 		},
 		tp2o: function(tpath, val) {
@@ -148,6 +155,7 @@ ab.dash.Dash = CT.Class({
 			CT.dom.setContent(_.nodes.legend, [
 				_.counts(data, "orders"),
 				_.counts(data, "harvester", true),
+				_.counts(data, "gem"),
 				_.leg(data.balances.theoretical, true, data.balances.actual),
 				_.leg(data.strategists, false, null, true)
 			]);
