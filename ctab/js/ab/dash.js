@@ -7,6 +7,7 @@ ab.dash = {
 		orders: ["approved", "active", "filled", "cancelled"],
 		harvester: ["hauls", "harvest", "refills"],
 		floats: ["prunelimit", "vcutoff"],
+		alerts: ["warnings", "cancels"],
 		csides: {harvester: "left", orders: "right"},
 		slice: 10,
 		loud: false
@@ -151,8 +152,9 @@ ab.dash.Dash = CT.Class({
 				_.leg(data.strategists, false, null, true)
 			]);
 		},
-		cancels: function(cancels) {
-			CT.dom.setContent(this._.nodes.cancels, cancels);
+		alerts: function(data) {
+			for (var sec of d_.alerts)
+				CT.dom.setContent(this._.nodes[sec], data[sec]);
 		},
 		up: function(upd) {
 			var k, v, d = this._.data;
@@ -217,10 +219,12 @@ ab.dash.Dash = CT.Class({
 		nz.chart1 = CT.dom.div(null, "w1-2");
 		nz.chart2 = CT.dom.div(null, "w1-2");
 		nz.cancels = CT.dom.div(null, "abs cbl");
+		nz.warnings = CT.dom.div(null, "abs cbr smaller w130p");
 		nz.sells = CT.dom.div(null, "scrolly red sidecol");
 		nz.buys = CT.dom.div(null, "scrolly green sidecol");
 		nz.charts = CT.dom.flex([nz.chart1, nz.chart2], "midcharts");
 		CT.dom.setMain(CT.dom.flex([
+			nz.warnings,
 			nz.cancels,
 			nz.sells,
 			CT.dom.div([
@@ -234,7 +238,7 @@ ab.dash.Dash = CT.Class({
 	update: function(data) {
 		var _ = this._, m = data.message;
 		d_.loud && this.log(data);
-		_.cancels(m.cancels);
+		_.alerts(m);
 		_.balup(m.balances);
 		_.trades(m);
 		_.charts();

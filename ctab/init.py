@@ -30,6 +30,7 @@ cfg = {
     },
     "office": {
         "index": 0,
+        "warnings": 20,
         "verbose": False,
         "stagish": False
     },
@@ -53,7 +54,7 @@ cfg = {
         }
     },
     "mon": {
-        "timeout": 10,
+        "timeout": 60,
         "interval": 1
     }
 }
