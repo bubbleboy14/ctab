@@ -53,7 +53,7 @@ def setem():
 	setLive(tcfg.comptroller.live)
 	setVerbose(tcfg.office.verbose)
 	setStagish(tcfg.office.stagish)
-	setStagish(tcfg.office.warnings)
+	setWarnings(tcfg.office.warnings)
 	setStaging(tcfg.backend.staging)
 	setUnspammed(tcfg.base.unspammed)
 	setSkim(tcfg.harvester.skim)
