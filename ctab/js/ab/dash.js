@@ -1,7 +1,7 @@
 ab.dash = {
 	_: {
 		counts: {
-			orders: ["approved", "active", "filled", "cancelled"],
+			orders: ["approved", "active", "filled", "cancelled", "fees"],
 			harvester: ["hauls", "harvest", "refills"]
 		},
 		csides: {
