@@ -26,7 +26,8 @@ cfg = {
         "prunelimit": 0.1
     },
     "backend": {
-        "staging": True
+        "staging": True,
+        "realdie": True
     },
     "office": {
         "index": 0,
