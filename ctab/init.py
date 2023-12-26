@@ -20,6 +20,9 @@ cfg = {
         "balance": True,
         "network": "bitcoin"
     },
+    "accountant": {
+        "capped": True
+    },
     "comptroller": {
         "live": False,
         "actives": 20,

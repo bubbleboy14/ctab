@@ -1,5 +1,6 @@
 from mkswap.base import setUnspammed
 from mkswap import presets, getOffice
+from mkswap.accountant import setCapped
 from mkswap.backend import setStaging, setRealDie
 from mkswap.office import setVerbose, setStagish, setWarnings
 from mkswap.comptroller import setLive, setActives, setPruneLimit
@@ -32,6 +33,7 @@ def prep():
 	s2b(tcfg.office, "stagish")
 	s2b(tcfg.backend, "staging")
 	s2b(tcfg.backend, "realdie")
+	s2b(tcfg.accountant, "capped")
 	s2b(tcfg.comptroller, "live")
 	s2b(tcfg.harvester, "skim")
 	s2b(tcfg.harvester, "balance")
@@ -57,6 +59,7 @@ def setem():
 	setWarnings(tcfg.office.warnings)
 	setStaging(tcfg.backend.staging)
 	setRealDie(tcfg.backend.realdie)
+	setCapped(tcfg.accountant.capped)
 	setUnspammed(tcfg.base.unspammed)
 	setSkim(tcfg.harvester.skim)
 	setBatch(tcfg.harvester.batch)
