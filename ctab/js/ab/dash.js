@@ -11,7 +11,7 @@ ab.dash = {
 		},
 		chart1: ["USD", "ETH", "BTC", "USD actual", "ETH actual", "BTC actual"],
 		chart2: ["diff", "dph", "diff actual", "dph actual"],
-		noclix: ["staging", "stagish", "live", "network"],
+		noclix: ["staging", "stagish", "live", "network", "capped"],
 		ofloro: ["strategy", "harvester"],
 		floats: ["prunelimit", "vcutoff"],
 		alerts: ["warnings", "cancels"],
