@@ -117,7 +117,7 @@ ab.dash.Dash = CT.Class({
 							}
 						};
 						d_.floats.includes(d) && Object.assign(popts, {
-							max: 1,
+							max: 3,
 							min: 0.1,
 							step: 0.1
 						});
