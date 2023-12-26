@@ -6,8 +6,7 @@ ab.dash = {
 		},
 		csides: {
 			orders: "right",
-			harvester: "left",
-			gem: "justified clearnode"
+			harvester: "left"
 		},
 		chart1: ["USD", "ETH", "BTC", "USD actual", "ETH actual", "BTC actual"],
 		chart2: ["diff", "dph", "diff actual", "dph actual"],
@@ -50,7 +49,7 @@ ab.dash.Dash = CT.Class({
 			});
 		},
 		counts: function(data, prop, round) {
-			var d = data[prop], cname = "up20 " + d_.csides[prop], r = this._.rounder,
+			var d = data[prop], cname = "up20 smallish" + d_.csides[prop], r = this._.rounder,
 				parts = d_.counts[prop].map(p => (round ? r(d[p]) : d[p]) + " " + p);
 			return CT.dom.div(prop + ": " + parts.join("; "), cname);
 		},
