@@ -49,7 +49,7 @@ ab.dash.Dash = CT.Class({
 			});
 		},
 		counts: function(data, prop, round) {
-			var d = data[prop], cname = "up20 smallish " + d_.csides[prop], r = this._.rounder,
+			var d = data[prop], cname = "up20 small " + d_.csides[prop], r = this._.rounder,
 				parts = d_.counts[prop].map(p => (round ? r(d[p]) : d[p]) + " " + p);
 			return CT.dom.div(prop + ": " + parts.join("; "), cname);
 		},
