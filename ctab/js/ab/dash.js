@@ -4,7 +4,7 @@ ab.dash = {
 			orders: ["approved", "active", "filled", "cancelled", "fees"],
 			harvester: ["hauls", "harvest", "refills"]
 		},
-		csides: {
+		csides: { // now unused
 			orders: "right",
 			harvester: "left"
 		},
@@ -48,7 +48,7 @@ ab.dash.Dash = CT.Class({
 				series: d_.chart2.map(k => _.data[k])
 			});
 		},
-		counts: function(data, prop, round) {
+		counts: function(data, prop, round) { // now unused
 			var d = data[prop], cname = "up20 small " + d_.csides[prop], r = this._.rounder,
 				parts = d_.counts[prop].map(p => (round ? r(d[p]) : d[p]) + " " + p);
 			return CT.dom.div(prop + ": " + parts.join("; "), cname);
@@ -151,9 +151,8 @@ ab.dash.Dash = CT.Class({
 		legend: function(data) {
 			var _ = this._;
 			CT.dom.setContent(_.nodes.legend, [
-				_.counts(data, "orders"),
-				_.counts(data, "harvester", true),
 				_.leg(data.balances.theoretical, true, data.balances.actual),
+				_.leg({ orders: data.orders, harvester: data.harvester }),
 				_.leg(data.strategists, false, null, true),
 				_.leg(data.gem)
 			]);
