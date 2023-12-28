@@ -8,12 +8,17 @@ ab.dash = {
 			orders: "right",
 			harvester: "left"
 		},
+		scols: {
+			cancels: "yellow",
+			fills: "green",
+			warnings: "red"
+		},
 		chart1: ["USD", "ETH", "BTC", "USD actual", "ETH actual", "BTC actual"],
 		chart2: ["diff", "dph", "diff actual", "dph actual"],
 		noclix: ["staging", "stagish", "live", "network", "capped"],
 		ofloro: ["strategy", "harvester"],
 		floats: ["prunelimit", "vcutoff"],
-		alerts: ["warnings", "cancels"],
+		streams: ["cancels", "fills", "warnings"],
 		slice: 10,
 		loud: false
 	},
@@ -150,16 +155,28 @@ ab.dash.Dash = CT.Class({
 		},
 		legend: function(data) {
 			var _ = this._;
+			CT.dom.setContent(_.nodes.prices,
+				_.leg(data.balances.theoretical, true, data.balances.actual));
 			CT.dom.setContent(_.nodes.legend, [
-				_.leg(data.balances.theoretical, true, data.balances.actual),
 				_.leg({ orders: data.orders, harvester: data.harvester }),
 				_.leg(data.strategists, false, null, true),
 				_.leg(data.gem)
 			]);
 		},
-		alerts: function(data) {
-			for (var sec of d_.alerts)
-				CT.dom.setContent(this._.nodes[sec], data[sec]);
+		snode: function(data, sec) {
+			var _ = this._, n = CT.dom.div(data.msg,
+				"bordered padded margined round hoverglow pointer");
+			n.onclick = () => CT.modal.modal([
+				CT.dom.div(sec + ": " + data.msg, "bigger bold centered"),
+				_.leg(data.data)
+			]);
+			return n;
+		},
+		streams: function(data) {
+			var _ = this._, sec, d;
+			for (sec of d_.streams)
+				for (d of data[sec])
+					CT.dom.addContent(_.nodes[sec], _.snode(d, sec));
 		},
 		up: function(upd) {
 			var k, v, d = this._.data;
@@ -196,7 +213,7 @@ ab.dash.Dash = CT.Class({
 			Object.assign(all, bals.theoretical);
 			for (k in bals.actual)
 				all[k + " actual"] = bals.actual[k];
-//			this.log("updated balances:", Object.keys(all));
+			d_.loud && this.log("updated balances:", Object.keys(all));
 			_.up(all);
 		},
 		upConf: function(cobj) {
@@ -215,39 +232,49 @@ ab.dash.Dash = CT.Class({
 				_.leg(curconf, false, null, false, _.upConf),
 				_.leg(row2, false, null, false, _.upConf)
 			]);
+		},
+		setStreams: function() {
+			var _ = this._, nz = _.nodes;
+			nz.streams = CT.dom.flex(d_.streams.map(function(name) {
+				nz[name] = CT.dom.div(null, "hm100p scrolly");
+				return CT.dom.div([
+					CT.dom.div(name, "centered bold"),
+					nz[name]
+				], "w1 " + d_.scols[name]);
+			}), "bordered row");
 		}
 	},
 	build: function(curconf) {
 		var _ = this._, nz = _.nodes;
+		_.setStreams();
 		_.loadConf(curconf);
+		nz.prices = CT.dom.div();
 		nz.legend = CT.dom.div();
 		nz.chart1 = CT.dom.div(null, "w1-2");
 		nz.chart2 = CT.dom.div(null, "w1-2");
-		nz.cancels = CT.dom.div(null, "abs cbl");
-		nz.warnings = CT.dom.div(null, "abs cbr smaller w130p");
 		nz.sells = CT.dom.div(null, "scrolly red sidecol");
 		nz.buys = CT.dom.div(null, "scrolly green sidecol");
-		nz.charts = CT.dom.flex([nz.chart1, nz.chart2], "midcharts");
+		nz.charts = CT.dom.flex([nz.chart1, nz.chart2], "midcharts fgrow");
 		CT.dom.setMain(CT.dom.flex([
-			nz.warnings,
-			nz.cancels,
 			nz.sells,
-			CT.dom.div([
+			CT.dom.flex([
 				nz.conf,
 				nz.charts,
+				nz.prices,
+				nz.streams,
 				nz.legend
-			], "maincol"),
+			], "maincol h1 col"),
 			nz.buys
-		]));
+		], "h1 row"));
 	},
 	update: function(data) {
 		var _ = this._, m = data.message;
 		d_.loud && this.log(data);
-		_.alerts(m);
 		_.balup(m.balances);
 		_.trades(m);
 		_.charts();
 		_.legend(m);
+		_.streams(m);
 	},
 	load: function() {
 		CT.pubsub.set_autohistory(true);
