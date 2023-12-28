@@ -1,5 +1,6 @@
 .midcharts {
-	height: calc(100vh - 380px);
+/*	height: calc(100vh - 495px);*/
+	margin-bottom: -19px;
 }
 
 .sidecol {

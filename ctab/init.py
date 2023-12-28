@@ -34,7 +34,6 @@ cfg = {
     },
     "office": {
         "index": 0,
-        "warnings": 20,
         "verbose": False,
         "stagish": False
     },
