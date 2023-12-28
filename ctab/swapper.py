@@ -2,7 +2,7 @@ from mkswap.base import setUnspammed
 from mkswap import presets, getOffice
 from mkswap.accountant import setCapped
 from mkswap.backend import setStaging, setRealDie
-from mkswap.office import setVerbose, setStagish, setWarnings
+from mkswap.office import setVerbose, setStagish
 from mkswap.comptroller import setLive, setActives, setPruneLimit
 from mkswap.strategy.base import setInner, setOuter, setLong, setLoud
 from mkswap.harvester import setSkim, setBatch, setBottom, setBalance, setNetwork
@@ -48,7 +48,6 @@ def prep():
 	s2i(tcfg.harvester, "batch")
 	s2i(tcfg.harvester, "bottom")
 	s2i(tcfg.office, "index")
-	s2i(tcfg.office, "warnings")
 	s2f(tcfg.comptroller, "prunelimit")
 	s2f(tcfg.strategy.slosh, "vcutoff")
 
@@ -56,7 +55,6 @@ def setem():
 	setLive(tcfg.comptroller.live)
 	setVerbose(tcfg.office.verbose)
 	setStagish(tcfg.office.stagish)
-	setWarnings(tcfg.office.warnings)
 	setStaging(tcfg.backend.staging)
 	setRealDie(tcfg.backend.realdie)
 	setCapped(tcfg.accountant.capped)
