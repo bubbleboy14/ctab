@@ -13,6 +13,16 @@ ab.dash = {
 			fills: "green",
 			warnings: "red"
 		},
+		tables: {
+			symbol: { // TODO: meh configurize better
+				head: ["symbol", "quote", "actual", "theoretical"],
+				rows: ["USD", "ETH", "BTC"]
+			},
+			metric: {
+				head: ["metric", "actual", "theoretical"],
+				rows: ["diff", "dph"]
+			}
+		},
 		chart1: ["USD", "ETH", "BTC", "USD actual", "ETH actual", "BTC actual"],
 		chart2: ["diff", "dph", "diff actual", "dph actual"],
 		noclix: ["staging", "stagish", "live", "network", "capped"],
@@ -35,6 +45,7 @@ ab.dash.Dash = CT.Class({
 	_: {
 		data: {},
 		nodes: {},
+		colors: {},
 		ab: function(cb, action, params) {
 			CT.net.post({
 				path: "/_ab",
@@ -53,6 +64,23 @@ ab.dash.Dash = CT.Class({
 				series: d_.chart2.map(k => _.data[k])
 			});
 		},
+		tab: function(data, mode) {
+			var col, sym, colnode, cols = {}, colors = this._.colors,
+				params = d_.tables[mode], head = params.head, rows = params.rows,
+				c = d => CT.dom.div(d, "w1 bordered padded");
+			for (col of head)
+				cols[col] = [c("<b>" + col + "</b>")];
+			for (sym of rows) {
+				colnode = c("<b>" + sym + "</b>");
+				colnode.style.color = colors[sym];
+				cols[mode].push(colnode);
+				if (mode == "symbol")
+					cols.quote.push(c(data.prices[sym + "USD"] || 1));
+				cols.actual.push(c(data.balances.actual[sym]));
+				cols.theoretical.push(c(data.balances.theoretical[sym]));
+			}
+			return CT.dom.flex(head.map(h => cols[h]), "bordered row jcbetween");
+		},
 		counts: function(data, prop, round) { // now unused
 			var d = data[prop], cname = "up20 small " + d_.csides[prop], r = this._.rounder,
 				parts = d_.counts[prop].map(p => (round ? r(d[p]) : d[p]) + " " + p);
@@ -68,7 +96,7 @@ ab.dash.Dash = CT.Class({
 		leg: function(data, colored, parenthetical, round, onclick, tpath) {
 			if (!data) return "0";
 			tpath = tpath || [];
-			var _ = this._, cont, dnode, lab, labs = {}, popts, d2n = function(d) {
+			var _ = this._, cont, dnode, lname, lab, labs = {}, popts, d2n = function(d) {
 				var val, vnode, isbool, mypath = tpath.slice();
 				mypath.push(d);
 				if (typeof data[d] == "object") {
@@ -134,7 +162,8 @@ ab.dash.Dash = CT.Class({
 				return dnode;
 			}, n = CT.dom.flex(Object.keys(data).map(d2n), "bordered row jcbetween");
 			colored && CT.dom.className("ct-line", _.nodes.charts).forEach(function(n, i) {
-				labs[d_.charts[i]].style.color
+				lname = d_.charts[i];
+				labs[lname].style.color = _.colors[lname]
 					= window.getComputedStyle(n).getPropertyValue("stroke");
 			});
 			return n;
@@ -156,10 +185,14 @@ ab.dash.Dash = CT.Class({
 		},
 		legend: function(data) {
 			var _ = this._;
-			CT.dom.setContent(_.nodes.prices,
-				_.leg(data.balances.theoretical, true, data.balances.actual));
+			CT.dom.setContent(_.nodes.prices, [
+				_.leg(data.balances.theoretical, true, data.balances.actual),
+				CT.dom.flex([
+					_.tab(data, "symbol"), _.tab(data, "metric")
+				], "bordered row jcbetween")
+			]);
 			CT.dom.setContent(_.nodes.legend, [
-				_.leg({ orders: data.orders, harvester: data.harvester, prices: data.prices }),
+				_.leg({ orders: data.orders, harvester: data.harvester }),
 				_.leg(data.strategists, false, null, true),
 				_.leg(data.gem)
 			]);
