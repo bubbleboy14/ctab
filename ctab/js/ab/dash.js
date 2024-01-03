@@ -111,8 +111,9 @@ ab.dash.Dash = CT.Class({
 							style: "number",
 							initial: val,
 							step: 1,
-							max: 40,
 							min: 1,
+							max: 200,
+							classname: "w400p",
 							cb: function(rval) {
 								CT.dom.setContent(vnode, rval);
 								if (d == "outer")
