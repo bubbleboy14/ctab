@@ -158,7 +158,7 @@ ab.dash.Dash = CT.Class({
 			CT.dom.setContent(_.nodes.prices,
 				_.leg(data.balances.theoretical, true, data.balances.actual));
 			CT.dom.setContent(_.nodes.legend, [
-				_.leg({ orders: data.orders, harvester: data.harvester }),
+				_.leg({ orders: data.orders, harvester: data.harvester, prices: data.prices }),
 				_.leg(data.strategists, false, null, true),
 				_.leg(data.gem)
 			]);
