@@ -69,10 +69,10 @@ ab.dash.Dash = CT.Class({
 				series: d_.chart2.map(k => _.data[k])
 			});
 		},
-		tab: function(data, mode) {
-			var col, sym, colnode, cols = {}, colors = this._.colors,
+		tab: function(data, mode, sub) {
+			var col, sym, colnode, fnode, cols = {}, _ = this._, colors = _.colors,
 				params = d_.tables[mode], head = params.head, rows = params.rows,
-				c = d => CT.dom.div(d, "w1 bordered smallpadded");
+				c = d => CT.dom.div(d, "w1 bordered smallpadded nowrap");
 			for (col of head)
 				cols[col] = [c("<b>" + col + "</b>")];
 			for (sym of rows) {
@@ -84,7 +84,8 @@ ab.dash.Dash = CT.Class({
 				cols.actual.push(c(data.balances.actual[sym]));
 				cols.theoretical.push(c(data.balances.theoretical[sym]));
 			}
-			return CT.dom.flex(head.map(h => cols[h]), "bordered row jcbetween");
+			fnode = CT.dom.flex(head.map(h => cols[h]), "bordered row jcbetween");
+			return sub ? CT.dom.div([fnode, _.leg(data[sub], false, null, true)]) : fnode;
 		},
 		counts: function(data, prop, round) { // now unused
 			var d = data[prop], cname = "up20 small " + d_.csides[prop], r = this._.rounder,
@@ -195,7 +196,7 @@ ab.dash.Dash = CT.Class({
 			CT.dom.setContent(_.nodes.prices, [
 				_.leg(data.balances.theoretical, true, data.balances.actual),
 				CT.dom.flex([
-					_.tab(data, "symbol"), _.tab(data, "metric")
+					_.tab(data, "symbol"), _.tab(data, "metric", "ndx")
 				], "bordered row jcbetween")
 			]);
 			CT.dom.setContent(_.nodes.legend, [
