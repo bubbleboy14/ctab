@@ -2,7 +2,7 @@ from mkswap.base import setUnspammed
 from mkswap import presets, getOffice
 from mkswap.accountant import setCapped
 from mkswap.backend import setStaging, setRealDie
-from mkswap.office import setVerbose, setStagish
+from mkswap.office import gem, setVerbose, setStagish
 from mkswap.comptroller import setLive, setActives, setPruneLimit
 from mkswap.strategy.base import setInner, setOuter, setLong, setLoud
 from mkswap.harvester import setSkim, setBatch, setBottom, setBalance, setNetwork
@@ -81,7 +81,9 @@ def response():
 	log("initializing mkswap office", important=True)
 	prep()
 	setem()
-	config.update("office", getOffice(**presets[int(tcfg.office.index)]))
+	livemods = config.ctab.sub("live")
+	livemods.update("office", getOffice(**presets[int(tcfg.office.index)]))
+	livemods.update("gem", gem)
 	log("office initialized")
 
 respond(response)

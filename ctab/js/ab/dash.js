@@ -55,6 +55,11 @@ ab.dash.Dash = CT.Class({
 				cb: cb
 			});
 		},
+		cancelAll: function() {
+			confirm("are you sure?") && confirm("really?") && this._.ab(function() {
+				alert("ok!");
+			}, "cancelall");
+		},
 		charts: function() {
 			var _ = this._;
 			new Chartist.Line(_.nodes.chart1, {
@@ -291,6 +296,7 @@ ab.dash.Dash = CT.Class({
 		nz.sells = CT.dom.div(null, "scrolly red sidecol");
 		nz.buys = CT.dom.div(null, "scrolly green sidecol");
 		nz.charts = CT.dom.flex([nz.chart1, nz.chart2], "midcharts fgrow");
+		nz.cancelAll = CT.dom.button("Cancel All Orders", _.cancelAll, "abc cbl");
 		CT.dom.setMain(CT.dom.flex([
 			nz.sells,
 			CT.dom.flex([
@@ -300,7 +306,8 @@ ab.dash.Dash = CT.Class({
 				nz.streams,
 				nz.legend
 			], "maincol h1 col"),
-			nz.buys
+			nz.buys,
+			nz.cancelAll
 		], "h1 row"));
 	},
 	update: function(data) {
