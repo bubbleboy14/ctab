@@ -1,6 +1,6 @@
 ab.dash = {
 	_: {
-		counts: {
+		counts: { // now unused
 			orders: ["approved", "active", "filled", "cancelled", "fees"],
 			harvester: ["hauls", "harvest", "refills"]
 		},
@@ -26,7 +26,7 @@ ab.dash = {
 		chart1: ["USD", "ETH", "BTC", "USD actual", "ETH actual", "BTC actual"],
 		chart2: ["diff", "dph", "diff actual", "dph actual"],
 		noclix: ["staging", "stagish", "live", "network", "capped"],
-		ofloro: ["strategy", "harvester"],
+		ofloro: ["strategy", "comptroller"],
 		floats: ["prunelimit", "vcutoff"],
 		streams: ["cancels", "fills", "warnings"],
 		slice: 10,
