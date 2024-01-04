@@ -53,7 +53,8 @@ cfg = {
         },
         "slosh": {
             "vmult": 16,
-            "vcutoff": 0.5
+            "vcutoff": 0.5,
+            "oneswap": False
         }
     },
     "mon": {
