@@ -296,7 +296,7 @@ ab.dash.Dash = CT.Class({
 		nz.sells = CT.dom.div(null, "scrolly red sidecol");
 		nz.buys = CT.dom.div(null, "scrolly green sidecol");
 		nz.charts = CT.dom.flex([nz.chart1, nz.chart2], "midcharts fgrow");
-		nz.cancelAll = CT.dom.button("Cancel All Orders", _.cancelAll, "abc cbl");
+		nz.cancelAll = CT.dom.button("Cancel All Orders", _.cancelAll, "abs b0 l0");
 		CT.dom.setMain(CT.dom.flex([
 			nz.sells,
 			CT.dom.flex([
