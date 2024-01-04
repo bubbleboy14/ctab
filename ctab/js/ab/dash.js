@@ -67,7 +67,7 @@ ab.dash.Dash = CT.Class({
 		tab: function(data, mode) {
 			var col, sym, colnode, cols = {}, colors = this._.colors,
 				params = d_.tables[mode], head = params.head, rows = params.rows,
-				c = d => CT.dom.div(d, "w1 bordered padded");
+				c = d => CT.dom.div(d, "w1 bordered smallpadded");
 			for (col of head)
 				cols[col] = [c("<b>" + col + "</b>")];
 			for (sym of rows) {
@@ -97,7 +97,7 @@ ab.dash.Dash = CT.Class({
 			if (!data) return "0";
 			tpath = tpath || [];
 			var _ = this._, cont, dnode, lname, lab, labs = {}, popts, d2n = function(d) {
-				var val, vnode, isbool, mypath = tpath.slice();
+				var val, vtype, vnode, isbool, mypath = tpath.slice();
 				mypath.push(d);
 				if (typeof data[d] == "object") {
 					return CT.dom.div([
@@ -109,8 +109,9 @@ ab.dash.Dash = CT.Class({
 				cont = [lab, CT.dom.pad()];
 				labs[d] = lab;
 				val = data[d];
-				isbool = typeof(val) == "boolean";
-				if (round)
+				vtype = typeof(val);
+				isbool = vtype == "boolean";
+				if (round && vtype == "number")
 					val = _.rounder(val, 10000000);
 				else if (isbool)
 					val = val.toString();
@@ -184,7 +185,8 @@ ab.dash.Dash = CT.Class({
 			CT.dom.setContent(nz.buys, buys);
 		},
 		legend: function(data) {
-			var _ = this._;
+			var _ = this._, strats = _.leg(data.strategists, false, null, true);
+			strats.classList.add("fwrap");
 			CT.dom.setContent(_.nodes.prices, [
 				_.leg(data.balances.theoretical, true, data.balances.actual),
 				CT.dom.flex([
@@ -193,7 +195,7 @@ ab.dash.Dash = CT.Class({
 			]);
 			CT.dom.setContent(_.nodes.legend, [
 				_.leg({ orders: data.orders, harvester: data.harvester }),
-				_.leg(data.strategists, false, null, true),
+				strats,
 				_.leg(data.gem)
 			]);
 		},
