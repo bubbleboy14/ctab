@@ -85,7 +85,10 @@ ab.dash.Dash = CT.Class({
 				cols.theoretical.push(c(data.balances.theoretical[sym]));
 			}
 			fnode = CT.dom.flex(head.map(h => cols[h]), "bordered row jcbetween");
-			return sub ? CT.dom.div([fnode, _.leg(data[sub], false, null, true)]) : fnode;
+			return sub ? CT.dom.div([
+				fnode,
+				_.leg(data[sub], false, null, true, null, null, "wm100p")
+			]) : fnode;
 		},
 		counts: function(data, prop, round) { // now unused
 			var d = data[prop], cname = "up20 small " + d_.csides[prop], r = this._.rounder,
@@ -99,7 +102,7 @@ ab.dash.Dash = CT.Class({
 			o[tpath[tpath.length - 1]] = val;
 			return full;
 		},
-		leg: function(data, colored, parenthetical, round, onclick, tpath) {
+		leg: function(data, colored, parenthetical, round, onclick, tpath, subclass) {
 			if (!data) return "0";
 			tpath = tpath || [];
 			var _ = this._, cont, dnode, lname, lab, labs = {}, popts, d2n = function(d) {
@@ -134,6 +137,7 @@ ab.dash.Dash = CT.Class({
 					cont.push(CT.dom.span(parenthetical[d]));
 				}
 				dnode = CT.dom.div(cont, "slightlysmall p1");
+				subclass && dnode.classList.add(subclass);
 				if (onclick && !d_.noclix.includes(d)) {
 					dnode.onclick = function() {
 						if (isbool) {
