@@ -128,7 +128,7 @@ ab.dash.Dash = CT.Class({
 				vtype = typeof(val);
 				isbool = vtype == "boolean";
 				if (round && vtype == "number")
-					val = _.rounder(val, 10000000);
+					val = _.rounder(val, 1000000);
 				else if (isbool)
 					val = val.toString();
 				else if (d == "outer")
