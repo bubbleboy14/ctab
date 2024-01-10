@@ -114,12 +114,15 @@ ab.dash.Dash = CT.Class({
 						_.leg(data[d], colored, parenthetical && parenthetical[d], round, onclick, mypath)
 					], "w1");
 				}
-				lab = CT.dom.span(d, "bold");
-				cont = [lab];
-				if (forceBreak)
-					cont.push(CT.dom.br());
-				else
-					cont.push(CT.dom.pad());
+
+				if (forceBreak) {
+					lab = CT.dom.div(d, "bold");
+					cont = [lab];
+				} else {
+					lab = CT.dom.span(d, "bold");
+					cont = [lab, CT.dom.pad()];
+				}
+
 				labs[d] = lab;
 				val = data[d];
 				vtype = typeof(val);
