@@ -159,7 +159,7 @@ ab.dash.Dash = CT.Class({
 						d_.floats.includes(d) && Object.assign(popts, {
 							max: 3,
 							min: 0.1,
-							step: 0.1
+							step: 0.05
 						});
 						CT.modal.prompt(popts);
 					};
