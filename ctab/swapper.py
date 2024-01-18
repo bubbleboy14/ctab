@@ -1,8 +1,8 @@
 from mkswap.base import setUnspammed
 from mkswap import presets, getOffice
 from mkswap.accountant import setCapped
-from mkswap.backend import setStaging, setRealDie
 from mkswap.office import setVerbose, setStagish
+from mkswap.backend import setStaging, setRealDie, setCredSet
 from mkswap.comptroller import setLive, setActives, setPruneLimit
 from mkswap.strategy.base import setInner, setOuter, setLong, setLoud
 from mkswap.harvester import setSkim, setBatch, setBottom, setBalance, setNetwork
@@ -58,6 +58,7 @@ def setem():
 	setStagish(tcfg.office.stagish)
 	setStaging(tcfg.backend.staging)
 	setRealDie(tcfg.backend.realdie)
+	setCredSet(tcfg.backend.credset)
 	setCapped(tcfg.accountant.capped)
 	setUnspammed(tcfg.base.unspammed)
 	setSkim(tcfg.harvester.skim)
