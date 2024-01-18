@@ -25,8 +25,8 @@ ab.dash = {
 		},
 		chart1: ["USD", "ETH", "BTC", "USD actual", "ETH actual", "BTC actual"],
 		chart2: ["diff", "dph", "diff actual", "dph actual"],
-		noclix: ["staging", "stagish", "live", "network", "capped"],
-		ofloro: ["strategy", "comptroller"],
+		noclix: ["staging", "stagish", "live", "network", "capped", "credset"],
+		ofloro: ["office", "strategy", "accountant", "base"],
 		floats: ["prunelimit", "vcutoff"],
 		streams: ["cancels", "fills", "warnings"],
 		slice: 10,
@@ -143,7 +143,7 @@ ab.dash.Dash = CT.Class({
 					cont.push(CT.dom.pad());
 					cont.push(CT.dom.span(parenthetical[d]));
 				}
-				dnode = CT.dom.div(cont, "slightlysmall p1");
+				dnode = CT.dom.div(cont, "smallisher p1");
 				if (onclick && !d_.noclix.includes(d)) {
 					dnode.onclick = function() {
 						if (isbool) {
