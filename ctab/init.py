@@ -30,7 +30,8 @@ cfg = {
     },
     "backend": {
         "staging": True,
-        "realdie": True
+        "realdie": True,
+        "credset": "default"
     },
     "office": {
         "index": 0,
