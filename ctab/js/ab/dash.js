@@ -229,7 +229,7 @@ ab.dash.Dash = CT.Class({
 			for (sec of d_.streams) {
 				for (d of data[sec])
 					CT.dom.addContent(_.nodes[sec], _.snode(d, sec));
-				data[sec].length && _.nodes[sec].lastChild.scrollIntoViewIfNecessary();
+				data[sec].length && _.nodes[sec].lastChild.scrollIntoViewIfNeeded();
 			}
 		},
 		up: function(upd) {
