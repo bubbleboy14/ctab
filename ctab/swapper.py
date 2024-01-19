@@ -21,6 +21,10 @@ def s2b(cfg, key):
 	elif v == "True":
 		cfg.update(key, True)
 
+def s2tb(cfg, key):
+	if cfg[key] != "auto":
+		s2b(cfg, key)
+
 def s2i(cfg, key):
 	cfg[key] and cfg.update(key, int(cfg[key]))
 
@@ -38,7 +42,7 @@ def prep():
 	s2b(tcfg.harvester, "skim")
 	s2b(tcfg.harvester, "balance")
 	s2b(tcfg.strategy.base, "loud")
-	s2b(tcfg.strategy.slosh, "oneswap")
+	s2tb(tcfg.strategy.slosh, "oneswap")
 	s2i(tcfg.comptroller, "actives")
 	s2i(tcfg.strategy.slosh, "vmult")
 	s2i(tcfg.strategy.base, "inner")
