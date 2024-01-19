@@ -29,6 +29,7 @@ ab.dash = {
 		ofloro: ["office", "strategy", "accountant", "base"],
 		floats: ["prunelimit", "vcutoff"],
 		streams: ["cancels", "fills", "warnings"],
+		tribools: ["oneswap"],
 		slice: 10,
 		loud: false
 	},
@@ -146,6 +147,16 @@ ab.dash.Dash = CT.Class({
 				dnode = CT.dom.div(cont, "smallisher p1");
 				if (onclick && !d_.noclix.includes(d)) {
 					dnode.onclick = function() {
+						if (d_.tribools.includes(d)) {
+							if (val == "auto")
+								val = true;
+							else if (val == true)
+								val = false;
+							else // false...
+								val = "auto";
+							CT.dom.setContent(vnode, val.toString());
+							return onclick(_.tp2o(mypath, val));
+						}
 						if (isbool) {
 							val = (val == "true") ? "false" : "true";
 							CT.dom.setContent(vnode, val);
