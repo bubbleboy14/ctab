@@ -73,7 +73,7 @@ ab.dash.Dash = CT.Class({
 		tab: function(data, mode, sub) {
 			var col, sym, colnode, fnode, cols = {}, _ = this._, colors = _.colors,
 				params = d_.tables[mode], head = params.head, rows = params.rows,
-				c = d => CT.dom.div(d, "w1 bordered smallpadded nowrap");
+				c = d => CT.dom.div(d, "w1 bordered smallpadded nowrap"), bals = data.balances;
 			for (col of head)
 				cols[col] = [c("<b>" + col + "</b>")];
 			for (sym of rows) {
@@ -82,8 +82,8 @@ ab.dash.Dash = CT.Class({
 				cols[mode].push(colnode);
 				if (mode == "symbol")
 					cols.quote.push(c(data.prices[sym + "USD"] || 1));
-				cols.actual.push(c(data.balances.actual[sym]));
-				cols.theoretical.push(c(data.balances.theoretical[sym]));
+				cols.actual.push(c(bals.waiting ? "waiting" : bals.actual[sym]));
+				cols.theoretical.push(c(bals.waiting ? "waiting" : bals.theoretical[sym]));
 			}
 			fnode = CT.dom.flex(head.map(h => cols[h]), "bordered row jcbetween");
 			return sub ? CT.dom.div([
@@ -103,7 +103,7 @@ ab.dash.Dash = CT.Class({
 			o[tpath[tpath.length - 1]] = val;
 			return full;
 		},
-		leg: function(data, colored, parenthetical, round, onclick, tpath, forceBreak) {
+		leg: function(data, colored, parenthetical, round, onclick, tpath, forceBreak, withClass) {
 			if (!data) return "0";
 			tpath = tpath || [];
 			var _ = this._, cont, dnode, lname, lab, labs = {}, popts, d2n = function(d) {
@@ -194,6 +194,7 @@ ab.dash.Dash = CT.Class({
 				labs[lname].style.color = _.colors[lname]
 					= window.getComputedStyle(n).getPropertyValue("stroke");
 			});
+			withClass && n.classList.add(withClass);
 			return n;
 		},
 		trades: function(data) {
@@ -212,10 +213,12 @@ ab.dash.Dash = CT.Class({
 			CT.dom.setContent(nz.buys, buys);
 		},
 		legend: function(data) {
-			var _ = this._, strats = _.leg(data.strategists, false, null, true);
+			var _ = this._, bals = data.balances,
+				strats = _.leg(data.strategists, false, null, true);
 			strats.classList.add("fwrap");
 			CT.dom.setContent(_.nodes.prices, [
-				_.leg(data.balances.theoretical, true, data.balances.actual),
+				bals.waiting ? _.leg(bals, false, null, false, null, null, true,
+					"centered") : _.leg(bals.theoretical, true, bals.actual),
 				CT.dom.flex([
 					_.tab(data, "symbol"), _.tab(data, "metric", "ndx")
 				], "bordered row jcbetween")
@@ -337,18 +340,23 @@ ab.dash.Dash = CT.Class({
 	update: function(data) {
 		var _ = this._, m = data.message;
 		d_.loud && this.log(data);
-		_.balup(m.balances);
+		if (!m.balances.waiting) {
+			_.balup(m.balances);
+			_.charts();
+		}
 		_.trades(m);
-		_.charts();
 		_.legend(m);
 		_.streams(m);
 	},
-	load: function() {
+	start: function() {
 		CT.pubsub.set_autohistory(true);
 		CT.pubsub.connect(location.hostname, this.opts.port);
 		CT.pubsub.set_cb("message", this.update);
 		CT.pubsub.subscribe("swapmon");
-		this._.ab(this.build);
+	},
+	load: function(curconf) {
+		this.build(curconf);
+		this.start();
 	},
 	setLoud: function(isloud) {
 		d_.loud = isloud;
@@ -357,6 +365,6 @@ ab.dash.Dash = CT.Class({
 		this.opts = opts = CT.merge(opts, {
 
 		});
-		this.load();
+		this._.ab(this.load);
 	}
 });
