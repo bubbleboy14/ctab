@@ -43,7 +43,7 @@ cfg = {
     },
     "ndx": {
         "inner": 3,
-        "outer": 10,
+        "outer": 20,
         "long": 40
     },
     "strategy": {
