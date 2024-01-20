@@ -26,7 +26,7 @@ ab.dash = {
 		chart1: ["USD", "ETH", "BTC", "USD actual", "ETH actual", "BTC actual"],
 		chart2: ["diff", "dph", "diff actual", "dph actual"],
 		noclix: ["staging", "stagish", "live", "network", "capped", "credset"],
-		ofloro: ["office", "strategy", "accountant", "base"],
+		ofloro: ["backend", "strategy", "comptroller"],
 		floats: ["prunelimit", "vcutoff"],
 		streams: ["cancels", "fills", "warnings"],
 		tribools: ["oneswap"],
@@ -304,7 +304,7 @@ ab.dash.Dash = CT.Class({
 		setStreams: function() {
 			var _ = this._, nz = _.nodes;
 			nz.streams = CT.dom.flex(d_.streams.map(function(name) {
-				nz[name] = CT.dom.div(null, "hm200p scrolly");
+				nz[name] = CT.dom.div(null, "hm150p scrolly");
 				return CT.dom.div([
 					CT.dom.div(name, "centered bold"),
 					nz[name]

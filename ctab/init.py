@@ -41,11 +41,13 @@ cfg = {
     "base": {
         "unspammed": True
     },
+    "ndx": {
+        "inner": 3,
+        "outer": 20,
+        "long": 40
+    },
     "strategy": {
         "base": {
-            "inner": 3,
-            "outer": 10,
-            "long": 40,
             "loud": False
         },
         "rsi": {

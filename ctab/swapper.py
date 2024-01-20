@@ -1,10 +1,11 @@
 from mkswap.base import setUnspammed
 from mkswap import presets, getOffice
 from mkswap.accountant import setCapped
+from mkswap.strategy.base import setLoud
 from mkswap.office import setVerbose, setStagish
+from mkswap.ndx import setInner, setOuter, setLong
 from mkswap.backend import setStaging, setRealDie, setCredSet
 from mkswap.comptroller import setLive, setActives, setPruneLimit
-from mkswap.strategy.base import setInner, setOuter, setLong, setLoud
 from mkswap.harvester import setSkim, setBatch, setBottom, setBalance, setNetwork
 from mkswap.strategy.slosh import setOneSwap, setVolatilityMult, setVolatilityCutoff
 from mkswap.strategy.rsi import setSize, setPeriod
@@ -43,16 +44,16 @@ def prep():
 	s2b(tcfg.harvester, "balance")
 	s2b(tcfg.strategy.base, "loud")
 	s2tb(tcfg.strategy.slosh, "oneswap")
-	s2i(tcfg.comptroller, "actives")
 	s2i(tcfg.strategy.slosh, "vmult")
-	s2i(tcfg.strategy.base, "inner")
-	s2i(tcfg.strategy.base, "outer")
-	s2i(tcfg.strategy.base, "long")
 	s2i(tcfg.strategy.rsi, "period")
 	s2i(tcfg.strategy.rsi, "size")
 	s2i(tcfg.harvester, "batch")
 	s2i(tcfg.harvester, "bottom")
 	s2i(tcfg.office, "index")
+	s2i(tcfg.ndx, "inner")
+	s2i(tcfg.ndx, "outer")
+	s2i(tcfg.ndx, "long")
+	s2i(tcfg.comptroller, "actives")
 	s2f(tcfg.comptroller, "prunelimit")
 	s2f(tcfg.strategy.slosh, "vcutoff")
 
@@ -71,9 +72,9 @@ def setem():
 	setBalance(tcfg.harvester.balance)
 	setNetwork(tcfg.harvester.network)
 	setActives(tcfg.comptroller.actives)
-	setInner(tcfg.strategy.base.inner)
-	setOuter(tcfg.strategy.base.outer)
-	setLong(tcfg.strategy.base.long)
+	setInner(tcfg.ndx.inner)
+	setOuter(tcfg.ndx.outer)
+	setLong(tcfg.ndx.long)
 	setLoud(tcfg.strategy.base.loud)
 	setSize(tcfg.strategy.rsi.size)
 	setPeriod(tcfg.strategy.rsi.period)
