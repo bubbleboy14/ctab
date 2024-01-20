@@ -42,8 +42,8 @@ cfg = {
         "unspammed": True
     },
     "ndx": {
-        "inner": 3,
-        "outer": 20,
+        "inner": 8,
+        "outer": 24,
         "long": 40
     },
     "strategy": {
