@@ -42,7 +42,6 @@ def prep():
 	s2b(tcfg.comptroller, "live")
 	s2b(tcfg.harvester, "skim")
 	s2b(tcfg.harvester, "balance")
-	s2i(tcfg.comptroller, "actives")
 	s2b(tcfg.strategy.base, "loud")
 	s2tb(tcfg.strategy.slosh, "oneswap")
 	s2i(tcfg.strategy.slosh, "vmult")
@@ -54,6 +53,7 @@ def prep():
 	s2i(tcfg.ndx, "inner")
 	s2i(tcfg.ndx, "outer")
 	s2i(tcfg.ndx, "long")
+	s2i(tcfg.comptroller, "actives")
 	s2f(tcfg.comptroller, "prunelimit")
 	s2f(tcfg.strategy.slosh, "vcutoff")
 
