@@ -28,6 +28,7 @@ ab.dash = {
 		noclix: ["staging", "stagish", "live", "network", "capped", "credset"],
 		ofloro: ["backend", "strategy", "comptroller"],
 		floats: ["prunelimit", "vcutoff"],
+		littles: ["randlim"],
 		streams: ["cancels", "fills", "warnings"],
 		tribools: ["oneswap"],
 		slice: 10,
@@ -177,11 +178,19 @@ ab.dash.Dash = CT.Class({
 								onclick(_.tp2o(mypath, rval));
 							}
 						};
-						d_.floats.includes(d) && Object.assign(popts, {
-							max: 3,
-							min: 0.1,
-							step: 0.05
-						});
+						if (d_.floats.includes(d)) {
+							Object.assign(popts, {
+								max: 3,
+								min: 0.1,
+								step: 0.05
+							});
+						} else if (d_.littles.includes(d)) {
+							Object.assign(popts, {
+								max: 0.01,
+								min: 0.0001,
+								step: 0.0001
+							});
+						}
 						CT.modal.prompt(popts);
 					};
 					dnode.classList.add("hoverglow");

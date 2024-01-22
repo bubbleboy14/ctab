@@ -7,7 +7,7 @@ from mkswap.ndx import setInner, setOuter, setLong
 from mkswap.backend import setStaging, setRealDie, setCredSet
 from mkswap.comptroller import setLive, setActives, setPruneLimit
 from mkswap.harvester import setSkim, setBatch, setBottom, setBalance, setNetwork
-from mkswap.strategy.slosh import setOneSwap, setVolatilityMult, setVolatilityCutoff
+from mkswap.strategy.slosh import setOneSwap, setRandLim, setVolatilityMult, setVolatilityCutoff
 from mkswap.strategy.rsi import setSize, setPeriod
 from cantools.web import respond
 from cantools.util import log
@@ -56,6 +56,7 @@ def prep():
 	s2i(tcfg.comptroller, "actives")
 	s2f(tcfg.comptroller, "prunelimit")
 	s2f(tcfg.strategy.slosh, "vcutoff")
+	s2f(tcfg.strategy.slosh, "randlim")
 
 def setem():
 	setLive(tcfg.comptroller.live)
@@ -80,6 +81,7 @@ def setem():
 	setPeriod(tcfg.strategy.rsi.period)
 	setPruneLimit(tcfg.comptroller.prunelimit)
 	setOneSwap(tcfg.strategy.slosh.oneswap)
+	setRandLim(tcfg.strategy.slosh.randlim)
 	setVolatilityMult(tcfg.strategy.slosh.vmult)
 	setVolatilityCutoff(tcfg.strategy.slosh.vcutoff)
 

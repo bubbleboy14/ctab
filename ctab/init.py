@@ -57,6 +57,7 @@ cfg = {
         "slosh": {
             "vmult": 16,
             "vcutoff": 0.5,
+            "randlim": 0.002,
             "oneswap": False
         }
     },
