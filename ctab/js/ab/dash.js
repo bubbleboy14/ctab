@@ -32,6 +32,7 @@ ab.dash = {
 		littles: ["randlim"],
 		streams: ["fills", "cancels", "warnings", "refills"],
 		tribools: ["oneswap"],
+		sliceSpan: "short",
 		slice: 10,
 		loud: false
 	},
@@ -134,7 +135,7 @@ ab.dash.Dash = CT.Class({
 					val = _.rounder(val, 1000000);
 				else if (isbool)
 					val = val.toString();
-				else if (d == "outer")
+				else if (d == d_.sliceSpan)
 					d_.slice = val;
 				vnode = CT.dom.span(val);
 				cont.push(vnode);
@@ -174,7 +175,7 @@ ab.dash.Dash = CT.Class({
 							classname: "w400p",
 							cb: function(rval) {
 								CT.dom.setContent(vnode, rval);
-								if (d == "outer")
+								if (d == d_.sliceSpan)
 									d_.slice = rval;
 								onclick(_.tp2o(mypath, rval));
 							}
