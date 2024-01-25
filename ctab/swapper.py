@@ -3,7 +3,7 @@ from mkswap import presets, getOffice
 from mkswap.accountant import setCapped
 from mkswap.strategy.base import setLoud
 from mkswap.office import setVerbose, setStagish
-from mkswap.ndx import setInner, setOuter, setLong
+from mkswap.ndx import setInner, setShort, setLong, setOuter
 from mkswap.backend import setStaging, setRealDie, setCredSet
 from mkswap.comptroller import setLive, setActives, setPruneLimit
 from mkswap.harvester import setSkim, setBatch, setBottom, setBalance, setNetwork
@@ -51,8 +51,9 @@ def prep():
 	s2i(tcfg.harvester, "bottom")
 	s2i(tcfg.office, "index")
 	s2i(tcfg.ndx, "inner")
-	s2i(tcfg.ndx, "outer")
+	s2i(tcfg.ndx, "short")
 	s2i(tcfg.ndx, "long")
+	s2i(tcfg.ndx, "outer")
 	s2i(tcfg.comptroller, "actives")
 	s2f(tcfg.comptroller, "prunelimit")
 	s2f(tcfg.strategy.slosh, "vcutoff")
@@ -74,8 +75,9 @@ def setem():
 	setNetwork(tcfg.harvester.network)
 	setActives(tcfg.comptroller.actives)
 	setInner(tcfg.ndx.inner)
-	setOuter(tcfg.ndx.outer)
+	setShort(tcfg.ndx.short)
 	setLong(tcfg.ndx.long)
+	setOuter(tcfg.ndx.outer)
 	setLoud(tcfg.strategy.base.loud)
 	setSize(tcfg.strategy.rsi.size)
 	setPeriod(tcfg.strategy.rsi.period)

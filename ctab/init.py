@@ -43,8 +43,9 @@ cfg = {
     },
     "ndx": {
         "inner": 8,
-        "outer": 24,
-        "long": 48
+        "short": 24,
+        "long": 36,
+        "outer": 72
     },
     "strategy": {
         "base": {
