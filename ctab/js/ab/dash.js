@@ -247,18 +247,17 @@ ab.dash.Dash = CT.Class({
 				CT.dom.div(sec + ": " + data.msg, "bigger bold centered"),
 				_.leg(data.data)
 			]);
+			CT.trans.glow(n);
 			return n;
 		},
 		streams: function(data) {
-			var _ = this._, sec, d, lc;
+			var _ = this._, sec, d;
 			for (sec of d_.streams) {
 				for (d of data[sec])
 					CT.dom.addContent(_.nodes[sec], _.snode(d, sec));
-				if (data[sec].length) {
-					lc = _.nodes[sec].lastChild;
-					CT.trans.glow(lc);
-					lc.scrollIntoView({ behavior: "smooth" });
-				}
+				data[sec].length && _.nodes[sec].lastChild.scrollIntoView({
+					behavior: "smooth"
+				});
 			}
 		},
 		up: function(upd) {
