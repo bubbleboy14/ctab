@@ -9,9 +9,10 @@ ab.dash = {
 			harvester: "left"
 		},
 		scols: {
-			cancels: "yellow",
-			fills: "green",
-			warnings: "red"
+			cancels: "yellow fgrow",
+			refills: "blue fgrow2",
+			fills: "green fgrow2",
+			warnings: "red fgrow"
 		},
 		tables: {
 			symbol: { // TODO: meh configurize better
@@ -29,7 +30,7 @@ ab.dash = {
 		ofloro: ["backend", "strategy", "comptroller"],
 		floats: ["prunelimit", "vcutoff"],
 		littles: ["randlim"],
-		streams: ["cancels", "fills", "warnings"],
+		streams: ["fills", "cancels", "warnings", "refills"],
 		tribools: ["oneswap"],
 		slice: 10,
 		loud: false
@@ -248,11 +249,15 @@ ab.dash.Dash = CT.Class({
 			return n;
 		},
 		streams: function(data) {
-			var _ = this._, sec, d;
+			var _ = this._, sec, d, lc;
 			for (sec of d_.streams) {
 				for (d of data[sec])
 					CT.dom.addContent(_.nodes[sec], _.snode(d, sec));
-				data[sec].length && _.nodes[sec].lastChild.scrollIntoViewIfNeeded();
+				if (data[sec].length) {
+					lc = _.nodes[sec].lastChild;
+					lc.scrollIntoViewIfNeeded();
+					CT.trans.glow(lc);
+				}
 			}
 		},
 		up: function(upd) {
@@ -317,7 +322,7 @@ ab.dash.Dash = CT.Class({
 				return CT.dom.div([
 					CT.dom.div(name, "centered bold"),
 					nz[name]
-				], "w1 " + d_.scols[name]);
+				], d_.scols[name]);
 			}), "bordered row");
 		}
 	},
