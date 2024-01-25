@@ -255,8 +255,8 @@ ab.dash.Dash = CT.Class({
 					CT.dom.addContent(_.nodes[sec], _.snode(d, sec));
 				if (data[sec].length) {
 					lc = _.nodes[sec].lastChild;
-					lc.scrollIntoViewIfNeeded();
 					CT.trans.glow(lc);
+					lc.scrollIntoView({ behavior: "smooth" });
 				}
 			}
 		},
