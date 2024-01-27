@@ -21,7 +21,7 @@ cfg = {
         "network": "bitcoin"
     },
     "accountant": {
-        "capped": True
+        "capped": "auto"
     },
     "comptroller": {
         "live": False,
