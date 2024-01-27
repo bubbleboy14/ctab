@@ -59,7 +59,7 @@ cfg = {
             "vmult": 16,
             "vcutoff": 0.8,
             "randlim": 0.002,
-            "oneswap": False
+            "oneswap": "auto"
         }
     },
     "mon": {
