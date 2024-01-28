@@ -209,8 +209,10 @@ ab.dash.Dash = CT.Class({
 			return n;
 		},
 		trades: function(data) {
-			var nz = this._.nodes, proc = function(t, cname) {
-				tnode = CT.dom.div(t.amount + " " + t.symbol + " @ " + t.price, cname);
+			var _ = this._, nz = _.nodes, proc = function(t, cname) {
+				tnode = CT.dom.div(t.amount + " " + t.symbol + " @ " + t.price,
+					"pointer hoverglow " + cname);
+				tnode.onclick = () => CT.modal.modal(_.leg(t));
 				if (t.side == "sell")
 					sells.push(tnode);
 				else
