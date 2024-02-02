@@ -21,6 +21,7 @@ cfg = {
         "network": "bitcoin"
     },
     "accountant": {
+        "nudge": "auto",
         "capped": "auto"
     },
     "comptroller": {

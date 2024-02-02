@@ -1,8 +1,8 @@
 from mkswap.base import setUnspammed
 from mkswap import presets, getOffice
-from mkswap.accountant import setCapped
 from mkswap.strategy.base import setLoud
 from mkswap.office import setVerbose, setStagish
+from mkswap.accountant import setCapped, setNudge
 from mkswap.ndx import setInner, setShort, setLong, setOuter
 from mkswap.backend import setStaging, setRealDie, setCredSet
 from mkswap.comptroller import setLive, setActives, setPruneLimit
@@ -42,6 +42,7 @@ def prep():
 	s2b(tcfg.harvester, "skim")
 	s2b(tcfg.harvester, "balance")
 	s2b(tcfg.strategy.base, "loud")
+	s2tb(tcfg.accountant, "nudge")
 	s2tb(tcfg.accountant, "capped")
 	s2tb(tcfg.strategy.slosh, "oneswap")
 	s2i(tcfg.strategy.slosh, "vmult")
@@ -66,8 +67,9 @@ def setem():
 	setStaging(tcfg.backend.staging)
 	setRealDie(tcfg.backend.realdie)
 	setCredSet(tcfg.backend.credset)
-	setCapped(tcfg.accountant.capped)
 	setUnspammed(tcfg.base.unspammed)
+	setCapped(tcfg.accountant.capped)
+	setNudge(tcfg.accountant.nudge)
 	setSkim(tcfg.harvester.skim)
 	setBatch(tcfg.harvester.batch)
 	setBottom(tcfg.harvester.bottom)
