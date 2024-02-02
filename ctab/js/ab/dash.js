@@ -31,7 +31,7 @@ ab.dash = {
 		floats: ["prunelimit", "vcutoff"],
 		littles: ["randlim"],
 		streams: ["fills", "cancels", "warnings", "refills"],
-		tribools: ["oneswap"],
+		tribools: ["oneswap", "nudge"],
 		sliceSpan: "short",
 		slice: 10,
 		loud: false
