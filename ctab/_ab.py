@@ -9,7 +9,7 @@ def response():
 	if action == "cancelall":
 		office.cancelAll()
 	elif action == "curconf":
-		succeed(swapconf.current())
+		succeed(swapconf.obj())
 	elif action == "setconf":
 		swapconf.set(cgi_get("mod"))
 	else: # status (pubsub swapmon)
