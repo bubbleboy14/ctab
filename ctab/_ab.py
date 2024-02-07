@@ -13,6 +13,6 @@ def response():
 	elif action == "setconf":
 		swapconf.set(cgi_get("mod"))
 	else: # status (pubsub swapmon)
-		succeed(office.status())
+		succeed(office and office.status() or { "waiting": "office loading" })
 
 respond(response)
