@@ -9,6 +9,7 @@ def response():
 	log("initializing mkswap office", important=True)
 	swobj = config.ctab.obj()
 	presel = presets[int(swobj["office"].pop("index"))]
+	swobj.pop("mon")
 	swapconfig.set(swobj)
 	setStaging()
 	setCredSet()
