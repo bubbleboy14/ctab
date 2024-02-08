@@ -209,15 +209,22 @@ ab.dash.Dash = CT.Class({
 			return n;
 		},
 		trades: function(data) {
-			var _ = this._, nz = _.nodes, proc = function(t, cname) {
-				tnode = CT.dom.div(t.amount + " " + t.symbol + " @ " + t.price,
-					"pointer hoverglow " + cname);
+			var _ = this._, nz = _.nodes, trade, tnode, tsig, tclass, sells = [
+			], buys = [], proc = function(t, cname) {
+				tsig = t.amount + " " + t.symbol + " @ " + t.price;
+				tclass = "pointer hoverglow " + cname;
+				tnode = CT.hover.auto(CT.dom.div(tsig, tclass), [
+					CT.dom.div(t.score, "big"),
+					t.status,
+					t.client_order_id,
+					t.order_id
+				]);
 				tnode.onclick = () => CT.modal.modal(_.leg(t));
 				if (t.side == "sell")
 					sells.push(tnode);
 				else
 					buys.push(tnode);
-			}, sells = [], buys = [], trade, tnode;
+			};
 			for (trade in data.actives)
 				proc(data.actives[trade], "bold");
 			for (trade of data.backlog)
