@@ -357,8 +357,8 @@ ab.dash.Dash = CT.Class({
 	update: function(data) {
 		var _ = this._, m = data.message;
 		d_.loud && this.log(data);
-		if (data.waiting)
-			return this.log("waiting!", data.waiting);
+		if (m.waiting)
+			return this.log("waiting!", m.waiting);
 		if (!m.balances.waiting) {
 			_.balup(m.balances);
 			_.charts();
