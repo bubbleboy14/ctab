@@ -15,9 +15,13 @@ ab.dash = {
 			warnings: "red fgrow"
 		},
 		tables: {
-			symbol: { // TODO: meh configurize better
+			symbol: { // TODO: meh configurize symbol/market better
 				head: ["symbol", "quote", "actual", "theoretical"],
 				rows: ["USD", "ETH", "BTC"]
+			},
+			market: {
+				head: ["market", "volume"],
+				rows: ["ETHBTC", "ETHUSD", "BTCUSD"]
 			},
 			metric: {
 				head: ["metric", "actual", "theoretical"],
@@ -81,12 +85,16 @@ ab.dash.Dash = CT.Class({
 				cols[col] = [c("<b>" + col + "</b>")];
 			for (sym of rows) {
 				colnode = c("<b>" + sym + "</b>");
-				colnode.style.color = colors[sym];
 				cols[mode].push(colnode);
-				if (mode == "symbol")
-					cols.quote.push(c(data.prices[sym + "USD"] || 1));
-				cols.actual.push(c(bals.waiting ? "waiting" : bals.actual[sym]));
-				cols.theoretical.push(c(bals.waiting ? "waiting" : bals.theoretical[sym]));
+				if (mode == "market")
+					cols.volume.push(c(_.rounder(data.volumes[sym])));
+				else {
+					colnode.style.color = colors[sym];
+					if (mode == "symbol")
+						cols.quote.push(c(data.prices[sym + "USD"] || 1));
+					cols.actual.push(c(bals.waiting ? "waiting" : bals.actual[sym]));
+					cols.theoretical.push(c(bals.waiting ? "waiting" : bals.theoretical[sym]));
+				}
 			}
 			fnode = CT.dom.flex(head.map(h => cols[h]), "bordered row jcbetween");
 			return sub ? CT.dom.div([
@@ -240,8 +248,10 @@ ab.dash.Dash = CT.Class({
 				bals.waiting ? _.leg(bals, false, null, false, null, null, true,
 					"centered") : _.leg(bals.theoretical, true, bals.actual),
 				CT.dom.flex([
-					_.tab(data, "symbol"), _.tab(data, "metric", "ndx")
-				], "bordered row jcbetween")
+					_.tab(data, "symbol"),
+					_.tab(data, "market"),
+					_.tab(data, "metric", "ndx")
+				], "smallish bordered row jcbetween")
 			]);
 			CT.dom.setContent(_.nodes.legend, [
 				_.leg({ orders: data.orders, harvester: data.harvester }),
