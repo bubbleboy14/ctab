@@ -196,9 +196,9 @@ ab.dash.Dash = CT.Class({
 							});
 						} else if (d_.littles.includes(d)) {
 							Object.assign(popts, {
-								max: 0.01,
-								min: 0.0001,
-								step: 0.0001
+								max: 0.1,
+								min: 0.001,
+								step: 0.001
 							});
 						}
 						CT.modal.prompt(popts);
