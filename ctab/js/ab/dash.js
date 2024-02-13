@@ -87,7 +87,7 @@ ab.dash.Dash = CT.Class({
 				colnode = c("<b>" + sym + "</b>");
 				cols[mode].push(colnode);
 				if (mode == "market")
-					cols.volume.push(c(_.rounder(data.volumes[sym])));
+					cols.volume.push(c(_.rounder(data.volumes[sym], 10000)));
 				else {
 					colnode.style.color = colors[sym];
 					if (mode == "symbol")
