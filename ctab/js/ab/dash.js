@@ -31,11 +31,12 @@ ab.dash = {
 		chart1: ["USD", "ETH", "BTC", "USD actual", "ETH actual", "BTC actual"],
 		chart2: ["diff", "dph", "diff actual", "dph actual"],
 		noclix: ["staging", "stagish", "live", "network", "capped", "credset"],
+		streams: ["fills", "cancels", "warnings", "refills"],
 		ofloro: ["backend", "strategy", "comptroller"],
 		floats: ["prunelimit", "vcutoff"],
-		littles: ["randlim"],
-		streams: ["fills", "cancels", "warnings", "refills"],
 		tribools: ["oneswap", "nudge"],
+		littles: ["randlim"],
+		rounders: ["fees"],
 		sliceSpan: "short",
 		slice: 10,
 		loud: false
@@ -139,6 +140,7 @@ ab.dash.Dash = CT.Class({
 				val = data[d];
 				vtype = typeof(val);
 				isbool = vtype == "boolean";
+				round = round || d_.rounders.includes(d);
 				if (round && vtype == "number")
 					val = _.rounder(val, 1000000);
 				else if (isbool)
