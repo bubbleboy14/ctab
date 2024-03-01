@@ -15,7 +15,11 @@ class SwapMon(pubsub.Bot):
 		rel.timeout(mcfg.interval, self._tick)
 
 	def _tick(self):
-		data = fetch(wcfg.host, "/_ab", wcfg.port, timeout=mcfg.timeout, protocol=wcfg.protocol, ctjson=True)
+		try:
+			data = fetch(wcfg.host, "/_ab", wcfg.port, timeout=mcfg.timeout, protocol=wcfg.protocol, ctjson=True)
+		except:
+			log("fetch failed!")
+			return True
 		log(data)
 		self.pub(data)
 		return True
