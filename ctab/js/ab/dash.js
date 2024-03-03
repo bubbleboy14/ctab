@@ -32,8 +32,8 @@ ab.dash = {
 		chart2: ["diff", "dph", "diff actual", "dph actual"],
 		noclix: ["staging", "stagish", "live", "network", "capped", "credset"],
 		streams: ["fills", "cancels", "warnings", "refills"],
-		ofloro: ["backend", "strategy", "comptroller"],
-		floats: ["prunelimit", "vcutoff"],
+		floats: ["prunelimit", "vcutoff", "nmult"],
+		ofloro: ["backend", "strategy", "ndx"],
 		tribools: ["oneswap", "nudge"],
 		littles: ["randlim"],
 		rounders: ["fees"],
@@ -157,7 +157,7 @@ ab.dash.Dash = CT.Class({
 					cont.push(CT.dom.pad());
 					cont.push(CT.dom.span(parenthetical[d]));
 				}
-				dnode = CT.dom.div(cont, "smallisher p1");
+				dnode = CT.dom.div(cont, "small p1");
 				if (onclick && !d_.noclix.includes(d)) {
 					dnode.onclick = function() {
 						if (d_.tribools.includes(d)) {
