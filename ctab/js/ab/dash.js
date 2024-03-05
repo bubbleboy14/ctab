@@ -20,7 +20,7 @@ ab.dash = {
 				rows: ["USD", "ETH", "BTC"]
 			},
 			market: {
-				head: ["market", "volume"],
+				head: ["market", "ask", "bid", "volume"],
 				rows: ["ETHBTC", "ETHUSD", "BTCUSD"]
 			},
 			metric: {
@@ -87,9 +87,11 @@ ab.dash.Dash = CT.Class({
 			for (sym of rows) {
 				colnode = c("<b>" + sym + "</b>");
 				cols[mode].push(colnode);
-				if (mode == "market")
+				if (mode == "market") {
 					cols.volume.push(c(_.rounder(data.volumes[sym], 1000)));
-				else {
+					cols.ask.push(c(data.orders[sym].ask));
+					cols.bid.push(c(data.orders[sym].bid));
+				} else {
 					colnode.style.color = colors[sym];
 					if (mode == "symbol")
 						cols.quote.push(c(data.prices[sym + "USD"] || 1));
@@ -100,7 +102,7 @@ ab.dash.Dash = CT.Class({
 			fnode = CT.dom.flex(head.map(h => cols[h]), "bordered row jcbetween");
 			return sub ? CT.dom.div([
 				fnode,
-				_.leg(data[sub], false, null, true, null, null, true)
+				_.leg(data[sub], false, null, true, null, null, true, "big")
 			]) : fnode;
 		},
 		counts: function(data, prop, round) { // now unused
@@ -253,10 +255,10 @@ ab.dash.Dash = CT.Class({
 					_.tab(data, "symbol"),
 					_.tab(data, "market"),
 					_.tab(data, "metric", "ndx")
-				], "smallish bordered row jcbetween")
+				], "fs75p bordered row jcbetween")
 			]);
 			CT.dom.setContent(_.nodes.legend, [
-				_.leg({ orders: data.orders, harvester: data.harvester }),
+				_.leg({ orders: data.accountant, harvester: data.harvester }),
 				strats,
 				_.leg(data.gem)
 			]);
