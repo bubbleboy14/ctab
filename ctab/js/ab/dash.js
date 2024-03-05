@@ -323,11 +323,12 @@ ab.dash.Dash = CT.Class({
 		balup: function(bals) {
 			var s, k, all = {}, _ = this._;
 			_.round(bals.theoretical);
-			_.round(bals.actual);
 			Object.assign(all, bals.theoretical);
-			for (s of d_.balsubs)
+			for (s of d_.balsubs) {
+				_.round(bals[s]);
 				for (k in bals[s])
 					all[k + " " + s] = bals[s][k];
+			}
 			d_.loud && this.log("updated balances:", Object.keys(all));
 			_.up(all);
 		},
