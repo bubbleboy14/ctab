@@ -29,7 +29,7 @@ ab.dash = {
 			}
 		},
 		chart1: ["USD", "ETH", "BTC", "USD actual", "ETH actual", "BTC actual",
-			"USD ask", "ETH ask", "BTC ask", "USD bid", "ETH bid", "BTC bid"],
+			"ETH ask", "BTC ask", "ETH bid", "BTC bid"],
 		chart2: ["diff", "dph", "diff actual", "dph actual",
 			"diff ask", "dph ask", "diff bid", "dph bid"],
 		noclix: ["staging", "stagish", "live", "network", "capped", "credset"],
@@ -123,7 +123,7 @@ ab.dash.Dash = CT.Class({
 		leg: function(data, colored, subbers, round, onclick, tpath, forceBreak, withClass) {
 			if (!data) return "0";
 			tpath = tpath || [];
-			var _ = this._, cont, dnode, lname, lab, labs = {}, popts, subber, d2n = function(d) {
+			var _ = this._, cont, dnode, lname, lab, labs = {}, popts, subber, sval, srow, d2n = function(d) {
 				var val, vtype, vnode, isbool, mypath = tpath.slice();
 				mypath.push(d);
 				if (typeof data[d] == "object") {
@@ -156,12 +156,16 @@ ab.dash.Dash = CT.Class({
 				cont.push(vnode);
 				if (subbers) {
 					for (subber of subbers.names) {
+						if (sval == subbers.set[subber][d])
+							continue;
+						srow = [];
+						sval = subbers.set[subber][d];
 						lab = CT.dom.span(subber, "bold");
 						labs[d + " " + subber] = lab;
-						cont.push(CT.dom.pad());
-						cont.push(lab);
-						cont.push(CT.dom.pad());
-						cont.push(CT.dom.span(subbers.set[subber][d]));
+						srow.push(lab);
+						srow.push(CT.dom.pad());
+						srow.push(CT.dom.span(sval));
+						cont.push(srow);
 					}
 				}
 				dnode = CT.dom.div(cont, "small p1");
@@ -219,8 +223,11 @@ ab.dash.Dash = CT.Class({
 			}, n = CT.dom.flex(Object.keys(data).map(d2n), "bordered row jcbetween");
 			colored && CT.dom.className("ct-line", _.nodes.charts).forEach(function(n, i) {
 				lname = d_.charts[i];
-				labs[lname].style.color = _.colors[lname]
-					= window.getComputedStyle(n).getPropertyValue("stroke");
+				if (lname in labs)
+					labs[lname].style.color = _.colors[lname]
+						= window.getComputedStyle(n).getPropertyValue("stroke");
+				else
+					CT.log("can't find " + lname + " to color!");
 			});
 			withClass && n.classList.add(withClass);
 			return n;
