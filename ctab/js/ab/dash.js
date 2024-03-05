@@ -28,12 +28,15 @@ ab.dash = {
 				rows: ["diff", "dph"]
 			}
 		},
-		chart1: ["USD", "ETH", "BTC", "USD actual", "ETH actual", "BTC actual"],
-		chart2: ["diff", "dph", "diff actual", "dph actual"],
+		chart1: ["USD", "ETH", "BTC", "USD actual", "ETH actual", "BTC actual",
+			"USD ask", "ETH ask", "BTC ask", "USD bid", "ETH bid", "BTC bid"],
+		chart2: ["diff", "dph", "diff actual", "dph actual",
+			"diff ask", "dph ask", "diff bid", "dph bid"],
 		noclix: ["staging", "stagish", "live", "network", "capped", "credset"],
 		streams: ["fills", "cancels", "warnings", "refills"],
 		floats: ["prunelimit", "vcutoff", "nmult"],
 		ofloro: ["backend", "strategy", "ndx"],
+		balsubs: ["actual", "ask", "bid"],
 		tribools: ["oneswap", "nudge"],
 		littles: ["randlim"],
 		rounders: ["fees"],
@@ -117,16 +120,16 @@ ab.dash.Dash = CT.Class({
 			o[tpath[tpath.length - 1]] = val;
 			return full;
 		},
-		leg: function(data, colored, parenthetical, round, onclick, tpath, forceBreak, withClass) {
+		leg: function(data, colored, subbers, round, onclick, tpath, forceBreak, withClass) {
 			if (!data) return "0";
 			tpath = tpath || [];
-			var _ = this._, cont, dnode, lname, lab, labs = {}, popts, d2n = function(d) {
+			var _ = this._, cont, dnode, lname, lab, labs = {}, popts, subber, d2n = function(d) {
 				var val, vtype, vnode, isbool, mypath = tpath.slice();
 				mypath.push(d);
 				if (typeof data[d] == "object") {
 					return CT.dom.div([
 						CT.dom.div(d, "centered"),
-						_.leg(data[d], colored, parenthetical && parenthetical[d], round, onclick, mypath)
+						_.leg(data[d], colored, subbers && subbers[d], round, onclick, mypath)
 					], "w1");
 				}
 
@@ -151,13 +154,15 @@ ab.dash.Dash = CT.Class({
 					d_.slice = val;
 				vnode = CT.dom.span(val);
 				cont.push(vnode);
-				if (parenthetical) {
-					lab = CT.dom.span("actual", "bold");
-					labs[d + " actual"] = lab;
-					cont.push(CT.dom.pad());
-					cont.push(lab);
-					cont.push(CT.dom.pad());
-					cont.push(CT.dom.span(parenthetical[d]));
+				if (subbers) {
+					for (subber of subbers.names) {
+						lab = CT.dom.span(subber, "bold");
+						labs[d + " " + subber] = lab;
+						cont.push(CT.dom.pad());
+						cont.push(lab);
+						cont.push(CT.dom.pad());
+						cont.push(CT.dom.span(subbers.set[subber][d]));
+					}
 				}
 				dnode = CT.dom.div(cont, "small p1");
 				if (onclick && !d_.noclix.includes(d)) {
@@ -250,7 +255,10 @@ ab.dash.Dash = CT.Class({
 			strats.classList.add("fwrap");
 			CT.dom.setContent(_.nodes.prices, [
 				bals.waiting ? _.leg(bals, false, null, false, null, null, true,
-					"centered") : _.leg(bals.theoretical, true, bals.actual),
+					"centered") : _.leg(bals.theoretical, true, {
+						set: bals,
+						names: d_.balsubs
+					}),
 				CT.dom.flex([
 					_.tab(data, "symbol"),
 					_.tab(data, "market"),
@@ -313,12 +321,13 @@ ab.dash.Dash = CT.Class({
 			}
 		},
 		balup: function(bals) {
-			var k, all = {}, _ = this._;
+			var s, k, all = {}, _ = this._;
 			_.round(bals.theoretical);
 			_.round(bals.actual);
 			Object.assign(all, bals.theoretical);
-			for (k in bals.actual)
-				all[k + " actual"] = bals.actual[k];
+			for (s of d_.balsubs)
+				for (k in bals[s])
+					all[k + " " + s] = bals[s][k];
 			d_.loud && this.log("updated balances:", Object.keys(all));
 			_.up(all);
 		},
