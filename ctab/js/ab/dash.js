@@ -36,7 +36,7 @@ ab.dash = {
 		streams: ["fills", "cancels", "warnings", "refills"],
 		floats: ["prunelimit", "vcutoff", "nmult"],
 		ofloro: ["backend", "strategy", "ndx"],
-		balsubs: ["actual", "ask", "bid"],
+		balsubs: ["ask", "bid", "actual"],
 		tribools: ["oneswap", "nudge"],
 		littles: ["randlim"],
 		rounders: ["fees"],
@@ -156,7 +156,7 @@ ab.dash.Dash = CT.Class({
 				cont.push(vnode);
 				if (subbers) {
 					for (subber of subbers.names) {
-						if (sval == subbers.set[subber][d])
+						if (d == "USD" && ["ask", "bid"].includes(subber))
 							continue;
 						srow = [];
 						sval = subbers.set[subber][d];
