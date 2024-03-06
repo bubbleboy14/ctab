@@ -263,7 +263,7 @@ ab.dash.Dash = CT.Class({
 				hiding, showing = 1, nodes = contents.map(CT.dom.div);
 			toggler.onclick = function() {
 				showing = showing ? 0 : 1;
-				hiding = showing ? 1 : 0;
+				hiding = showing ? 0 : 1;
 				CT.dom.show(nodes[showing]);
 				CT.dom.hide(nodes[hiding]);
 				toggler.innerHTML = names[showing] + " (switch to " + names[hiding] + ")";
