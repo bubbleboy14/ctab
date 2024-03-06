@@ -275,9 +275,9 @@ ab.dash.Dash = CT.Class({
 				_.tab(data, "market")
 			], "bigish");
 			CT.dom.setContent(_.nodes.legend, [
-				_.leg({ "asks": data.weighted.ask }),
-				_.leg({ "bids": data.weighted.bid }),
-				_.leg({ "trades": data.weighted.trade }),
+				_.leg({ "asks": data.weighted.ask }, false, null, true),
+				_.leg({ "bids": data.weighted.bid }, false, null, true),
+				_.leg({ "trades": data.weighted.trade }, false, null, true),
 				_.leg({ orders: data.accountant, harvester: data.harvester }),
 				strats,
 				_.leg(data.gem)
