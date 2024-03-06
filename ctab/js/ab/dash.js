@@ -258,22 +258,22 @@ ab.dash.Dash = CT.Class({
 			CT.dom.setContent(nz.sells, sells);
 			CT.dom.setContent(nz.buys, buys);
 		},
-		toggler: function(names, contents) { // swaps between _2_ items
-			var toggler = CT.dom.div(null, "pointer hoverglow"),
-				hiding, showing = 1, nodes = contents.map(CT.dom.div);
-			toggler.onclick = function() {
-				showing = showing ? 0 : 1;
-				hiding = showing ? 0 : 1;
-				CT.dom.show(nodes[showing]);
-				CT.dom.hide(nodes[hiding]);
-				toggler.innerHTML = names[showing] + " (switch to " + names[hiding] + ")";
-			};
-			toggler.onclick();
-			return [toggler, nodes];
+		toggleBotMode: function() {
+			var nz = this._.nodes, butt = nz.bottomToggler;
+			if (butt._mode == "stats") {
+				butt._mode = "weighted averages";
+				butt._nextMode = "stats";
+			} else {
+				butt._mode = "stats";
+				butt._nextMode = "weighted averages";
+			}
+			CT.dom.show(nz[butt._mode]);
+			CT.dom.hide(nz[butt._nextMode]);
+			butt.innerHTML = "view " + butt._nextMode;
 		},
 		legend: function(data) {
-			var _ = this._, bals = data.balances,
-				strats = _.leg(data.strategists, false, null, true);
+			var _ = this._, nz = _.nodes, bals = data.balances,
+				wavs, stas, strats = _.leg(data.strategists, false, null, true);
 			strats.classList.add("fwrap");
 			CT.dom.setContent(_.nodes.prices, [
 				bals.waiting ? _.leg(bals, false, null, false, null, null, true,
@@ -287,15 +287,18 @@ ab.dash.Dash = CT.Class({
 				], "bordered row jcbetween"),
 				_.tab(data, "market")
 			], "bigish");
-			CT.dom.setContent(_.nodes.legend, _.toggler(["weighted averages", "stats"], [[
+			wavs = nz["weighted averages"] = CT.dom.div([
 				_.leg({ "asks": data.weighted.ask }, false, null, true),
 				_.leg({ "bids": data.weighted.bid }, false, null, true),
 				_.leg({ "trades": data.weighted.trade }, false, null, true),
-			], [
+			]);
+			stas = nz.stats = CT.dom.div([
 				_.leg({ orders: data.accountant, harvester: data.harvester }),
 				strats,
 				_.leg(data.gem)
-			]]));
+			]);
+			CT.dom.hide(nz[nz.bottomToggler._nextMode]);
+			CT.dom.setContent(_.nodes.legend, [wavs, stas]);
 		},
 		snode: function(data, sec) {
 			var _ = this._, n = CT.hover.auto(CT.dom.div(data.msg,
@@ -399,6 +402,9 @@ ab.dash.Dash = CT.Class({
 		nz.buys = CT.dom.div(null, "scrolly green sidecol");
 		nz.charts = CT.dom.flex([nz.chart1, nz.chart2], "midcharts fgrow");
 		nz.cancelAll = CT.dom.button("Cancel All Orders", _.cancelAll, "abs b0 l0");
+		nz.bottomToggler = CT.dom.button("View weighted averages", _.toggleBotMode, "abs b0 r0");
+		nz.bottomToggler._mode = "stats";
+		nz.bottomToggler._nextMode = "weighted averages";
 		CT.dom.setMain(CT.dom.flex([
 			nz.sells,
 			CT.dom.flex([
@@ -409,7 +415,8 @@ ab.dash.Dash = CT.Class({
 				nz.legend
 			], "maincol h1 col"),
 			nz.buys,
-			nz.cancelAll
+			nz.cancelAll,
+			nz.bottomToggler
 		], "h1 row"));
 	},
 	update: function(data) {
