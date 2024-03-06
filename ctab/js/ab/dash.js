@@ -402,9 +402,9 @@ ab.dash.Dash = CT.Class({
 		nz.buys = CT.dom.div(null, "scrolly green sidecol");
 		nz.charts = CT.dom.flex([nz.chart1, nz.chart2], "midcharts fgrow");
 		nz.cancelAll = CT.dom.button("Cancel All Orders",
-			_.cancelAll, "abs b0 l0 sidebutt hoverglow");
+			_.cancelAll, "abs b0 l0 w120 hoverglow");
 		nz.bottomToggler = CT.dom.button("weighted averages",
-			_.toggleBotMode, "abs b0 r0 sidebutt hoverglow");
+			_.toggleBotMode, "abs b0 r0 w120 sidebutt hoverglow");
 		nz.bottomToggler._mode = "stats";
 		nz.bottomToggler._nextMode = "weighted averages";
 		CT.dom.setMain(CT.dom.flex([

@@ -8,10 +8,6 @@
 	height: calc(100vh - 100px);
 }
 
-.sidebutt {
-	width: 114px;
-}
-
 .maincol {
 	width: calc(100vw - 240px);
 }
