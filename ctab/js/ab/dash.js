@@ -258,6 +258,19 @@ ab.dash.Dash = CT.Class({
 			CT.dom.setContent(nz.sells, sells);
 			CT.dom.setContent(nz.buys, buys);
 		},
+		toggler: function(names, contents) { // swaps between _2_ items
+			var toggler = CT.dom.div(null, "pointer hoverglow"),
+				hiding, showing = 1, nodes = contents.map(CT.dom.div);
+			toggler.onclick = function() {
+				showing = showing ? 0 : 1;
+				hiding = showing ? 1 : 0;
+				CT.dom.show(nodes[showing]);
+				CT.dom.hide(nodes[hiding]);
+				toggler.innerHTML = names[showing] + " (switch to " + names[hiding] + ")";
+			};
+			toggler.onclick();
+			return [toggler, nodes];
+		},
 		legend: function(data) {
 			var _ = this._, bals = data.balances,
 				strats = _.leg(data.strategists, false, null, true);
@@ -274,14 +287,15 @@ ab.dash.Dash = CT.Class({
 				], "bordered row jcbetween"),
 				_.tab(data, "market")
 			], "bigish");
-			CT.dom.setContent(_.nodes.legend, [
+			CT.dom.setContent(_.nodes.legend, _.toggler(["weighted averages", "stats"], [[
 				_.leg({ "asks": data.weighted.ask }, false, null, true),
 				_.leg({ "bids": data.weighted.bid }, false, null, true),
 				_.leg({ "trades": data.weighted.trade }, false, null, true),
+			], [
 				_.leg({ orders: data.accountant, harvester: data.harvester }),
 				strats,
 				_.leg(data.gem)
-			]);
+			]]));
 		},
 		snode: function(data, sec) {
 			var _ = this._, n = CT.hover.auto(CT.dom.div(data.msg,
