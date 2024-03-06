@@ -273,7 +273,7 @@ ab.dash.Dash = CT.Class({
 					_.tab(data, "metric", "ndx")
 				], "bordered row jcbetween"),
 				_.tab(data, "market")
-			], "big");
+			], "bigish");
 			CT.dom.setContent(_.nodes.legend, [
 				_.leg({ orders: data.accountant, harvester: data.harvester }),
 				strats,
