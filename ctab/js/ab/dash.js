@@ -404,7 +404,7 @@ ab.dash.Dash = CT.Class({
 		nz.cancelAll = CT.dom.button("Cancel All Orders",
 			_.cancelAll, "abs b0 l0 w120 hoverglow");
 		nz.bottomToggler = CT.dom.button("weighted averages",
-			_.toggleBotMode, "abs b0 r0 w120 sidebutt hoverglow");
+			_.toggleBotMode, "abs b0 r0 w120 hoverglow");
 		nz.bottomToggler._mode = "stats";
 		nz.bottomToggler._nextMode = "weighted averages";
 		CT.dom.setMain(CT.dom.flex([
