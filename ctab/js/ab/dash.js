@@ -269,7 +269,7 @@ ab.dash.Dash = CT.Class({
 			}
 			CT.dom.show(nz[butt._mode]);
 			CT.dom.hide(nz[butt._nextMode]);
-			butt.innerHTML = butt._nextMode;
+			butt.innerHTML = "View " + CT.parse.words2title(butt._nextMode);
 		},
 		legend: function(data) {
 			var _ = this._, nz = _.nodes, bals = data.balances,
@@ -403,7 +403,7 @@ ab.dash.Dash = CT.Class({
 		nz.charts = CT.dom.flex([nz.chart1, nz.chart2], "midcharts fgrow");
 		nz.cancelAll = CT.dom.button("Cancel All Orders",
 			_.cancelAll, "abs b0 l0 w120 hoverglow");
-		nz.bottomToggler = CT.dom.button("weighted averages",
+		nz.bottomToggler = CT.dom.button("View Weighted Averages",
 			_.toggleBotMode, "abs b0 r0 w120 hoverglow");
 		nz.bottomToggler._mode = "stats";
 		nz.bottomToggler._nextMode = "weighted averages";
