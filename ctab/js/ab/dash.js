@@ -20,7 +20,7 @@ ab.dash = {
 				rows: ["USD", "ETH", "BTC"]
 			},
 			market: {
-				head: ["market", "ask", "bid", "volume"],
+				head: ["market", "ask", "bid", "asks", "bids", "volume"],
 				rows: ["ETHBTC", "ETHUSD", "BTCUSD"]
 			},
 			metric: {
@@ -94,6 +94,8 @@ ab.dash.Dash = CT.Class({
 					cols.volume.push(c(_.rounder(data.volumes[sym], 1000)));
 					cols.ask.push(c(data.orders[sym].ask));
 					cols.bid.push(c(data.orders[sym].bid));
+					cols.asks.push(c(data.totals[sym].ask));
+					cols.bids.push(c(data.totals[sym].bid));
 				} else {
 					colnode.style.color = colors[sym];
 					if (mode == "symbol")
@@ -268,9 +270,9 @@ ab.dash.Dash = CT.Class({
 					}),
 				CT.dom.flex([
 					_.tab(data, "symbol"),
-					_.tab(data, "market"),
 					_.tab(data, "metric", "ndx")
-				], "fs75p bordered row jcbetween")
+				], "bordered row jcbetween"),
+				_.tab(data, "market")
 			]);
 			CT.dom.setContent(_.nodes.legend, [
 				_.leg({ orders: data.accountant, harvester: data.harvester }),
