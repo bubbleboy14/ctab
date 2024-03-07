@@ -260,11 +260,11 @@ ab.dash.Dash = CT.Class({
 		},
 		toggleBotMode: function() {
 			var nz = this._.nodes, butt = nz.bottomToggler;
-			if (butt._mode == "stats") {
+			if (butt._mode == "various stats") {
 				butt._mode = "weighted averages";
-				butt._nextMode = "stats";
+				butt._nextMode = "various stats";
 			} else {
-				butt._mode = "stats";
+				butt._mode = "various stats";
 				butt._nextMode = "weighted averages";
 			}
 			CT.dom.show(nz[butt._mode]);
@@ -292,7 +292,7 @@ ab.dash.Dash = CT.Class({
 				_.leg({ "bids": data.weighted.bid }, false, null, true),
 				_.leg({ "trades": data.weighted.trade }, false, null, true),
 			]);
-			stas = nz.stats = CT.dom.div([
+			stas = nz["various stats"] = CT.dom.div([
 				_.leg({ orders: data.accountant, harvester: data.harvester }),
 				strats,
 				_.leg(data.gem)
@@ -405,7 +405,7 @@ ab.dash.Dash = CT.Class({
 			_.cancelAll, "abs b0 l0 w120 hoverglow");
 		nz.bottomToggler = CT.dom.button("View Weighted Averages",
 			_.toggleBotMode, "abs b0 r0 w120 hoverglow");
-		nz.bottomToggler._mode = "stats";
+		nz.bottomToggler._mode = "various stats";
 		nz.bottomToggler._nextMode = "weighted averages";
 		CT.dom.setMain(CT.dom.flex([
 			nz.sells,
