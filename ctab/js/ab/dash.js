@@ -149,7 +149,7 @@ ab.dash.Dash = CT.Class({
 				isbool = vtype == "boolean";
 				round = round || d_.rounders.includes(d);
 				if (round && vtype == "number")
-					val = _.rounder(val, 1000000);
+					val = _.rounder(val, 100000);
 				else if (isbool)
 					val = val.toString();
 				else if (d == d_.sliceSpan)
