@@ -96,7 +96,7 @@ ab.dash.Dash = CT.Class({
 					cols.asks.push(c(_.rounder(data.totals[sym].ask, 1000)));
 					cols.bids.push(c(_.rounder(data.totals[sym].bid, 1000)));
 					cols.volume.push(c(_.rounder(data.volumes[sym], 1000)));
-					cols.volatility.push(c(data.volvols[sym]));
+					cols.volatility.push(c(_.rounder(data.volvols[sym], 1000)));
 					cols.hint.push(c(data.hints[sym]));
 				} else {
 					colnode.style.color = colors[sym];
