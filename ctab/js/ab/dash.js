@@ -93,8 +93,8 @@ ab.dash.Dash = CT.Class({
 				if (mode == "market") {
 					cols.ask.push(c(data.orders[sym].ask));
 					cols.bid.push(c(data.orders[sym].bid));
-					cols.asks.push(c(_.rounder(data.totals[sym].ask, 1000)));
-					cols.bids.push(c(_.rounder(data.totals[sym].bid, 1000)));
+					cols.asks.push(c(_.rounder(data.totals[sym].ask, 10)));
+					cols.bids.push(c(_.rounder(data.totals[sym].bid, 10)));
 					cols.volume.push(c(_.rounder(data.volumes[sym], 1000)));
 					cols.volatility.push(c(_.rounder(data.volvols[sym], 1000)));
 					cols.hint.push(c(data.hints[sym]));
