@@ -20,7 +20,7 @@ ab.dash = {
 				rows: ["USD", "ETH", "BTC"]
 			},
 			market: {
-				head: ["market", "ask", "bid", "asks", "bids", "volume"],
+				head: ["market", "ask", "bid", "asks", "bids", "volume", "hint"],
 				rows: ["ETHBTC", "ETHUSD", "BTCUSD"]
 			},
 			metric: {
@@ -96,6 +96,7 @@ ab.dash.Dash = CT.Class({
 					cols.bid.push(c(data.orders[sym].bid));
 					cols.asks.push(c(data.totals[sym].ask));
 					cols.bids.push(c(data.totals[sym].bid));
+					cols.hint.push(c(data.hints[sym]));
 				} else {
 					colnode.style.color = colors[sym];
 					if (mode == "symbol")
