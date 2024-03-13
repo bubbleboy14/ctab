@@ -20,7 +20,7 @@ ab.dash = {
 				rows: ["USD", "ETH", "BTC"]
 			},
 			market: {
-				head: ["market", "volume"],
+				head: ["market", "ask", "bid", "asks", "bids", "volume", "volatility", "hint"],
 				rows: ["ETHBTC", "ETHUSD", "BTCUSD"]
 			},
 			metric: {
@@ -28,12 +28,15 @@ ab.dash = {
 				rows: ["diff", "dph"]
 			}
 		},
-		chart1: ["USD", "ETH", "BTC", "USD actual", "ETH actual", "BTC actual"],
-		chart2: ["diff", "dph", "diff actual", "dph actual"],
+		chart1: ["USD", "ETH", "BTC", "USD actual", "ETH actual", "BTC actual",
+			"ETH ask", "BTC ask", "ETH bid", "BTC bid"],
+		chart2: ["diff", "dph", "diff actual", "dph actual",
+			"diff ask", "dph ask", "diff bid", "dph bid"],
 		noclix: ["staging", "stagish", "live", "network", "capped", "credset"],
 		streams: ["fills", "cancels", "warnings", "refills"],
 		floats: ["prunelimit", "vcutoff", "nmult"],
 		ofloro: ["backend", "strategy", "ndx"],
+		balsubs: ["ask", "bid", "actual"],
 		tribools: ["oneswap", "nudge"],
 		littles: ["randlim"],
 		rounders: ["fees"],
@@ -87,9 +90,15 @@ ab.dash.Dash = CT.Class({
 			for (sym of rows) {
 				colnode = c("<b>" + sym + "</b>");
 				cols[mode].push(colnode);
-				if (mode == "market")
+				if (mode == "market") {
+					cols.ask.push(c(data.orders[sym].ask));
+					cols.bid.push(c(data.orders[sym].bid));
+					cols.asks.push(c(_.rounder(data.totals[sym].ask, 10)));
+					cols.bids.push(c(_.rounder(data.totals[sym].bid, 10)));
 					cols.volume.push(c(_.rounder(data.volumes[sym], 1000)));
-				else {
+					cols.volatility.push(c(_.rounder(data.volvols[sym], 1000)));
+					cols.hint.push(c(data.hints[sym]));
+				} else {
 					colnode.style.color = colors[sym];
 					if (mode == "symbol")
 						cols.quote.push(c(data.prices[sym + "USD"] || 1));
@@ -100,7 +109,7 @@ ab.dash.Dash = CT.Class({
 			fnode = CT.dom.flex(head.map(h => cols[h]), "bordered row jcbetween");
 			return sub ? CT.dom.div([
 				fnode,
-				_.leg(data[sub], false, null, true, null, null, true)
+				_.leg(data[sub], false, null, true, null, null, true, "big")
 			]) : fnode;
 		},
 		counts: function(data, prop, round) { // now unused
@@ -115,16 +124,16 @@ ab.dash.Dash = CT.Class({
 			o[tpath[tpath.length - 1]] = val;
 			return full;
 		},
-		leg: function(data, colored, parenthetical, round, onclick, tpath, forceBreak, withClass) {
+		leg: function(data, colored, subbers, round, onclick, tpath, forceBreak, withClass) {
 			if (!data) return "0";
 			tpath = tpath || [];
-			var _ = this._, cont, dnode, lname, lab, labs = {}, popts, d2n = function(d) {
+			var _ = this._, cont, dnode, lname, lab, labs = {}, popts, subber, sval, srow, d2n = function(d) {
 				var val, vtype, vnode, isbool, mypath = tpath.slice();
 				mypath.push(d);
 				if (typeof data[d] == "object") {
 					return CT.dom.div([
 						CT.dom.div(d, "centered"),
-						_.leg(data[d], colored, parenthetical && parenthetical[d], round, onclick, mypath)
+						_.leg(data[d], colored, subbers && subbers[d], round, onclick, mypath)
 					], "w1");
 				}
 
@@ -142,20 +151,26 @@ ab.dash.Dash = CT.Class({
 				isbool = vtype == "boolean";
 				round = round || d_.rounders.includes(d);
 				if (round && vtype == "number")
-					val = _.rounder(val, 1000000);
+					val = _.rounder(val, 100000);
 				else if (isbool)
 					val = val.toString();
 				else if (d == d_.sliceSpan)
 					d_.slice = val;
 				vnode = CT.dom.span(val);
 				cont.push(vnode);
-				if (parenthetical) {
-					lab = CT.dom.span("actual", "bold");
-					labs[d + " actual"] = lab;
-					cont.push(CT.dom.pad());
-					cont.push(lab);
-					cont.push(CT.dom.pad());
-					cont.push(CT.dom.span(parenthetical[d]));
+				if (subbers) {
+					for (subber of subbers.names) {
+						if (d == "USD" && ["ask", "bid"].includes(subber))
+							continue;
+						srow = [];
+						sval = subbers.set[subber][d];
+						lab = CT.dom.span(subber, "bold");
+						labs[d + " " + subber] = lab;
+						srow.push(lab);
+						srow.push(CT.dom.pad());
+						srow.push(CT.dom.span(sval));
+						cont.push(srow);
+					}
 				}
 				dnode = CT.dom.div(cont, "small p1");
 				if (onclick && !d_.noclix.includes(d)) {
@@ -212,8 +227,11 @@ ab.dash.Dash = CT.Class({
 			}, n = CT.dom.flex(Object.keys(data).map(d2n), "bordered row jcbetween");
 			colored && CT.dom.className("ct-line", _.nodes.charts).forEach(function(n, i) {
 				lname = d_.charts[i];
-				labs[lname].style.color = _.colors[lname]
-					= window.getComputedStyle(n).getPropertyValue("stroke");
+				if (lname in labs)
+					labs[lname].style.color = _.colors[lname]
+						= window.getComputedStyle(n).getPropertyValue("stroke");
+				else
+					CT.log("can't find " + lname + " to color!");
 			});
 			withClass && n.classList.add(withClass);
 			return n;
@@ -242,28 +260,52 @@ ab.dash.Dash = CT.Class({
 			CT.dom.setContent(nz.sells, sells);
 			CT.dom.setContent(nz.buys, buys);
 		},
+		toggleBotMode: function() {
+			var nz = this._.nodes, butt = nz.bottomToggler;
+			if (butt._mode == "various stats") {
+				butt._mode = "weighted averages";
+				butt._nextMode = "various stats";
+			} else {
+				butt._mode = "various stats";
+				butt._nextMode = "weighted averages";
+			}
+			CT.dom.show(nz[butt._mode]);
+			CT.dom.hide(nz[butt._nextMode]);
+			butt.innerHTML = "View " + CT.parse.words2title(butt._nextMode);
+		},
 		legend: function(data) {
-			var _ = this._, bals = data.balances,
-				strats = _.leg(data.strategists, false, null, true);
+			var _ = this._, nz = _.nodes, bals = data.balances,
+				wavs, stas, strats = _.leg(data.strategists, false, null, true);
 			strats.classList.add("fwrap");
 			CT.dom.setContent(_.nodes.prices, [
 				bals.waiting ? _.leg(bals, false, null, false, null, null, true,
-					"centered") : _.leg(bals.theoretical, true, bals.actual),
+					"centered") : _.leg(bals.theoretical, true, {
+						set: bals,
+						names: d_.balsubs
+					}),
 				CT.dom.flex([
 					_.tab(data, "symbol"),
-					_.tab(data, "market"),
 					_.tab(data, "metric", "ndx")
-				], "smallish bordered row jcbetween")
+				], "bordered row jcbetween"),
+				_.tab(data, "market")
+			], "bigish");
+			wavs = nz["weighted averages"] = CT.dom.div([
+				_.leg({ "asks": data.weighted.ask }, false, null, true),
+				_.leg({ "bids": data.weighted.bid }, false, null, true),
+				_.leg({ "trades": data.weighted.trade }, false, null, true),
 			]);
-			CT.dom.setContent(_.nodes.legend, [
-				_.leg({ orders: data.orders, harvester: data.harvester }),
+			stas = nz["various stats"] = CT.dom.div([
+				_.leg({ orders: data.accountant, harvester: data.harvester }),
 				strats,
 				_.leg(data.gem)
 			]);
+			CT.dom.hide(nz[nz.bottomToggler._nextMode]);
+			CT.dom.setContent(_.nodes.legend, [wavs, stas]);
 		},
 		snode: function(data, sec) {
-			var _ = this._, n = CT.dom.div(data.msg,
-				"bordered padded margined round hoverglow pointer");
+			var _ = this._, n = CT.hover.auto(CT.dom.div(data.msg,
+				"bordered padded margined round hoverglow pointer"),
+				(data.timestampms ? new Date(data.timestampms) : new Date()).toLocaleString());
 			n.onclick = () => CT.modal.modal([
 				CT.dom.div(sec + ": " + data.msg, "bigger bold centered"),
 				_.leg(data.data)
@@ -311,12 +353,14 @@ ab.dash.Dash = CT.Class({
 			}
 		},
 		balup: function(bals) {
-			var k, all = {}, _ = this._;
+			var s, k, all = {}, _ = this._;
 			_.round(bals.theoretical);
-			_.round(bals.actual);
 			Object.assign(all, bals.theoretical);
-			for (k in bals.actual)
-				all[k + " actual"] = bals.actual[k];
+			for (s of d_.balsubs) {
+				_.round(bals[s]);
+				for (k in bals[s])
+					all[k + " " + s] = bals[s][k];
+			}
 			d_.loud && this.log("updated balances:", Object.keys(all));
 			_.up(all);
 		},
@@ -359,7 +403,12 @@ ab.dash.Dash = CT.Class({
 		nz.sells = CT.dom.div(null, "scrolly red sidecol");
 		nz.buys = CT.dom.div(null, "scrolly green sidecol");
 		nz.charts = CT.dom.flex([nz.chart1, nz.chart2], "midcharts fgrow");
-		nz.cancelAll = CT.dom.button("Cancel All Orders", _.cancelAll, "abs b0 l0");
+		nz.cancelAll = CT.dom.button("Cancel All Orders",
+			_.cancelAll, "abs b0 l0 w120 hoverglow");
+		nz.bottomToggler = CT.dom.button("View Weighted Averages",
+			_.toggleBotMode, "abs b0 r0 w120 hoverglow");
+		nz.bottomToggler._mode = "various stats";
+		nz.bottomToggler._nextMode = "weighted averages";
 		CT.dom.setMain(CT.dom.flex([
 			nz.sells,
 			CT.dom.flex([
@@ -370,7 +419,8 @@ ab.dash.Dash = CT.Class({
 				nz.legend
 			], "maincol h1 col"),
 			nz.buys,
-			nz.cancelAll
+			nz.cancelAll,
+			nz.bottomToggler
 		], "h1 row"));
 	},
 	update: function(data) {
