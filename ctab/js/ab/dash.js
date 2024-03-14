@@ -67,10 +67,14 @@ ab.dash.Dash = CT.Class({
 				cb: cb
 			});
 		},
+		cancel: function(token, cb) {
+			if (!cb)
+				cb = () => alert("ok!");
+			confirm("are you sure?") && confirm("really?") && this._.ab(cb,
+				"cancel", { token: token });
+		},
 		cancelAll: function() {
-			confirm("are you sure?") && confirm("really?") && this._.ab(function() {
-				alert("ok!");
-			}, "cancelall");
+			this._.cancel("all");
 		},
 		charts: function() {
 			var _ = this._;
@@ -247,7 +251,11 @@ ab.dash.Dash = CT.Class({
 					t.client_order_id,
 					t.order_id
 				]);
-				tnode.onclick = () => CT.modal.modal(_.leg(t));
+				tnode.onclick = () => CT.modal.modal([
+					_.leg(t),
+					CT.dom.button("cancel", () => _.cancel(t.client_order_id),
+						"w1 biggest hoverglow red centered")
+				]);
 				if (t.side == "sell")
 					sells.push(tnode);
 				else
@@ -404,7 +412,7 @@ ab.dash.Dash = CT.Class({
 		nz.buys = CT.dom.div(null, "scrolly green sidecol");
 		nz.charts = CT.dom.flex([nz.chart1, nz.chart2], "midcharts fgrow");
 		nz.cancelAll = CT.dom.button("Cancel All Orders",
-			_.cancelAll, "abs b0 l0 w120 hoverglow");
+			_.cancelAll, "abs b0 l0 w120 hoverglow red");
 		nz.bottomToggler = CT.dom.button("View Weighted Averages",
 			_.toggleBotMode, "abs b0 r0 w120 hoverglow");
 		nz.bottomToggler._mode = "various stats";
