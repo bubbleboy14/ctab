@@ -5,9 +5,13 @@ from cantools import config
 def response():
 	office = config.ctab.live.office
 	action = cgi_get("action", choices=["status",
-		"curconf", "setconf", "cancelall"], default="status")
-	if action == "cancelall":
-		office.cancelAll()
+		"curconf", "setconf", "cancel"], default="status")
+	if action == "cancel":
+		token = cgi_get("token")
+		if token == "all":
+			office.cancelAll()
+		else:
+			office.cancel(token)
 	elif action == "curconf":
 		succeed(swapconf.obj())
 	elif action == "setconf":
