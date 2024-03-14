@@ -20,6 +20,5 @@ class SwapMon(pubsub.Bot):
 		except:
 			log("fetch failed!")
 			return True
-		log(data)
 		self.pub(data)
 		return True
