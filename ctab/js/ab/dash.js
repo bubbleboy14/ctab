@@ -389,11 +389,17 @@ ab.dash.Dash = CT.Class({
 				_.leg(row2, false, null, false, _.upConf)
 			]);
 		},
+		fnode: function(f) {
+			return this._.snode({
+				msg: f.side + " " + f.amount + " " + f.market + " @ " + f.price,
+				data: f
+			}, "fills");
+		},
 		fillHistory: function() {
 			var _ = this._;
 			CT.db.get("fill", fz => CT.modal.modal([
 				CT.dom.div("Fill History", "bigger bold centered"),
-				fz.map(f => _.snode(f, "fills"))
+				fz.map(_.fnode)
 			]));
 		},
 		setStreams: function() {
