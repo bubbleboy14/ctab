@@ -389,15 +389,33 @@ ab.dash.Dash = CT.Class({
 				_.leg(row2, false, null, false, _.upConf)
 			]);
 		},
+		fnode: function(f) {
+			return this._.snode({
+				msg: f.side + " " + f.amount + " " + f.market + " @ " + f.price,
+				data: f
+			}, "fills");
+		},
+		fillHistory: function() {
+			var _ = this._;
+			CT.db.get("fill", fz => CT.modal.modal([
+				CT.dom.div("Fill History", "bigger bold centered"),
+				fz.map(_.fnode)
+			]));
+		},
 		setStreams: function() {
-			var _ = this._, nz = _.nodes;
+			var _ = this._, nz = _.nodes, fhead;
 			nz.streams = CT.dom.flex(d_.streams.map(function(name) {
 				nz[name] = CT.dom.div(null, "hm150p scrolly");
+				nz[name].header = CT.dom.div(name, "centered bold");
 				return CT.dom.div([
-					CT.dom.div(name, "centered bold"),
+					nz[name].header,
 					nz[name]
 				], d_.scols[name]);
 			}), "bordered row");
+			fhead = nz.fills.header;
+			fhead.onclick = _.fillHistory;
+			fhead.classList.add("pointer");
+			fhead.classList.add("hoverglow");
 		}
 	},
 	build: function(curconf) {
