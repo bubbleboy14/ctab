@@ -313,7 +313,8 @@ ab.dash.Dash = CT.Class({
 		snode: function(data, sec) {
 			var _ = this._, n = CT.hover.auto(CT.dom.div(data.msg,
 				"bordered padded margined round hoverglow pointer"),
-				(data.timestampms ? new Date(data.timestampms) : new Date()).toLocaleString());
+				data.created || (data.timestampms ? new Date(data.timestampms)
+					: new Date()).toLocaleString());
 			n.onclick = () => CT.modal.modal([
 				CT.dom.div(sec + ": " + data.msg, "bigger bold centered"),
 				_.leg(data.data)
