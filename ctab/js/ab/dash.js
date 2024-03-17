@@ -311,13 +311,13 @@ ab.dash.Dash = CT.Class({
 			CT.dom.setContent(_.nodes.legend, [wavs, stas]);
 		},
 		snode: function(data, sec) {
-			var _ = this._, n = CT.hover.auto(CT.dom.div(data.msg,
+			var _ = this._, dada = data.data, n = CT.hover.auto(CT.dom.div(data.msg,
 				"bordered padded margined round hoverglow pointer"),
-				data.created || (data.timestampms ? new Date(data.timestampms)
+				dada.created || (dada.timestampms ? new Date(dada.timestampms)
 					: new Date()).toLocaleString());
 			n.onclick = () => CT.modal.modal([
 				CT.dom.div(sec + ": " + data.msg, "bigger bold centered"),
-				_.leg(data.data)
+				_.leg(dada)
 			]);
 			CT.trans.glow(n);
 			return n;
