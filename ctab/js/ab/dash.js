@@ -311,7 +311,7 @@ ab.dash.Dash = CT.Class({
 			CT.dom.setContent(_.nodes.legend, [wavs, stas]);
 		},
 		snode: function(data, sec) {
-			var _ = this._, dada = data.data, n = CT.hover.auto(CT.dom.div(data.msg,
+			var _ = this._, dada = data.data || data, n = CT.hover.auto(CT.dom.div(data.msg,
 				"bordered padded margined round hoverglow pointer"),
 				dada.created || (dada.timestampms ? new Date(dada.timestampms)
 					: new Date()).toLocaleString());
