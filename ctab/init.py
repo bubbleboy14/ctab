@@ -31,6 +31,7 @@ cfg = {
         "prunelimit": 0.1
     },
     "backend": {
+        "mdv2": True,
         "staging": True,
         "realdie": True,
         "credset": "default"
