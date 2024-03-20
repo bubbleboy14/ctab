@@ -106,7 +106,7 @@ ab.dash.Dash = CT.Class({
 					colnode.style.color = colors[sym];
 					if (mode == "symbol") {
 						cols.quote.push(c(data.prices[sym + "USD"] || 1));
-						cols.initial.push(c(bals.initial[sym]));
+						cols.initial.push(c(_.rounder(bals.initial[sym])));
 					}
 					cols.actual.push(c(bals.waiting ? "waiting" : bals.actual[sym]));
 					cols.theoretical.push(c(bals.waiting ? "waiting" : bals.theoretical[sym]));
@@ -296,7 +296,7 @@ ab.dash.Dash = CT.Class({
 				CT.dom.flex([
 					_.tab(data, "symbol"),
 					_.tab(data, "metric", "ndx")
-				], "small bordered row jcbetween"),
+				], "smallish bordered row jcbetween"),
 				_.tab(data, "market")
 			], "bigish");
 			wavs = nz["weighted averages"] = CT.dom.div([
