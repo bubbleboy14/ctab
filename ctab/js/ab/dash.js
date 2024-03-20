@@ -16,7 +16,7 @@ ab.dash = {
 		},
 		tables: {
 			symbol: { // TODO: meh configurize symbol/market better
-				head: ["symbol", "quote", "actual", "theoretical"],
+				head: ["symbol", "quote", "actual", "theoretical", "initial"],
 				rows: ["USD", "ETH", "BTC"]
 			},
 			market: {
@@ -104,8 +104,10 @@ ab.dash.Dash = CT.Class({
 					cols.hint.push(c(data.hints[sym]));
 				} else {
 					colnode.style.color = colors[sym];
-					if (mode == "symbol")
+					if (mode == "symbol") {
 						cols.quote.push(c(data.prices[sym + "USD"] || 1));
+						cols.initial.push(c(bals.initial[sym]));
+					}
 					cols.actual.push(c(bals.waiting ? "waiting" : bals.actual[sym]));
 					cols.theoretical.push(c(bals.waiting ? "waiting" : bals.theoretical[sym]));
 				}
