@@ -296,7 +296,7 @@ ab.dash.Dash = CT.Class({
 				CT.dom.flex([
 					_.tab(data, "symbol"),
 					_.tab(data, "metric", "ndx")
-				], "bordered row jcbetween"),
+				], "small bordered row jcbetween"),
 				_.tab(data, "market")
 			], "bigish");
 			wavs = nz["weighted averages"] = CT.dom.div([
