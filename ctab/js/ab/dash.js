@@ -16,7 +16,7 @@ ab.dash = {
 		},
 		tables: {
 			symbol: { // TODO: meh configurize symbol/market better
-				head: ["symbol", "quote", "actual", "theoretical", "initial"],
+				head: ["symbol", "quote", "initial", "actual", "theoretical"],
 				rows: ["USD", "ETH", "BTC"]
 			},
 			market: {
