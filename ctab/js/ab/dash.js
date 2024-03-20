@@ -401,7 +401,7 @@ ab.dash.Dash = CT.Class({
 			CT.db.get("fill", fz => CT.modal.modal([
 				CT.dom.div("Fill History", "bigger bold centered"),
 				fz.map(_.fnode)
-			], null, { className: "basicpopup h9-10" }));
+			], null, { className: "basicpopup h9-10" }), 1000);
 		},
 		setStreams: function() {
 			var _ = this._, nz = _.nodes, fhead;
