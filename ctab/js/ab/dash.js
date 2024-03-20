@@ -16,7 +16,7 @@ ab.dash = {
 		},
 		tables: {
 			symbol: { // TODO: meh configurize symbol/market better
-				head: ["symbol", "quote", "actual", "theoretical"],
+				head: ["symbol", "quote", "initial", "actual", "theoretical"],
 				rows: ["USD", "ETH", "BTC"]
 			},
 			market: {
@@ -32,7 +32,7 @@ ab.dash = {
 			"ETH ask", "BTC ask", "ETH bid", "BTC bid"],
 		chart2: ["diff", "dph", "diff actual", "dph actual",
 			"diff ask", "dph ask", "diff bid", "dph bid"],
-		noclix: ["staging", "stagish", "live", "network", "capped", "credset"],
+		noclix: ["staging", "stagish", "live", "network", "capped", "credset", "mdv2"],
 		streams: ["fills", "cancels", "warnings", "refills"],
 		floats: ["prunelimit", "vcutoff", "nmult"],
 		ofloro: ["backend", "strategy", "ndx"],
@@ -104,8 +104,10 @@ ab.dash.Dash = CT.Class({
 					cols.hint.push(c(data.hints[sym]));
 				} else {
 					colnode.style.color = colors[sym];
-					if (mode == "symbol")
+					if (mode == "symbol") {
 						cols.quote.push(c(data.prices[sym + "USD"] || 1));
+						cols.initial.push(c(_.rounder(bals.initial[sym])));
+					}
 					cols.actual.push(c(bals.waiting ? "waiting" : bals.actual[sym]));
 					cols.theoretical.push(c(bals.waiting ? "waiting" : bals.theoretical[sym]));
 				}
@@ -294,7 +296,7 @@ ab.dash.Dash = CT.Class({
 				CT.dom.flex([
 					_.tab(data, "symbol"),
 					_.tab(data, "metric", "ndx")
-				], "bordered row jcbetween"),
+				], "smallish row jcbetween"),
 				_.tab(data, "market")
 			], "bigish");
 			wavs = nz["weighted averages"] = CT.dom.div([
@@ -401,7 +403,7 @@ ab.dash.Dash = CT.Class({
 			CT.db.get("fill", fz => CT.modal.modal([
 				CT.dom.div("Fill History", "bigger bold centered"),
 				fz.map(_.fnode)
-			], null, { className: "basicpopup h9-10" }));
+			], null, { className: "basicpopup h9-10" }), 1000);
 		},
 		setStreams: function() {
 			var _ = this._, nz = _.nodes, fhead;
