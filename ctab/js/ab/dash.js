@@ -58,19 +58,10 @@ ab.dash.Dash = CT.Class({
 		data: {},
 		nodes: {},
 		colors: {},
-		ab: function(cb, action, params) {
-			CT.net.post({
-				path: "/_ab",
-				params: CT.merge(params, {
-					action: action || "curconf"
-				}),
-				cb: cb
-			});
-		},
 		cancel: function(token, cb) {
 			if (!cb)
 				cb = () => alert("ok!");
-			confirm("are you sure?") && confirm("really?") && this._.ab(cb,
+			confirm("are you sure?") && confirm("really?") && ab.util.req(cb,
 				"cancel", { token: token });
 		},
 		cancelAll: function() {
@@ -376,7 +367,7 @@ ab.dash.Dash = CT.Class({
 			_.up(all);
 		},
 		upConf: function(cobj) {
-			this._.ab(() => this.log("conf updated!"), "setconf", {
+			ab.util.req(() => this.log("conf updated!"), "setconf", {
 				mod: cobj
 			});
 		},
@@ -465,15 +456,9 @@ ab.dash.Dash = CT.Class({
 		_.legend(m);
 		_.streams(m);
 	},
-	start: function() {
-		CT.pubsub.set_autohistory(true);
-		CT.pubsub.connect(location.hostname, this.opts.port);
-		CT.pubsub.set_cb("message", this.update);
-		CT.pubsub.subscribe("swapmon");
-	},
 	load: function(curconf) {
 		this.build(curconf);
-		this.start();
+		ab.util.startWS(this.update);
 	},
 	setLoud: function(isloud) {
 		d_.loud = isloud;
@@ -482,6 +467,6 @@ ab.dash.Dash = CT.Class({
 		this.opts = opts = CT.merge(opts, {
 
 		});
-		this._.ab(this.load);
+		ab.util.req(this.load);
 	}
 });
