@@ -9,6 +9,9 @@ ab.candles = {
 		const n = CT.dom.div();
 		n.build = function() {
 			n.chart = new ApexCharts(n, {
+				title: {
+					text: sym
+				},
 				xaxis: {
 					type: "datetime"
 				},
@@ -28,7 +31,7 @@ ab.candles = {
 	},
 	update: function(data) {
 		const abc = ab.candles, cans = data.message.candles;
-		if (!cans)
+		if (!cans || !Object.keys(cans).length)
 			return CT.dom.setMain("waiting for candles");
 		const cnodes = Object.keys(cans).map(sym => abc.chart(sym, cans[sym]));
 		CT.dom.setMain(cnodes);
