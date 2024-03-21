@@ -17,7 +17,7 @@ def response():
 	elif action == "setconf":
 		swapconf.set(cgi_get("mod"))
 	elif action == "candles":
-		succeed(office and office.actuary.candles or { "waiting": "candles loading" })
+		succeed(office and office.actuary.oldCandles() or { "waiting": "candles loading" })
 	else: # status (pubsub swapmon)
 		succeed(office and office.status() or { "waiting": "office loading" })
 
