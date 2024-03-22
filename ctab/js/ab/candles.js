@@ -28,10 +28,7 @@ ab.candles = {
 				},
 				chart: {
 					height: 350,
-					type: "line",
-					animations: {
-						enabled: false
-					}
+					type: "line"
 				},
 				series: [{
 					name: sym,
@@ -48,10 +45,7 @@ ab.candles = {
 				},
 				chart: {
 					height: 350,
-					type: "bar",
-					animations: {
-						enabled: false
-					}
+					type: "bar"
 				},
 				series: [{
 					name: sym,
