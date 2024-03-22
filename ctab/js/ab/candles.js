@@ -8,13 +8,20 @@ ab.candles = {
 			y: [can.open, can.high, can.low, can.close]
 		};
 	},
+	tranCanOBV: function(can) {
+		return {
+			x: new Date(can.timestamp),
+			y: [can.obv]
+		};
+	},
 	chart: function(sym, candles) {
-		const abc = ab.candles, n = abc._.charts[sym] = CT.dom.div();
+		const abc = ab.candles, cans = CT.dom.div(), obvs = CT.dom.div(),
+			n = abc._.charts[sym] = CT.dom.div([cans, obvs], "w1-2 inline-block");
 		abc.log("initializing", candles.length, sym, candles);
 		n.build = function() {
-			n.chart = new ApexCharts(n, {
+			n.candles = new ApexCharts(cans, {
 				title: {
-					text: sym
+					text: sym + " candles"
 				},
 				xaxis: {
 					type: "datetime"
@@ -32,7 +39,28 @@ ab.candles = {
 					data: candles.map(abc.tranCan)
 				}]
 			});
-			n.chart.render();
+			n.obvs = new ApexCharts(obvs, {
+				title: {
+					text: sym + " OBVs"
+				},
+				xaxis: {
+					type: "datetime"
+				},
+				chart: {
+					height: 350,
+					type: "bar",
+					animations: {
+						enabled: false
+					}
+				},
+				series: [{
+					name: sym,
+					type: "bar",
+					data: candles.map(abc.tranCanOBV)
+				}]
+			});
+			n.candles.render();
+			n.obvs.render();
 		};
 		return n;
 	},
@@ -43,8 +71,11 @@ ab.candles = {
 			ups = cans[sym];
 			if (!ups.length) continue;
 			abc.log("updating", sym, ups);
-			charts[sym].chart.appendData([{
+			charts[sym].candles.appendData([{
 				data: ups.map(abc.tranCan)
+			}]);
+			charts[sym].obvs.appendData([{
+				data: ups.map(abc.tranCanOBV)
 			}]);
 		}
 	},
