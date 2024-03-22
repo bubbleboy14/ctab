@@ -16,7 +16,7 @@ ab.candles = {
 	},
 	chart: function(sym, candles) {
 		const abc = ab.candles, cans = CT.dom.div(), obvs = CT.dom.div(),
-			n = abc._.charts[sym] = CT.dom.div([cans, obvs], "w1-2 inline-block");
+			n = abc._.charts[sym] = CT.dom.div([cans, obvs], "w1");
 		abc.log("initializing", candles.length, sym, candles);
 		n.build = function() {
 			n.candles = new ApexCharts(cans, {
@@ -81,7 +81,7 @@ ab.candles = {
 	},
 	build: function(cans) {
 		const cnodes = Object.keys(cans).map(sym => ab.candles.chart(sym, cans[sym]));
-		CT.dom.setMain(cnodes);
+		CT.dom.setMain(cnodes, "flex");
 		cnodes.forEach(c => c.build());
 	},
 	load: function(candles) {
