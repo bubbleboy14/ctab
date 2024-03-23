@@ -16,7 +16,7 @@ ab.candles = {
 	},
 	chart: function(sym, candles) {
 		const abc = ab.candles, cans = CT.dom.div(), obvs = CT.dom.div(),
-			n = abc._.charts[sym] = CT.dom.div([cans, obvs], "w1");
+			n = abc._.charts[sym] = CT.dom.div([cans, obvs], "w1"), h = abc.opts.height;
 		abc.log("initializing", candles.length, sym, candles);
 		n.build = function() {
 			n.candles = new ApexCharts(cans, {
@@ -27,7 +27,7 @@ ab.candles = {
 					type: "datetime"
 				},
 				chart: {
-					height: 350,
+					height: h,
 					type: "line"
 				},
 				series: [{
@@ -44,7 +44,7 @@ ab.candles = {
 					type: "datetime"
 				},
 				chart: {
-					height: 350,
+					height: h,
 					type: "bar"
 				},
 				series: [{
@@ -74,14 +74,15 @@ ab.candles = {
 		}
 	},
 	build: function(cans) {
-		const cnodes = Object.keys(cans).map(sym => ab.candles.chart(sym, cans[sym]));
-		CT.dom.setMain(cnodes, "flex");
+		const abc = ab.candles,
+			cnodes = Object.keys(cans).map(sym => abc.chart(sym, cans[sym]));
+		CT.dom.setContent(abc.opts.container, cnodes, "flex");
 		cnodes.forEach(c => c.build());
 	},
 	load: function(candles) {
 		const abc = ab.candles;
 		if (candles.waiting) {
-			CT.dom.setMain("waiting for candles (retrying in 10 seconds)");
+			CT.dom.setContent(abc.opts.container, "waiting for candles (retrying in 10 seconds)");
 			return setTimeout(abc.start, 10000);
 		}
 		abc.build(candles);
@@ -94,7 +95,9 @@ ab.candles = {
 		const abc = ab.candles;
 		abc.log = CT.log.getLogger("candles");
 		abc.opts = opts = CT.merge(opts, {
-			startWS: true
+			height: 350,
+			startWS: true,
+			container: "ctmain"
 		});
 		abc.start();
 	}
