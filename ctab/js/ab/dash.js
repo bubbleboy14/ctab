@@ -76,6 +76,15 @@ ab.dash.Dash = CT.Class({
 				series: d_.chart2.map(k => _.data[k])
 			});
 		},
+		hint: function(sym, hints) {
+			var hint = hints[sym];
+			if (hint == "chill")
+				return hint;
+			return CT.dom.link(hint, () => ab.util.req(null, "bt", {
+				sym: sym,
+				side: hint
+			}), null, (hint == "buy") ? "green" : "red");
+		},
 		tab: function(data, mode, sub) {
 			var col, sym, colnode, fnode, cols = {}, _ = this._, colors = _.colors,
 				params = d_.tables[mode], head = params.head, rows = params.rows,
@@ -92,7 +101,7 @@ ab.dash.Dash = CT.Class({
 					cols.bids.push(c(_.rounder(data.totals[sym].bid, 10)));
 					cols.volume.push(c(_.rounder(data.volumes[sym], 1000)));
 					cols.volatility.push(c(_.rounder(data.volvols[sym], 1000)));
-					cols.hint.push(c(data.hints[sym]));
+					cols.hint.push(c(_.hint(sym, data.hints)));
 				} else {
 					colnode.style.color = colors[sym];
 					if (mode == "symbol") {
