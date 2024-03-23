@@ -222,7 +222,7 @@ ab.dash.Dash = CT.Class({
 				}
 				return dnode;
 			}, n = CT.dom.flex(Object.keys(data).map(d2n), "bordered row jcbetween");
-			colored && CT.dom.className("ct-line", _.nodes.charts).forEach(function(n, i) {
+			colored && CT.dom.className("ct-line", _.nodes.mainCharts).forEach(function(n, i) {
 				lname = d_.charts[i];
 				if (lname in labs)
 					labs[lname].style.color = _.colors[lname]
@@ -261,14 +261,18 @@ ab.dash.Dash = CT.Class({
 			CT.dom.setContent(nz.sells, sells);
 			CT.dom.setContent(nz.buys, buys);
 		},
-		toggleBotMode: function() {
-			var nz = this._.nodes, butt = nz.bottomToggler;
+		toggleMode: function() {
+			var _ = this._, nz = _.nodes, butt = nz.bottomToggler;
 			if (butt._mode == "various stats") {
 				butt._mode = "weighted averages";
 				butt._nextMode = "various stats";
+				CT.dom.show(nz.candles);
+				CT.dom.hide(nz.mainCharts);
 			} else {
 				butt._mode = "various stats";
 				butt._nextMode = "weighted averages";
+				CT.dom.show(nz.mainCharts);
+				CT.dom.hide(nz.candles);
 			}
 			CT.dom.show(nz[butt._mode]);
 			CT.dom.hide(nz[butt._nextMode]);
@@ -418,17 +422,24 @@ ab.dash.Dash = CT.Class({
 		_.loadConf(curconf);
 		nz.prices = CT.dom.div();
 		nz.legend = CT.dom.div();
-		nz.chart1 = CT.dom.div(null, "w1-2");
-		nz.chart2 = CT.dom.div(null, "w1-2");
+		nz.candles = CT.dom.div(null, "hidden");
+		nz.chart1 = CT.dom.div(null, "h1 w1-2 inline-block");
+		nz.chart2 = CT.dom.div(null, "h1 w1-2 inline-block");
 		nz.sells = CT.dom.div(null, "scrolly red sidecol");
 		nz.buys = CT.dom.div(null, "scrolly green sidecol");
-		nz.charts = CT.dom.flex([nz.chart1, nz.chart2], "midcharts fgrow");
+		nz.mainCharts = CT.dom.div([nz.chart1, nz.chart2], "h1 w1");
+		nz.charts = CT.dom.div([nz.mainCharts, nz.candles], "midcharts fgrow");
 		nz.cancelAll = CT.dom.button("Cancel All Orders",
 			_.cancelAll, "abs b0 l0 w120 hoverglow red");
 		nz.bottomToggler = CT.dom.button("View Weighted Averages",
-			_.toggleBotMode, "abs b0 r0 w120 hoverglow");
+			_.toggleMode, "abs b0 r0 w120 hoverglow");
 		nz.bottomToggler._mode = "various stats";
 		nz.bottomToggler._nextMode = "weighted averages";
+		ab.candles.init({
+			height: "50%",
+			startWS: false,
+			container: nz.candles
+		});
 		CT.dom.setMain(CT.dom.flex([
 			nz.sells,
 			CT.dom.flex([
@@ -455,6 +466,7 @@ ab.dash.Dash = CT.Class({
 		_.trades(m);
 		_.legend(m);
 		_.streams(m);
+		ab.candles.update(data);
 	},
 	load: function(curconf) {
 		this.build(curconf);
