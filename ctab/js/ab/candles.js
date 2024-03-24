@@ -1,23 +1,40 @@
 ab.candles = {
 	_: {
-		charts: {}
+		charts: {},
+		latest: {},
+		lasters: ["ad", "obv"],
+		gnode: function(can, stats) {
+			return {
+				x: new Date(can.timestamp),
+				y: stats.map(s => can[s])
+			};
+		}
 	},
 	tranCan: function(can) {
-		return {
-			x: new Date(can.timestamp),
-			y: [can.open, can.high, can.low, can.close]
-		};
+		return ab.candles._.gnode(can, ["open", "high", "low", "close"]);
 	},
-	tranCanOBV: function(can) {
-		return {
-			x: new Date(can.timestamp),
-			y: [can.obv]
-		};
+	tranAD: function(can) {
+		return ab.candles._.gnode(can, ["ad"]);
+	},
+	tranOBV: function(can) {
+		return ab.candles._.gnode(can, ["obv"]);
+	},
+	latest: function(sym, stat) {
+		const latest = ab.candles._.latest;
+		return latest[sym] && latest[sym][stat];
+	},
+	setLatest: function(sym, cans, isFirst) {
+		const _ = ab.candles._, last = cans[cans.length - 1];
+		if (isFirst)
+			_.latest[sym] = {};
+		for (let laster of _.lasters)
+			_.latest[sym][laster] = last[laster];
 	},
 	chart: function(sym, candles) {
-		const abc = ab.candles, cans = CT.dom.div(), obvs = CT.dom.div(),
-			n = abc._.charts[sym] = CT.dom.div([cans, obvs], "w1"), h = abc.opts.height;
+		const abc = ab.candles, _ = abc._, cans = CT.dom.div(), stats = CT.dom.div(),
+			n = _.charts[sym] = CT.dom.div([cans, stats], "w1"), h = abc.opts.height;
 		abc.log("initializing", candles.length, sym, candles);
+		abc.setLatest(sym, candles, true);
 		n.build = function() {
 			n.candles = new ApexCharts(cans, {
 				title: {
@@ -36,25 +53,29 @@ ab.candles = {
 					data: candles.map(abc.tranCan)
 				}]
 			});
-			n.obvs = new ApexCharts(obvs, {
+			n.stats = new ApexCharts(stats, {
 				title: {
-					text: sym + " OBVs"
+					text: sym + " stats"
 				},
 				xaxis: {
 					type: "datetime"
 				},
 				chart: {
 					height: h,
-					type: "bar"
+					type: "line"
 				},
 				series: [{
-					name: sym,
+					name: "obv",
 					type: "bar",
-					data: candles.map(abc.tranCanOBV)
+					data: candles.map(abc.tranOBV)
+				}, {
+					name: "ad",
+					type: "line",
+					data: candles.map(abc.tranAD)
 				}]
 			});
 			n.candles.render();
-			n.obvs.render();
+			n.stats.render();
 		};
 		return n;
 	},
@@ -68,9 +89,12 @@ ab.candles = {
 			charts[sym].candles.appendData([{
 				data: ups.map(abc.tranCan)
 			}]);
-			charts[sym].obvs.appendData([{
-				data: ups.map(abc.tranCanOBV)
+			charts[sym].stats.appendData([{
+				data: ups.map(abc.tranOBV)
+			}, {
+				data: ups.map(abc.tranAD)
 			}]);
+			abc.setLatest(sym, ups);
 		}
 	},
 	build: function(cans) {
