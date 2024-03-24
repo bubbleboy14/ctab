@@ -20,7 +20,7 @@ ab.dash = {
 				rows: ["USD", "ETH", "BTC"]
 			},
 			market: {
-				head: ["market", "ask", "bid", "asks", "bids", "volume", "volatility", "hint"],
+				head: ["market", "ask", "bid", "asks", "bids", "volume", "volatility", "obv", "ad", "hint"],
 				rows: ["ETHBTC", "ETHUSD", "BTCUSD"]
 			},
 			metric: {
@@ -85,10 +85,11 @@ ab.dash.Dash = CT.Class({
 				side: hint
 			}), null, (hint == "buy") ? "green" : "red");
 		},
-		tab: function(data, mode, sub) {
+		tab: function(data, mode, sub, contClass) {
 			var col, sym, colnode, fnode, cols = {}, _ = this._, colors = _.colors,
 				params = d_.tables[mode], head = params.head, rows = params.rows,
-				c = d => CT.dom.div(d, "w1 bordered smallpadded nowrap"), bals = data.balances;
+				c = d => CT.dom.div(d, "w1 bordered smallpadded nowrap"),
+				bals = data.balances, latest = ab.candles.latest;
 			for (col of head)
 				cols[col] = [c("<b>" + col + "</b>")];
 			for (sym of rows) {
@@ -101,6 +102,8 @@ ab.dash.Dash = CT.Class({
 					cols.bids.push(c(_.rounder(data.totals[sym].bid, 10)));
 					cols.volume.push(c(_.rounder(data.volumes[sym], 1000)));
 					cols.volatility.push(c(_.rounder(data.volvols[sym], 1000)));
+					cols.obv.push(c(_.rounder(latest(sym, "obv"), 10)));
+					cols.ad.push(c(_.rounder(latest(sym, "ad"), 10)));
 					cols.hint.push(c(_.hint(sym, data.hints)));
 				} else {
 					colnode.style.color = colors[sym];
@@ -113,6 +116,7 @@ ab.dash.Dash = CT.Class({
 				}
 			}
 			fnode = CT.dom.flex(head.map(h => cols[h]), "bordered row jcbetween");
+			contClass && fnode.classList.add(contClass);
 			return sub ? CT.dom.div([
 				fnode,
 				_.leg(data[sub], false, null, true, null, null, true, "big")
@@ -301,7 +305,7 @@ ab.dash.Dash = CT.Class({
 					_.tab(data, "symbol"),
 					_.tab(data, "metric", "ndx")
 				], "smallish row jcbetween"),
-				_.tab(data, "market")
+				_.tab(data, "market", null, "smallish")
 			], "bigish");
 			wavs = nz["weighted averages"] = CT.dom.div([
 				_.leg({ "asks": data.weighted.ask }, false, null, true),
