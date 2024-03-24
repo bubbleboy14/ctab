@@ -102,8 +102,8 @@ ab.dash.Dash = CT.Class({
 					cols.bids.push(c(_.rounder(data.totals[sym].bid, 10)));
 					cols.volume.push(c(_.rounder(data.volumes[sym], 1000)));
 					cols.volatility.push(c(_.rounder(data.volvols[sym], 1000)));
-					cols.obv.push(c(_.rounder(latest(sym, "obv"), 10)));
-					cols.ad.push(c(_.rounder(latest(sym, "ad"), 10)));
+					cols.obv.push(c(_.rounder(latest(sym, "obv"), 10) || "-"));
+					cols.ad.push(c(_.rounder(latest(sym, "ad"), 10) || "-"));
 					cols.hint.push(c(_.hint(sym, data.hints)));
 				} else {
 					colnode.style.color = colors[sym];
