@@ -2,7 +2,7 @@ ab.candles = {
 	_: {
 		charts: {},
 		latest: {},
-		lasters: ["ad", "obv"],
+		lasters: ["ad", "obv", "vpt"],
 		gnode: function(can, stats) {
 			return {
 				x: new Date(can.timestamp),

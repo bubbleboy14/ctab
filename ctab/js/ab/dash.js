@@ -20,7 +20,7 @@ ab.dash = {
 				rows: ["USD", "ETH", "BTC"]
 			},
 			market: {
-				head: ["market", "ask", "bid", "asks", "bids", "volume", "volatility", "obv", "ad", "hint"],
+				head: ["market", "ask", "bid", "asks", "bids", "volume", "volatility", "vpt", "obv", "ad", "hint"],
 				rows: ["ETHBTC", "ETHUSD", "BTCUSD"]
 			},
 			metric: {
@@ -102,6 +102,7 @@ ab.dash.Dash = CT.Class({
 					cols.bids.push(c(_.rounder(data.totals[sym].bid, 10)));
 					cols.volume.push(c(_.rounder(data.volumes[sym], 1000)));
 					cols.volatility.push(c(_.rounder(data.volvols[sym], 1000)));
+					cols.vpt.push(c(_.rounder(latest(sym, "vpt"), 10) || "-"));
 					cols.obv.push(c(_.rounder(latest(sym, "obv"), 10) || "-"));
 					cols.ad.push(c(_.rounder(latest(sym, "ad"), 10) || "-"));
 					cols.hint.push(c(_.hint(sym, data.hints)));
@@ -305,7 +306,7 @@ ab.dash.Dash = CT.Class({
 					_.tab(data, "symbol"),
 					_.tab(data, "metric", "ndx")
 				], "smallish row jcbetween"),
-				_.tab(data, "market", null, "smallish")
+				_.tab(data, "market", null, "small")
 			], "bigish");
 			wavs = nz["weighted averages"] = CT.dom.div([
 				_.leg({ "asks": data.weighted.ask }, false, null, true),
