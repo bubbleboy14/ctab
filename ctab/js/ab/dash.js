@@ -275,37 +275,44 @@ ab.dash.Dash = CT.Class({
 			CT.dom.setContent(nz.sells, sells);
 			CT.dom.setContent(nz.buys, buys);
 		},
+		modes: {
+			various: ["various stats", "mainCharts", "leggy"],
+			weighted: ["weighted averages", "candles", "symet"]
+		},
+		showHideModes: function() {
+			var _ = this._, nz = _.nodes, butt = nz.bottomToggler, n;
+			for (n of _.modes[butt._mode.split(" ")[0]])
+				CT.dom.show(nz[n], "auto");
+			for (n of _.modes[butt._nextMode.split(" ")[0]])
+				CT.dom.hide(nz[n]);
+		},
 		toggleMode: function() {
-			var _ = this._, nz = _.nodes, butt = nz.bottomToggler;
+			var _ = this._, nz = _.nodes, butt = nz.bottomToggler, n;
 			if (butt._mode == "various stats") {
 				butt._mode = "weighted averages";
 				butt._nextMode = "various stats";
-				CT.dom.show(nz.candles);
-				CT.dom.hide(nz.mainCharts);
 			} else {
 				butt._mode = "various stats";
 				butt._nextMode = "weighted averages";
-				CT.dom.show(nz.mainCharts);
-				CT.dom.hide(nz.candles);
 			}
-			CT.dom.show(nz[butt._mode]);
-			CT.dom.hide(nz[butt._nextMode]);
+			_.showHideModes();
 			butt.innerHTML = "View " + CT.parse.words2title(butt._nextMode);
 		},
 		legend: function(data) {
 			var _ = this._, nz = _.nodes, bals = data.balances,
-				wavs, stas, strats = _.leg(data.strategists, false, null, true);
-			strats.classList.add("fwrap");
-			CT.dom.setContent(_.nodes.prices, [
-				bals.waiting ? _.leg(bals, false, null, false, null, null, true,
-					"centered") : _.leg(bals.theoretical, true, {
-						set: bals,
-						names: d_.balsubs
-					}),
-				CT.dom.flex([
+				wavs, stas, strats = _.leg(data.strategists, false, null, true),
+				leggy = nz.leggy = bals.waiting ? _.leg(bals, false, null, false,
+				null, null, true, "centered") : _.leg(bals.theoretical, true, {
+					set: bals,
+					names: d_.balsubs
+				}), symet = nz.symet = CT.dom.flex([
 					_.tab(data, "symbol"),
 					_.tab(data, "metric", "ndx")
-				], "smallish row jcbetween"),
+				], "smallish row jcbetween");
+			strats.classList.add("fwrap");
+			CT.dom.setContent(_.nodes.prices, [
+				leggy,
+				symet,
 				_.tab(data, "market", null, "small")
 			], "bigish");
 			wavs = nz["weighted averages"] = CT.dom.div([
@@ -318,7 +325,7 @@ ab.dash.Dash = CT.Class({
 				strats,
 				_.leg(data.gem)
 			]);
-			CT.dom.hide(nz[nz.bottomToggler._nextMode]);
+			_.showHideModes();
 			CT.dom.setContent(_.nodes.legend, [wavs, stas]);
 		},
 		snode: function(data, sec) {
@@ -417,7 +424,7 @@ ab.dash.Dash = CT.Class({
 		setStreams: function() {
 			var _ = this._, nz = _.nodes, fhead;
 			nz.streams = CT.dom.flex(d_.streams.map(function(name) {
-				nz[name] = CT.dom.div(null, "hm150p scrolly");
+				nz[name] = CT.dom.div(null, "hm100p scrolly");
 				nz[name].header = CT.dom.div(name, "centered bold");
 				return CT.dom.div([
 					nz[name].header,
@@ -450,7 +457,7 @@ ab.dash.Dash = CT.Class({
 		nz.bottomToggler._mode = "various stats";
 		nz.bottomToggler._nextMode = "weighted averages";
 		ab.candles.init({
-			height: "50%",
+			height: "30%",
 			startWS: false,
 			container: nz.candles
 		});
