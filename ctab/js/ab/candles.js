@@ -8,16 +8,38 @@ ab.candles = {
 				x: new Date(can.timestamp),
 				y: stats.map(s => can[s])
 			};
+		},
+		chart: function(node, name, series) {
+			const chart = new ApexCharts(node, {
+				title: {
+					text: name
+				},
+				xaxis: {
+					type: "datetime"
+				},
+				chart: {
+					type: "line",
+					height: ab.candles.opts.height
+				},
+				series: series
+			});
+			chart.render();
+			return chart;
 		}
 	},
-	tranCan: function(can) {
-		return ab.candles._.gnode(can, ["open", "high", "low", "close"]);
-	},
-	tranAD: function(can) {
-		return ab.candles._.gnode(can, ["ad"]);
-	},
-	tranOBV: function(can) {
-		return ab.candles._.gnode(can, ["obv"]);
+	trans: {
+		can: function(can) {
+			return ab.candles._.gnode(can, ["open", "high", "low", "close"]);
+		},
+		AD: function(can) {
+			return ab.candles._.gnode(can, ["ad"]);
+		},
+		OBV: function(can) {
+			return ab.candles._.gnode(can, ["obv"]);
+		},
+		VPT: function(can) {
+			return ab.candles._.gnode(can, ["vpt"]);
+		}
 	},
 	latest: function(sym, stat) {
 		const latest = ab.candles._.latest;
@@ -31,68 +53,52 @@ ab.candles = {
 			_.latest[sym][laster] = last[laster];
 	},
 	chart: function(sym, candles) {
-		const abc = ab.candles, _ = abc._, cans = CT.dom.div(), stats = CT.dom.div(),
-			n = _.charts[sym] = CT.dom.div([cans, stats], "w1"), h = abc.opts.height;
+		const abc = ab.candles, _ = abc._, trans = abc.trans,
+			cans = CT.dom.div(), stats = CT.dom.div(), vpts = CT.dom.div(),
+			n = _.charts[sym] = CT.dom.div([cans, vpts, stats], "w1");
 		abc.log("initializing", candles.length, sym, candles);
 		abc.setLatest(sym, candles, true);
 		n.build = function() {
-			n.candles = new ApexCharts(cans, {
-				title: {
-					text: sym + " candles"
-				},
-				xaxis: {
-					type: "datetime"
-				},
-				chart: {
-					height: h,
-					type: "line"
-				},
-				series: [{
-					name: sym,
-					type: "candlestick",
-					data: candles.map(abc.tranCan)
-				}]
-			});
-			n.stats = new ApexCharts(stats, {
-				title: {
-					text: sym + " stats"
-				},
-				xaxis: {
-					type: "datetime"
-				},
-				chart: {
-					height: h,
-					type: "line"
-				},
-				series: [{
-					name: "obv",
-					type: "bar",
-					data: candles.map(abc.tranOBV)
-				}, {
-					name: "ad",
-					type: "line",
-					data: candles.map(abc.tranAD)
-				}]
-			});
-			n.candles.render();
-			n.stats.render();
+			n.candles = _.chart(cans, sym + " candles", [{
+				name: sym,
+				type: "candlestick",
+				data: candles.map(trans.can)
+			}]);
+			n.vpt = _.chart(vpts, sym + " VPTs", [{
+				name: "vpt",
+				type: "line",
+				data: candles.map(trans.VPT)
+			}]);
+			n.stats = _.chart(stats, sym + " stats", [{
+				name: "obv",
+				type: "bar",
+				data: candles.map(trans.OBV)
+			}, {
+				name: "ad",
+				type: "line",
+				data: candles.map(trans.AD)
+			}]);
 		};
 		return n;
 	},
 	update: function(data) {
-		const abc = ab.candles, charts = abc._.charts, cans = data.message.candles;
+		const abc = ab.candles, charts = abc._.charts,
+			cans = data.message.candles, trans = abc.trans;
 		let sym, ups;
 		for (sym in cans) {
 			ups = cans[sym];
 			if (!ups.length) continue;
 			abc.log("updating", sym, ups);
 			charts[sym].candles.appendData([{
-				data: ups.map(abc.tranCan)
+				data: ups.map(trans.can)
+			}]);
+			charts[sym].vpt.appendData([{
+				data: ups.map(trans.VPT)
 			}]);
 			charts[sym].stats.appendData([{
-				data: ups.map(abc.tranOBV)
+				data: ups.map(trans.OBV)
 			}, {
-				data: ups.map(abc.tranAD)
+				data: ups.map(trans.AD)
 			}]);
 			abc.setLatest(sym, ups);
 		}
@@ -119,7 +125,7 @@ ab.candles = {
 		const abc = ab.candles;
 		abc.log = CT.log.getLogger("candles");
 		abc.opts = opts = CT.merge(opts, {
-			height: 350,
+			height: 250,
 			startWS: true,
 			container: "ctmain"
 		});
