@@ -3,7 +3,7 @@ ab.candles = {
 		charts: {},
 		latest: {},
 		lasters: ["ad", "obv", "vpt"],
-		spans: ["inner", "short", "long", "outer"],
+		terms: ["small", "medium", "large"],
 		gnode: function(can, stats) {
 			return {
 				x: new Date(can.timestamp),
@@ -27,12 +27,12 @@ ab.candles = {
 			chart.render();
 			return chart;
 		},
-		span: function(candles, span, dataOnly) {
+		term: function(candles, term, dataOnly) {
 			const gnode = ab.candles._.gnode, d = {
-				data: candles.map(c => gnode(c, [span]))
+				data: candles.map(c => gnode(c, [term]))
 			};
 			if (!dataOnly) {
-				d.name = span;
+				d.name = term;
 				d.type = "line";
 			}
 			return d;
@@ -51,9 +51,9 @@ ab.candles = {
 		VPT: function(can) {
 			return ab.candles._.gnode(can, ["vpt"]);
 		},
-		spans: function(candles, dataOnly) {
+		terms: function(candles, dataOnly) {
 			const _ = ab.candles._;
-			return _.spans.map(span => _.span(candles, span, dataOnly));
+			return _.terms.map(term => _.term(candles, term, dataOnly));
 		}
 	},
 	latest: function(sym, stat) {
@@ -78,7 +78,7 @@ ab.candles = {
 				name: "candles",
 				type: "candlestick",
 				data: candles.map(trans.can)
-			}].concat(trans.spans(candles)), "42%");
+			}].concat(trans.terms(candles)), "42%");
 			n.vpt = _.chart(vpts, sym + " VPTs", [{
 				name: "vpt",
 				type: "line",
@@ -106,7 +106,7 @@ ab.candles = {
 			abc.log("updating", sym, ups);
 			charts[sym].candles.appendData([{
 				data: ups.map(trans.can)
-			}].concat(trans.spans(ups, true)));
+			}].concat(trans.terms(ups, true)));
 			charts[sym].vpt.appendData([{
 				data: ups.map(trans.VPT)
 			}]);
