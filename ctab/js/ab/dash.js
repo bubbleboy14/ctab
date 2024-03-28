@@ -275,7 +275,7 @@ ab.dash.Dash = CT.Class({
 			CT.dom.setContent(nz.buys, buys);
 		},
 		modes: {
-			various: ["various stats", "mainCharts", "leggy", "conf"],
+			various: ["various stats", "mainCharts", "leggy", "conf", "streams"],
 			weighted: ["weighted averages", "candles", "symet"]
 		},
 		showHideModes: function() {
