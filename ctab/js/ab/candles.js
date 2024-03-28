@@ -83,7 +83,7 @@ ab.candles = {
 				name: "vpt",
 				type: "line",
 				data: candles.map(trans.VPT)
-			}], "25%");
+			}], "20%");
 			n.stats = _.chart(stats, sym + " stats", [{
 				name: "obv",
 				type: "bar",
@@ -92,7 +92,7 @@ ab.candles = {
 				name: "ad",
 				type: "line",
 				data: candles.map(trans.AD)
-			}], "25%");
+			}], "30%");
 		};
 		return n;
 	},
