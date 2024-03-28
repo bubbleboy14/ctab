@@ -10,7 +10,7 @@ ab.candles = {
 				y: stats.map(s => can[s])
 			};
 		},
-		chart: function(node, name, series) {
+		chart: function(node, name, series, height) {
 			const chart = new ApexCharts(node, {
 				title: {
 					text: name
@@ -20,7 +20,7 @@ ab.candles = {
 				},
 				chart: {
 					type: "line",
-					height: ab.candles.opts.height
+					height: height
 				},
 				series: series
 			});
@@ -78,12 +78,12 @@ ab.candles = {
 				name: "candles",
 				type: "candlestick",
 				data: candles.map(trans.can)
-			}].concat(trans.spans(candles)));
+			}].concat(trans.spans(candles)), "45%");
 			n.vpt = _.chart(vpts, sym + " VPTs", [{
 				name: "vpt",
 				type: "line",
 				data: candles.map(trans.VPT)
-			}]);
+			}], "25%");
 			n.stats = _.chart(stats, sym + " stats", [{
 				name: "obv",
 				type: "bar",
@@ -92,7 +92,7 @@ ab.candles = {
 				name: "ad",
 				type: "line",
 				data: candles.map(trans.AD)
-			}]);
+			}], "25%");
 		};
 		return n;
 	},
@@ -121,7 +121,7 @@ ab.candles = {
 	build: function(cans) {
 		const abc = ab.candles,
 			cnodes = Object.keys(cans).map(sym => abc.chart(sym, cans[sym]));
-		CT.dom.setContent(abc.opts.container, cnodes, "flex");
+		CT.dom.setContent(abc.opts.container, cnodes, "flex h1");
 		cnodes.forEach(c => c.build());
 	},
 	load: function(candles) {
@@ -140,7 +140,6 @@ ab.candles = {
 		const abc = ab.candles;
 		abc.log = CT.log.getLogger("candles");
 		abc.opts = opts = CT.merge(opts, {
-			height: 250,
 			startWS: true,
 			container: "ctmain"
 		});
