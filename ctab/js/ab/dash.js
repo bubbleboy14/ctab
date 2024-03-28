@@ -35,7 +35,8 @@ ab.dash = {
 		noclix: ["staging", "stagish", "live", "network", "capped", "credset", "mdv2"],
 		streams: ["fills", "cancels", "warnings", "refills"],
 		floats: ["prunelimit", "vcutoff", "nmult"],
-		ofloro: ["backend", "strategy", "ndx"],
+		row2: ["actuary", "strategy", "accountant"],
+		row3: ["backend", "harvester", "ndx"],
 		balsubs: ["ask", "bid", "actual"],
 		tribools: ["oneswap", "nudge"],
 		littles: ["randlim"],
@@ -396,16 +397,21 @@ ab.dash.Dash = CT.Class({
 			});
 		},
 		loadConf: function(curconf) {
-			var _ = this._, prop, row2 = {};
-			for (prop of d_.ofloro) {
+			var _ = this._, prop, row2 = {}, row3 = {};
+			for (prop of d_.row2) {
 				row2[prop] = curconf[prop];
+				delete curconf[prop];
+			}
+			for (prop of d_.row3) {
+				row3[prop] = curconf[prop];
 				delete curconf[prop];
 			}
 			_.nodes.conf = CT.dom.div();
 			CT.dom.setContent(_.nodes.conf, [
 				_.leg(curconf, false, null, false, _.upConf),
-				_.leg(row2, false, null, false, _.upConf)
-			]);
+				_.leg(row2, false, null, false, _.upConf),
+				_.leg(row3, false, null, false, _.upConf)
+			], "bigish");
 		},
 		fnode: function(f) {
 			return this._.snode({
