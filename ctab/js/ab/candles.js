@@ -78,7 +78,7 @@ ab.candles = {
 				name: "candles",
 				type: "candlestick",
 				data: candles.map(trans.can)
-			}].concat(trans.spans(candles)), "45%");
+			}].concat(trans.spans(candles)), "44%");
 			n.vpt = _.chart(vpts, sym + " VPTs", [{
 				name: "vpt",
 				type: "line",
