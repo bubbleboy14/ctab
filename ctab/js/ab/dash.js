@@ -16,11 +16,11 @@ ab.dash = {
 		},
 		tables: {
 			symbol: { // TODO: meh configurize symbol/market better
-				head: ["symbol", "quote", "initial", "actual", "theoretical"],
+				head: ["symbol", "initial", "actual", "theoretical"],
 				rows: ["USD", "ETH", "BTC"]
 			},
 			market: {
-				head: ["market", "ask", "bid", "asks", "bids", "volume", "volatility", "hint"],
+				head: ["market", "quote", "ask", "bid", "asks", "bids", "volume", "vola", "vpt", "obv", "ad", "hint"],
 				rows: ["ETHBTC", "ETHUSD", "BTCUSD"]
 			},
 			metric: {
@@ -85,34 +85,38 @@ ab.dash.Dash = CT.Class({
 				side: hint
 			}), null, (hint == "buy") ? "green" : "red");
 		},
-		tab: function(data, mode, sub) {
+		tab: function(data, mode, sub, contClass) {
 			var col, sym, colnode, fnode, cols = {}, _ = this._, colors = _.colors,
 				params = d_.tables[mode], head = params.head, rows = params.rows,
-				c = d => CT.dom.div(d, "w1 bordered smallpadded nowrap"), bals = data.balances;
+				c = d => CT.dom.div(d, "w1 bordered smallpadded nowrap"),
+				bals = data.balances, latest = ab.candles.latest;
 			for (col of head)
 				cols[col] = [c("<b>" + col + "</b>")];
 			for (sym of rows) {
 				colnode = c("<b>" + sym + "</b>");
 				cols[mode].push(colnode);
 				if (mode == "market") {
+					cols.quote.push(c(data.prices[sym] || "-"));
 					cols.ask.push(c(data.orders[sym].ask));
 					cols.bid.push(c(data.orders[sym].bid));
 					cols.asks.push(c(_.rounder(data.totals[sym].ask, 10)));
 					cols.bids.push(c(_.rounder(data.totals[sym].bid, 10)));
 					cols.volume.push(c(_.rounder(data.volumes[sym], 1000)));
-					cols.volatility.push(c(_.rounder(data.volvols[sym], 1000)));
+					cols.vola.push(c(_.rounder(data.volvols[sym], 1000)));
+					cols.vpt.push(c(_.rounder(latest(sym, "vpt"), 10) || "-"));
+					cols.obv.push(c(_.rounder(latest(sym, "obv"), 10) || "-"));
+					cols.ad.push(c(_.rounder(latest(sym, "ad"), 10) || "-"));
 					cols.hint.push(c(_.hint(sym, data.hints)));
 				} else {
 					colnode.style.color = colors[sym];
-					if (mode == "symbol") {
-						cols.quote.push(c(data.prices[sym + "USD"] || 1));
+					if (mode == "symbol")
 						cols.initial.push(c(_.rounder(bals.initial[sym])));
-					}
 					cols.actual.push(c(bals.waiting ? "waiting" : bals.actual[sym]));
 					cols.theoretical.push(c(bals.waiting ? "waiting" : bals.theoretical[sym]));
 				}
 			}
 			fnode = CT.dom.flex(head.map(h => cols[h]), "bordered row jcbetween");
+			contClass && fnode.classList.add(contClass);
 			return sub ? CT.dom.div([
 				fnode,
 				_.leg(data[sub], false, null, true, null, null, true, "big")
@@ -270,38 +274,45 @@ ab.dash.Dash = CT.Class({
 			CT.dom.setContent(nz.sells, sells);
 			CT.dom.setContent(nz.buys, buys);
 		},
+		modes: {
+			various: ["various stats", "mainCharts", "leggy", "conf"],
+			weighted: ["weighted averages", "candles", "symet"]
+		},
+		showHideModes: function() {
+			var _ = this._, nz = _.nodes, butt = nz.bottomToggler, n;
+			for (n of _.modes[butt._mode.split(" ")[0]])
+				CT.dom.show(nz[n], "auto");
+			for (n of _.modes[butt._nextMode.split(" ")[0]])
+				CT.dom.hide(nz[n]);
+		},
 		toggleMode: function() {
-			var _ = this._, nz = _.nodes, butt = nz.bottomToggler;
+			var _ = this._, nz = _.nodes, butt = nz.bottomToggler, n;
 			if (butt._mode == "various stats") {
 				butt._mode = "weighted averages";
 				butt._nextMode = "various stats";
-				CT.dom.show(nz.candles);
-				CT.dom.hide(nz.mainCharts);
 			} else {
 				butt._mode = "various stats";
 				butt._nextMode = "weighted averages";
-				CT.dom.show(nz.mainCharts);
-				CT.dom.hide(nz.candles);
 			}
-			CT.dom.show(nz[butt._mode]);
-			CT.dom.hide(nz[butt._nextMode]);
+			_.showHideModes();
 			butt.innerHTML = "View " + CT.parse.words2title(butt._nextMode);
 		},
 		legend: function(data) {
 			var _ = this._, nz = _.nodes, bals = data.balances,
-				wavs, stas, strats = _.leg(data.strategists, false, null, true);
-			strats.classList.add("fwrap");
-			CT.dom.setContent(_.nodes.prices, [
-				bals.waiting ? _.leg(bals, false, null, false, null, null, true,
-					"centered") : _.leg(bals.theoretical, true, {
-						set: bals,
-						names: d_.balsubs
-					}),
-				CT.dom.flex([
+				wavs, stas, strats = _.leg(data.strategists, false, null, true),
+				leggy = nz.leggy = bals.waiting ? _.leg(bals, false, null, false,
+				null, null, true, "centered") : _.leg(bals.theoretical, true, {
+					set: bals,
+					names: d_.balsubs
+				}), symet = nz.symet = CT.dom.flex([
 					_.tab(data, "symbol"),
 					_.tab(data, "metric", "ndx")
-				], "smallish row jcbetween"),
-				_.tab(data, "market")
+				], "smallish row jcbetween");
+			strats.classList.add("fwrap");
+			CT.dom.setContent(_.nodes.prices, [
+				leggy,
+				symet,
+				_.tab(data, "market", null, "small")
 			], "bigish");
 			wavs = nz["weighted averages"] = CT.dom.div([
 				_.leg({ "asks": data.weighted.ask }, false, null, true),
@@ -313,7 +324,7 @@ ab.dash.Dash = CT.Class({
 				strats,
 				_.leg(data.gem)
 			]);
-			CT.dom.hide(nz[nz.bottomToggler._nextMode]);
+			_.showHideModes();
 			CT.dom.setContent(_.nodes.legend, [wavs, stas]);
 		},
 		snode: function(data, sec) {
@@ -412,7 +423,7 @@ ab.dash.Dash = CT.Class({
 		setStreams: function() {
 			var _ = this._, nz = _.nodes, fhead;
 			nz.streams = CT.dom.flex(d_.streams.map(function(name) {
-				nz[name] = CT.dom.div(null, "hm150p scrolly");
+				nz[name] = CT.dom.div(null, "hm100p scrolly");
 				nz[name].header = CT.dom.div(name, "centered bold");
 				return CT.dom.div([
 					nz[name].header,
@@ -445,7 +456,6 @@ ab.dash.Dash = CT.Class({
 		nz.bottomToggler._mode = "various stats";
 		nz.bottomToggler._nextMode = "weighted averages";
 		ab.candles.init({
-			height: "50%",
 			startWS: false,
 			container: nz.candles
 		});
