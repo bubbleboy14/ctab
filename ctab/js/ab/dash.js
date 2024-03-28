@@ -275,7 +275,7 @@ ab.dash.Dash = CT.Class({
 			CT.dom.setContent(nz.buys, buys);
 		},
 		modes: {
-			various: ["various stats", "mainCharts", "leggy"],
+			various: ["various stats", "mainCharts", "leggy", "conf"],
 			weighted: ["weighted averages", "candles", "symet"]
 		},
 		showHideModes: function() {
@@ -456,7 +456,6 @@ ab.dash.Dash = CT.Class({
 		nz.bottomToggler._mode = "various stats";
 		nz.bottomToggler._nextMode = "weighted averages";
 		ab.candles.init({
-			height: "30%",
 			startWS: false,
 			container: nz.candles
 		});
