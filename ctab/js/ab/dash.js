@@ -16,11 +16,11 @@ ab.dash = {
 		},
 		tables: {
 			symbol: { // TODO: meh configurize symbol/market better
-				head: ["symbol", "quote", "initial", "actual", "theoretical"],
+				head: ["symbol", "initial", "actual", "theoretical"],
 				rows: ["USD", "ETH", "BTC"]
 			},
 			market: {
-				head: ["market", "ask", "bid", "asks", "bids", "volume", "volatility", "vpt", "obv", "ad", "hint"],
+				head: ["market", "quote", "ask", "bid", "asks", "bids", "volume", "vola", "vpt", "obv", "ad", "hint"],
 				rows: ["ETHBTC", "ETHUSD", "BTCUSD"]
 			},
 			metric: {
@@ -96,22 +96,21 @@ ab.dash.Dash = CT.Class({
 				colnode = c("<b>" + sym + "</b>");
 				cols[mode].push(colnode);
 				if (mode == "market") {
+					cols.quote.push(c(data.prices[sym] || "-"));
 					cols.ask.push(c(data.orders[sym].ask));
 					cols.bid.push(c(data.orders[sym].bid));
 					cols.asks.push(c(_.rounder(data.totals[sym].ask, 10)));
 					cols.bids.push(c(_.rounder(data.totals[sym].bid, 10)));
 					cols.volume.push(c(_.rounder(data.volumes[sym], 1000)));
-					cols.volatility.push(c(_.rounder(data.volvols[sym], 1000)));
+					cols.vola.push(c(_.rounder(data.volvols[sym], 1000)));
 					cols.vpt.push(c(_.rounder(latest(sym, "vpt"), 10) || "-"));
 					cols.obv.push(c(_.rounder(latest(sym, "obv"), 10) || "-"));
 					cols.ad.push(c(_.rounder(latest(sym, "ad"), 10) || "-"));
 					cols.hint.push(c(_.hint(sym, data.hints)));
 				} else {
 					colnode.style.color = colors[sym];
-					if (mode == "symbol") {
-						cols.quote.push(c(data.prices[sym + "USD"] || 1));
+					if (mode == "symbol")
 						cols.initial.push(c(_.rounder(bals.initial[sym])));
-					}
 					cols.actual.push(c(bals.waiting ? "waiting" : bals.actual[sym]));
 					cols.theoretical.push(c(bals.waiting ? "waiting" : bals.theoretical[sym]));
 				}
