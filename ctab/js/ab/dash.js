@@ -491,7 +491,7 @@ ab.dash.Dash = CT.Class({
 		_.trades(m);
 		_.legend(m);
 		_.streams(m);
-		ab.candles.update(data);
+		ab.candles.util.update(data);
 	},
 	load: function(curconf) {
 		this.build(curconf);
