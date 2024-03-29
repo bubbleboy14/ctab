@@ -4,7 +4,6 @@ CT.require("user.core");
 CT.require("ab.util");
 CT.require("ab.candles");
 CT.require("ab.dash");
-CT.scriptImport("https://cdn.jsdelivr.net/npm/apexcharts");
 CT.scriptImport("https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.js");
 CT.dom.addStyle(null, "https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.css");
 
