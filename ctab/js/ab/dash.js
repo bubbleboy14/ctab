@@ -90,7 +90,7 @@ ab.dash.Dash = CT.Class({
 			var col, sym, colnode, fnode, cols = {}, _ = this._, colors = _.colors,
 				params = d_.tables[mode], head = params.head, rows = params.rows,
 				c = d => CT.dom.div(d, "w1 bordered smallpadded nowrap"),
-				bals = data.balances, latest = ab.candles.latest;
+				bals = data.balances, latest = ab.candles.latest.get;
 			for (col of head)
 				cols[col] = [c("<b>" + col + "</b>")];
 			for (sym of rows) {
