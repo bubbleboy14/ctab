@@ -10,23 +10,6 @@ ab.candles = {
 				y: stats.map(s => can[s])
 			};
 		},
-		chart: function(node, name, series, height) {
-			const chart = new ApexCharts(node, {
-				title: {
-					text: name
-				},
-				xaxis: {
-					type: "datetime"
-				},
-				chart: {
-					type: "line",
-					height: height
-				},
-				series: series
-			});
-			chart.render();
-			return chart;
-		},
 		term: function(candles, term, dataOnly) {
 			const gnode = ab.candles._.gnode, d = {
 				data: candles.map(c => gnode(c, [term]))
@@ -67,62 +50,24 @@ ab.candles = {
 		for (let laster of _.lasters)
 			_.latest[sym][laster] = last[laster];
 	},
-	chart: function(sym, candles) {
-		const abc = ab.candles, _ = abc._, trans = abc.trans,
-			cans = CT.dom.div(), stats = CT.dom.div(), vpts = CT.dom.div(),
-			n = _.charts[sym] = CT.dom.div([cans, vpts, stats], "w1");
-		abc.log("initializing", candles.length, sym, candles);
+	manager: function(sym, candles) {
+		const abc = ab.candles, man = abc._.charts[sym] = new abc.Manager({
+			sym: sym,
+			candles: candles
+		});
 		abc.setLatest(sym, candles, true);
-		n.build = function() {
-			n.candles = _.chart(cans, sym + " candles", [{
-				name: "candles",
-				type: "candlestick",
-				data: candles.map(trans.can)
-			}].concat(trans.terms(candles)), "42%");
-			n.vpt = _.chart(vpts, sym + " VPTs", [{
-				name: "vpt",
-				type: "line",
-				data: candles.map(trans.VPT)
-			}], "25%");
-			n.stats = _.chart(stats, sym + " stats", [{
-				name: "obv",
-				type: "bar",
-				data: candles.map(trans.OBV)
-			}, {
-				name: "ad",
-				type: "line",
-				data: candles.map(trans.AD)
-			}], "30%");
-		};
-		return n;
+		return man;
 	},
 	update: function(data) {
-		const abc = ab.candles, charts = abc._.charts,
-			cans = data.message.candles, trans = abc.trans;
-		let sym, ups;
-		for (sym in cans) {
-			ups = cans[sym];
-			if (!ups.length) continue;
-			abc.log("updating", sym, ups);
-			charts[sym].candles.appendData([{
-				data: ups.map(trans.can)
-			}].concat(trans.terms(ups, true)));
-			charts[sym].vpt.appendData([{
-				data: ups.map(trans.VPT)
-			}]);
-			charts[sym].stats.appendData([{
-				data: ups.map(trans.OBV)
-			}, {
-				data: ups.map(trans.AD)
-			}]);
-			abc.setLatest(sym, ups);
-		}
+		const charts = ab.candles._.charts, cans = data.message.candles;
+		for (let sym in cans)
+			charts[sym].update(cans[sym]);
 	},
 	build: function(cans) {
 		const abc = ab.candles,
-			cnodes = Object.keys(cans).map(sym => abc.chart(sym, cans[sym]));
-		CT.dom.setContent(abc.opts.container, cnodes, "flex h1");
-		cnodes.forEach(c => c.build());
+			cmen = Object.keys(cans).map(sym => abc.manager(sym, cans[sym]));
+		CT.dom.setContent(abc.opts.container, cmen.map(m => m.node), "flex h1");
+		cmen.forEach(c => c.build());
 	},
 	load: function(candles) {
 		const abc = ab.candles;
@@ -146,3 +91,88 @@ ab.candles = {
 		abc.start();
 	}
 };
+
+ab.candles.Manager = CT.Class({
+	CLASSNAME: "ab.candles.Manager",
+	_: {
+		charts: {},
+		chart: function(node, name, series, height) {
+			const chart = new ApexCharts(node, {
+				title: {
+					text: name
+				},
+				xaxis: {
+					type: "datetime"
+				},
+				chart: {
+					type: "line",
+					height: height
+				},
+				series: series
+			});
+			chart.render();
+			return chart;
+		}
+	},
+	update: function(cans) {
+		const abc = ab.candles, trans = abc.trans, n = this.node;
+		if (!cans.length) return;
+		this.log("updating", this.sym, cans);
+		n.candles.appendData([{
+			data: cans.map(trans.can)
+		}].concat(trans.terms(cans, true)));
+		n.vpt.appendData([{
+			data: cans.map(trans.VPT)
+		}]);
+		n.stats.appendData([{
+			data: cans.map(trans.OBV)
+		}, {
+			data: cans.map(trans.AD)
+		}]);
+		abc.setLatest(this.sym, cans);
+	},
+	build: function() {
+		const _ = this._, cz = _.charts, trans = ab.candles.trans,
+			n = this.node, sym = this.sym, candles = this.candles;
+		n.candles = _.chart(cz.cans, sym + " candles", [{
+			name: "candles",
+			type: "candlestick",
+			data: candles.map(trans.can)
+		}].concat(trans.terms(candles)), "42%");
+		n.vpt = _.chart(cz.vpts, sym + " VPTs", [{
+			name: "vpt",
+			type: "line",
+			data: candles.map(trans.VPT)
+		}], "25%");
+		n.stats = _.chart(cz.stats, sym + " stats", [{
+			name: "obv",
+			type: "bar",
+			data: candles.map(trans.OBV)
+		}, {
+			name: "ad",
+			type: "line",
+			data: candles.map(trans.AD)
+		}], "30%");
+	},
+	load: function() {
+		const _ = this._, cz = _.charts, cans = cz.cans = CT.dom.div(),
+			stats = cz.stats = CT.dom.div(), vpts = cz.vpts = CT.dom.div();
+		this.node = CT.dom.div([cans, vpts, stats], "w1");
+	},
+	init: function(opts) {
+		this.opts = opts = CT.merge(opts, {
+
+		});
+		this.candles = opts.candles;
+		this.sym = opts.sym;
+		this.load();
+	}
+});
+
+ab.candles.Graph = CT.Class({
+	CLASSNAME: "ab.candles.Graph",
+	_: {},
+	init: function(opts) {
+
+	}
+});
