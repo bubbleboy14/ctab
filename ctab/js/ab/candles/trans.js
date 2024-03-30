@@ -18,7 +18,7 @@ ab.candles.trans = {
 			return d;
 		}
 	},
-	can: function(can) {
+	candles: function(can) {
 		return ab.candles.trans._.gnode(can, ["open", "high", "low", "close"]);
 	},
 	AD: function(can) {
