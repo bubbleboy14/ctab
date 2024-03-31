@@ -18,7 +18,7 @@ ab.candles.util = {
 	build: function(cans) {
 		const abc = ab.candles,
 			cmen = Object.keys(cans).map(sym => abc.util.manager(sym, cans[sym]));
-		CT.dom.setContent(abc.opts.container, cmen.map(m => m.node), "flex h1");
+		CT.dom.setContent(abc.opts.container, cmen.map(m => m.node), "flex h1 w1");
 		cmen.forEach(c => c.build());
 	},
 	load: function(candles) {

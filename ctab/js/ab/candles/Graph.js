@@ -2,7 +2,7 @@ ab.candles.Graph = CT.Class({
 	CLASSNAME: "ab.candles.Graph",
 	_: {
 		chart: function(series) {
-			const chart = new ApexCharts(this.node, {
+			const oz = this.opts, chart = new ApexCharts(this.node, {
 				title: {
 					text: this.sym + " " + this.name
 				},
@@ -11,7 +11,8 @@ ab.candles.Graph = CT.Class({
 				},
 				chart: {
 					type: "line",
-					height: this.opts.height
+					width: oz.width,
+					height: oz.height
 				},
 				series: series
 			});
@@ -43,6 +44,7 @@ ab.candles.Graph = CT.Class({
 	init: function(opts) {
 		opts.type = opts.type || "line";
 		this.opts = opts = CT.merge(opts, {
+			width: "100%",
 			height: "100%",
 			parts: [{ name: opts.name, type: opts.type }]
 		});
