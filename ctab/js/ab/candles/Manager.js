@@ -25,14 +25,14 @@ ab.candles.Manager = CT.Class({
 				}, "AD"]
 			}
 		},
-		graph: function(opts) {
+		graph: function(opts, h) {
 			const _ = this._, n = opts.name;
 			return new ab.candles.Graph(CT.merge(opts, {
 				type: "line",
 				sym: this.sym,
 				node: _.graphs[n],
-				height: _.heights[n],
-				candles: this.candles
+				candles: this.candles,
+				height: h || _.heights[n]
 			}));
 		},
 		plink: function(part) {
@@ -53,7 +53,13 @@ ab.candles.Manager = CT.Class({
 	},
 	set: function(mode) {
 		this.log("set(" + mode + ")");
-
+		if (mode == "none")
+			mode = [];
+		else if (mode == "all")
+			mode = null;
+		else
+			mode = [mode];
+		this.build(mode);
 	},
 	update: function(cans) {
 		const _ = this._, n = this.node;
@@ -66,10 +72,13 @@ ab.candles.Manager = CT.Class({
 		_.linx();
 	},
 	build: function(active) {
-		const _ = this._, n = this.node;
+		const _ = this._, n = this.node, h = active && "97%";
 		_.active = active || _.all;
-		for (let g of _.active)
-			n[g] = _.graph(_.gconf[g]);
+		for (let g of _.all) {
+			CT.dom.clear(_.graphs[g]);
+			if (_.active.includes(g))
+				n[g] = _.graph(_.gconf[g], h);
+		}
 		_.linx();
 	},
 	load: function() {

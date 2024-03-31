@@ -5,11 +5,12 @@ ab.candles.util = {
 	mode: function(mode) {
 		const abc = ab.candles, mans = abc.util._.managers,
 			isman = mode in mans;
-		let m, man;
+		let m, man, isMode;
 		for (m in mans) {
 			man = mans[m];
-			CT.dom[(!isman || (m == mode)) ? "show" : "hide"](man.node);
-			man.set(isman ? "all" : mode);
+			isMode = m == mode;
+			CT.dom[(isMode || !isman) ? "show" : "hide"](man.node);
+			man.set(isman ? (isMode && "all" || "none") : mode);
 		}
 	},
 	manager: function(sym, candles) {
