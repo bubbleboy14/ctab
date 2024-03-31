@@ -1,9 +1,9 @@
 ab.candles.util = {
 	_: {
-		charts: {}
+		managers: {}
 	},
 	manager: function(sym, candles) {
-		const abc = ab.candles, man = abc.util._.charts[sym] = new abc.Manager({
+		const abc = ab.candles, man = abc.util._.managers[sym] = new abc.Manager({
 			sym: sym,
 			candles: candles
 		});
@@ -11,9 +11,9 @@ ab.candles.util = {
 		return man;
 	},
 	update: function(data) {
-		const charts = ab.candles.util._.charts, cans = data.message.candles;
+		const managers = ab.candles.util._.managers, cans = data.message.candles;
 		for (let sym in cans)
-			charts[sym].update(cans[sym]);
+			managers[sym].update(cans[sym]);
 	},
 	build: function(cans) {
 		const abc = ab.candles,
