@@ -2,6 +2,16 @@ ab.candles.util = {
 	_: {
 		managers: {}
 	},
+	mode: function(mode) {
+		const abc = ab.candles, mans = abc.util._.managers,
+			isman = mode in mans;
+		let m, man;
+		for (m in mans) {
+			man = mans[m];
+			CT.dom[(!isman || (m == mode)) ? "show" : "hide"](man.node);
+			man.set(isman ? "all" : mode);
+		}
+	},
 	manager: function(sym, candles) {
 		const abc = ab.candles, man = abc.util._.managers[sym] = new abc.Manager({
 			sym: sym,
