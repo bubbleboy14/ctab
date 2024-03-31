@@ -84,7 +84,7 @@ ab.candles.Manager = CT.Class({
 	load: function() {
 		const _ = this._, gz = _.graphs, cans = gz.candles = CT.dom.div(),
 			stats = gz.stats = CT.dom.div(), vpts = gz.VPT = CT.dom.div();
-		this.node = CT.dom.div([cans, vpts, stats], "w1");
+		this.node = CT.dom.div([cans, vpts, stats], "w1 h1");
 	},
 	init: function(opts) {
 		this.opts = opts = CT.merge(opts, {
