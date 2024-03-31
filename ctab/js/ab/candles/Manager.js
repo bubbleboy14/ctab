@@ -16,16 +16,36 @@ ab.candles.Manager = CT.Class({
 				height: _.heights[n],
 				candles: this.candles
 			}));
+		},
+		plink: function(part) {
+			return CT.dom.link(part, () => this.set(part),
+				null, "big block pointer hoverglow");
+		},
+		linkify: function(node) {
+			const tnode = node.getElementsByTagName("text")[0],
+				parts = tnode.innerHTML.split(" ");
+			tnode.classList.add("pointer");
+			CT.hover.auto(tnode, parts.map(this._.plink), null, null, true);
+		},
+		linx: function() {
+			const _ = this._, gz = _.graphs;
+			for (let name in gz)
+				_.linkify(gz[name]);
 		}
+	},
+	set: function(mode) {
+		this.log("set(" + mode + ")");
 	},
 	update: function(cans) {
 		const n = this.node;
 		if (!cans.length) return;
-		this.log("updating", this.sym, cans);
+		this.candles = this.candles.concat(cans);
 		ab.candles.latest.set(this.sym, cans);
+		this.log("updating", this.sym, cans);
 		n.candles.update(cans);
 		n.stats.update(cans);
 		n.vpt.update(cans);
+		this._.linx();
 	},
 	build: function() {
 		const _ = this._, n = this.node;
@@ -44,6 +64,7 @@ ab.candles.Manager = CT.Class({
 				type: "bar"
 			}, "AD"]
 		});
+		_.linx();
 	},
 	load: function() {
 		const _ = this._, gz = _.graphs, cans = gz.candles = CT.dom.div(),
