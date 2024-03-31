@@ -1,11 +1,29 @@
 ab.candles.Manager = CT.Class({
 	CLASSNAME: "ab.candles.Manager",
 	_: {
+		all: ["candles", "VPT", "stats"],
 		graphs: {},
 		heights: {
 			VPT: "25%",
 			stats: "30%",
 			candles: "42%"
+		},
+		gconf: {
+			candles: {
+				terms: true,
+				name: "candles",
+				type: "candlestick"
+			},
+			VPT: {
+				name: "VPT"
+			},
+			stats: {
+				name: "stats",
+				parts: [{
+					name: "OBV",
+					type: "bar"
+				}, "AD"]
+			}
 		},
 		graph: function(opts) {
 			const _ = this._, n = opts.name;
@@ -18,7 +36,7 @@ ab.candles.Manager = CT.Class({
 			}));
 		},
 		plink: function(part) {
-			return CT.dom.link(part, () => this.set(part),
+			return CT.dom.link(part, () => ab.candles.util.mode(part),
 				null, "big block pointer hoverglow");
 		},
 		linkify: function(node) {
@@ -29,41 +47,29 @@ ab.candles.Manager = CT.Class({
 		},
 		linx: function() {
 			const _ = this._, gz = _.graphs;
-			for (let name in gz)
+			for (let name of _.active)
 				_.linkify(gz[name]);
 		}
 	},
 	set: function(mode) {
 		this.log("set(" + mode + ")");
+
 	},
 	update: function(cans) {
-		const n = this.node;
+		const _ = this._, n = this.node;
 		if (!cans.length) return;
 		this.candles = this.candles.concat(cans);
 		ab.candles.latest.set(this.sym, cans);
 		this.log("updating", this.sym, cans);
-		n.candles.update(cans);
-		n.stats.update(cans);
-		n.vpt.update(cans);
-		this._.linx();
+		for (let name of _.active)
+			n[name].update(cans);
+		_.linx();
 	},
-	build: function() {
+	build: function(active) {
 		const _ = this._, n = this.node;
-		n.candles = _.graph({
-			terms: true,
-			name: "candles",
-			type: "candlestick"
-		});
-		n.vpt = _.graph({
-			name: "VPT"
-		});
-		n.stats = _.graph({
-			name: "stats",
-			parts: [{
-				name: "OBV",
-				type: "bar"
-			}, "AD"]
-		});
+		_.active = active || _.all;
+		for (let g of _.active)
+			n[g] = _.graph(_.gconf[g]);
 		_.linx();
 	},
 	load: function() {
