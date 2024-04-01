@@ -56,8 +56,10 @@ ab.candles.Manager = CT.Class({
 		}
 	},
 	set: function(mode) {
+		const isNone = mode == "none";
 		this.log("set(" + mode + ")");
-		if (mode == "none")
+		CT.dom[isNone ? "hide" : "show"](this.node);
+		if (isNone)
 			mode = [];
 		else if (mode == "all")
 			mode = null;
