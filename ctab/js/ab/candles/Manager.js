@@ -44,10 +44,13 @@ ab.candles.Manager = CT.Class({
 				null, "big block pointer hoverglow");
 		},
 		linkify: function(node) {
-			const tnode = node.getElementsByTagName("text")[0],
-				_ = this._, parts = _.parts(tnode.innerHTML);
+			const _ = this._, tnode = node.getElementsByTagName("text")[0];
+			if (!tnode) {
+				this.log("waiting for label...");
+				return setTimeout(_.linkify, 2000, node);
+			}
 			tnode.classList.add("pointer");
-			CT.hover.auto(tnode, parts.map(_.plink), null, null, true);
+			CT.hover.auto(tnode, _.parts(tnode.innerHTML).map(_.plink), null, null, true);
 		},
 		linx: function() {
 			const _ = this._, gz = _.graphs;
@@ -81,7 +84,10 @@ ab.candles.Manager = CT.Class({
 		const _ = this._, n = this.node, h = active && "97%";
 		_.active = active || _.all;
 		for (let g of _.all) {
-			CT.dom.clear(_.graphs[g]);
+			if (n[g]) {
+				n[g].destroy();
+				CT.dom.clear(_.graphs[g]);
+			}
 			if (_.active.includes(g))
 				n[g] = _.graph(_.gconf[g], h);
 		}
