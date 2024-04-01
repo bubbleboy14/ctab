@@ -10,6 +10,7 @@ ab.candles.Graph = CT.Class({
 					type: "datetime"
 				},
 				chart: {
+//					redrawOnParentResize: true,
 					type: "line",
 					width: oz.width,
 					height: oz.height
@@ -40,6 +41,9 @@ ab.candles.Graph = CT.Class({
 		for (let i = 0; i < parts.length; i++)
 			if (!parts[i].name)
 				parts[i] = { name: parts[i], type: "line" };
+	},
+	destroy: function() {
+		this.chart.destroy();
 	},
 	init: function(opts) {
 		opts.type = opts.type || "line";
