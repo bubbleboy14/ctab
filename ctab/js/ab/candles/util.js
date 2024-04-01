@@ -5,16 +5,22 @@ ab.candles.util = {
 	},
 	mode: function(mode) {
 		const abc = ab.candles, _ = abc.util._, mans = _.managers,
-			isman = mode in mans;
+			isMan = mode in mans, isAll = mode == "all", isDub = mode && mode.includes(" ");
 		let m, man, isMode;
 		if (!mode)
 			return _.mode;
 		_.mode = mode;
 		for (m in mans) {
 			man = mans[m];
-			isMode = m == mode;
-			CT.dom[(isMode || !isman) ? "show" : "hide"](man.node);
-			man.set(isman ? (isMode && "all" || "none") : mode);
+			if (isAll)
+				man.set("all");
+			else {
+				isMode = mode.startsWith(m);
+				if (isMan)
+					man.set(isMode ? "all" : "none");
+				else
+					man.set((isMode || !isDub) ? mode.split(" ").pop() : "none");
+			}
 		}
 	},
 	manager: function(sym, candles) {
