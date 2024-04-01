@@ -1,11 +1,15 @@
 ab.candles.util = {
 	_: {
+		mode: "all",
 		managers: {}
 	},
 	mode: function(mode) {
-		const abc = ab.candles, mans = abc.util._.managers,
+		const abc = ab.candles, _ = abc.util._, mans = _.managers,
 			isman = mode in mans;
 		let m, man, isMode;
+		if (!mode)
+			return _.mode;
+		_.mode = mode;
 		for (m in mans) {
 			man = mans[m];
 			isMode = m == mode;
