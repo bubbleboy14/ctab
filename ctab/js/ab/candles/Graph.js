@@ -16,7 +16,7 @@ ab.candles.Graph = CT.Class({
 				},
 				series: series
 			});
-			setTimeout(() => chart.render(), 200);
+			setTimeout(() => chart.render());
 //			chart.render();
 			return chart;
 		},

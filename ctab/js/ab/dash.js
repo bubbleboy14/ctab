@@ -448,7 +448,7 @@ ab.dash.Dash = CT.Class({
 		_.loadConf(curconf);
 		nz.prices = CT.dom.div();
 		nz.legend = CT.dom.div();
-		nz.candles = CT.dom.div(null, "hidden");
+		nz.candles = CT.dom.div(null, "h1 w1 hidden");
 		nz.chart1 = CT.dom.div(null, "h1 w1-2 inline-block");
 		nz.chart2 = CT.dom.div(null, "h1 w1-2 inline-block");
 		nz.sells = CT.dom.div(null, "scrolly red sidecol");
