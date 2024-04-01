@@ -10,14 +10,14 @@ ab.candles.Graph = CT.Class({
 					type: "datetime"
 				},
 				chart: {
-//					redrawOnParentResize: true,
 					type: "line",
 					width: oz.width,
 					height: oz.height
 				},
 				series: series
 			});
-			chart.render();
+			setTimeout(() => chart.render(), 200);
+//			chart.render();
 			return chart;
 		},
 		series: function(part, cans, dataOnly) {
