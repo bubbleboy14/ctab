@@ -35,15 +35,19 @@ ab.candles.Manager = CT.Class({
 				height: h || _.heights[n]
 			}));
 		},
+		parts: function(pstr) {
+			const mode = ab.candles.util.mode();
+			return [pstr, "all"].concat(pstr.split(" ")).filter(p => p != mode);
+		},
 		plink: function(part) {
 			return CT.dom.link(part, () => ab.candles.util.mode(part),
 				null, "big block pointer hoverglow");
 		},
 		linkify: function(node) {
 			const tnode = node.getElementsByTagName("text")[0],
-				parts = tnode.innerHTML.split(" ");
+				_ = this._, parts = _.parts(tnode.innerHTML);
 			tnode.classList.add("pointer");
-			CT.hover.auto(tnode, parts.map(this._.plink), null, null, true);
+			CT.hover.auto(tnode, parts.map(_.plink), null, null, true);
 		},
 		linx: function() {
 			const _ = this._, gz = _.graphs;
