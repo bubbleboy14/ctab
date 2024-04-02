@@ -90,7 +90,7 @@ ab.dash.Dash = CT.Class({
 			var col, sym, colnode, fnode, cols = {}, _ = this._, colors = _.colors,
 				params = d_.tables[mode], head = params.head, rows = params.rows,
 				c = d => CT.dom.div(d, "w1 bordered smallpadded nowrap"),
-				bals = data.balances, latest = ab.candles.latest;
+				bals = data.balances, latest = ab.candles.latest.get;
 			for (col of head)
 				cols[col] = [c("<b>" + col + "</b>")];
 			for (sym of rows) {
@@ -448,7 +448,7 @@ ab.dash.Dash = CT.Class({
 		_.loadConf(curconf);
 		nz.prices = CT.dom.div();
 		nz.legend = CT.dom.div();
-		nz.candles = CT.dom.div(null, "hidden");
+		nz.candles = CT.dom.div(null, "h1 w1 hidden");
 		nz.chart1 = CT.dom.div(null, "h1 w1-2 inline-block");
 		nz.chart2 = CT.dom.div(null, "h1 w1-2 inline-block");
 		nz.sells = CT.dom.div(null, "scrolly red sidecol");
@@ -491,7 +491,7 @@ ab.dash.Dash = CT.Class({
 		_.trades(m);
 		_.legend(m);
 		_.streams(m);
-		ab.candles.update(data);
+		ab.candles.util.update(data);
 	},
 	load: function(curconf) {
 		this.build(curconf);
