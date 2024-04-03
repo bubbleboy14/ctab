@@ -9,6 +9,8 @@ ab.candles.util = {
 		let m, man, isMode;
 		if (!mode)
 			return _.mode;
+		if (mode.startsWith("jump to "))
+			return ab.util.jump2graph(mode.slice(8));
 		_.mode = mode;
 		for (m in mans) {
 			man = mans[m];
@@ -43,13 +45,14 @@ ab.candles.util = {
 		cmen.forEach(c => c.build());
 	},
 	load: function(candles) {
-		const abc = ab.candles;
+		const abc = ab.candles, abcu = abc.util, opts = abc.opts;
 		if (candles.waiting) {
-			CT.dom.setContent(abc.opts.container, "waiting for candles (retrying in 10 seconds)");
-			return setTimeout(abc.util.start, 10000);
+			CT.dom.setContent(opts.container, "waiting for candles (retrying in 10 seconds)");
+			return setTimeout(abcu.start, 10000);
 		}
-		abc.util.build(candles);
-		abc.opts.startWS && ab.util.startWS(abc.util.update);
+		abcu.build(candles);
+		opts.startWS && ab.util.startWS(abcu.update);
+		opts.mode && setTimeout(abcu.mode, 1000, opts.mode);
 	},
 	start: function() {
 		ab.util.req(ab.candles.util.load, "candles");
