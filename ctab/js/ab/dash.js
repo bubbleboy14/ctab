@@ -462,6 +462,7 @@ ab.dash.Dash = CT.Class({
 		nz.bottomToggler._mode = "various stats";
 		nz.bottomToggler._nextMode = "weighted averages";
 		ab.candles.init({
+			jumpers: true,
 			startWS: false,
 			container: nz.candles
 		});

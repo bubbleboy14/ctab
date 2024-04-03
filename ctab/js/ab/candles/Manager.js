@@ -36,8 +36,10 @@ ab.candles.Manager = CT.Class({
 			}));
 		},
 		parts: function(pstr) {
-			const mode = ab.candles.util.mode();
-			return [pstr, "all"].concat(pstr.split(" ")).filter(p => p != mode);
+			const abc = ab.candles, mode = abc.util.mode(),
+				parts = [pstr, "all"].concat(pstr.split(" ")).filter(p => p != mode);
+			abc.opts.jumpers && parts.unshift("jump to " + pstr);
+			return parts;
 		},
 		plink: function(part) {
 			return CT.dom.link(part, () => ab.candles.util.mode(part),

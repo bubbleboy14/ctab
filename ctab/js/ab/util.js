@@ -8,6 +8,9 @@ ab.util = {
 			cb: cb
 		});
 	},
+	jump2graph: function(mode) {
+		window.location = "/ab/candles.html#" + encodeURI(mode);
+	},
 	startWS: function(cb) {
 		CT.pubsub.set_autohistory(true);
 		CT.pubsub.connect(location.hostname, core.config.ctab.dash.port);
