@@ -5,6 +5,8 @@ CT.require("ab.util");
 CT.require("ab.candles");
 
 CT.onload(function() {
-        CT.initCore();
-        ab.candles.init();
+    CT.initCore();
+    ab.candles.init({
+        mode: decodeURI(document.location.hash.slice(1))
+    });
 });
