@@ -1,4 +1,4 @@
-from rel.util import listen
+from rel.util import ask, listen
 from mkswap.backend import setStaging, setCredSet
 from mkswap.config import config as swapconfig
 from mkswap import presets, getOffice
@@ -9,6 +9,7 @@ from model import Fill
 
 def filled(trade):
 	fill = Fill()
+	fill.balances = ask("balances", mode="actual")
 	fill.client_order_id = trade["client_order_id"]
 	fill.order_id = trade["order_id"]
 	fill.market = trade["symbol"]
