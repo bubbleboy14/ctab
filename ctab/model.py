@@ -9,3 +9,4 @@ class Fill(db.TimeStampedBase):
 	score = db.Float()
 	order_id = db.String()
 	client_order_id = db.String()
+	balances = db.JSON()
