@@ -1,11 +1,18 @@
 ab.apex.trans = {
 	_: {
 		terms: ["small", "medium", "large"],
-		gnode: function(can, stats) {
+		stamped: function(item, y) {
 			return {
-				x: new Date(can.timestamp),
-				y: stats.map(s => can[s])
+				x: new Date(item.timestamp || item.created),
+				y: y
 			};
+		},
+		bal: function(fill, sym) {
+			return ab.apex.trans._.stamped(fill,
+				parseFloat(fill.balances[sym].split(" ").shift()));
+		},
+		gnode: function(can, stats) {
+			return ab.apex.trans._.stamped(can, stats.map(s => can[s]));
 		},
 		term: function(candles, term, dataOnly) {
 			const gnode = ab.apex.trans._.gnode, d = {
@@ -17,6 +24,12 @@ ab.apex.trans = {
 			}
 			return d;
 		}
+	},
+	ETH: function(fill) {
+		return ab.apex.trans._.bal(fill, "ETH");
+	},
+	BTC: function(fill) {
+		return ab.apex.trans._.bal(fill, "BTC");
 	},
 	candles: function(can) {
 		return ab.apex.trans._.gnode(can, ["open", "high", "low", "close"]);
