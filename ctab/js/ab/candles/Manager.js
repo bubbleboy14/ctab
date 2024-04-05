@@ -31,7 +31,7 @@ ab.candles.Manager = CT.Class({
 				type: "line",
 				sym: this.sym,
 				node: _.graphs[n],
-				candles: this.candles,
+				items: this.candles,
 				height: h || _.heights[n]
 			}));
 		},
