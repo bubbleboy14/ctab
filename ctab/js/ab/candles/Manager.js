@@ -48,7 +48,7 @@ ab.candles.Manager = CT.Class({
 		linkify: function(node) {
 			const _ = this._, tnode = node.getElementsByTagName("text")[0];
 			if (!tnode) {
-				this.log("waiting for label...");
+				//this.log("waiting for label...");
 				return setTimeout(_.linkify, 2000, node);
 			}
 			tnode.classList.add("pointer");
