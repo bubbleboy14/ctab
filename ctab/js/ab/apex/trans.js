@@ -1,4 +1,4 @@
-ab.candles.trans = {
+ab.apex.trans = {
 	_: {
 		terms: ["small", "medium", "large"],
 		gnode: function(can, stats) {
@@ -8,7 +8,7 @@ ab.candles.trans = {
 			};
 		},
 		term: function(candles, term, dataOnly) {
-			const gnode = ab.candles.trans._.gnode, d = {
+			const gnode = ab.apex.trans._.gnode, d = {
 				data: candles.map(c => gnode(c, [term]))
 			};
 			if (!dataOnly) {
@@ -19,19 +19,19 @@ ab.candles.trans = {
 		}
 	},
 	candles: function(can) {
-		return ab.candles.trans._.gnode(can, ["open", "high", "low", "close"]);
+		return ab.apex.trans._.gnode(can, ["open", "high", "low", "close"]);
 	},
 	AD: function(can) {
-		return ab.candles.trans._.gnode(can, ["ad"]);
+		return ab.apex.trans._.gnode(can, ["ad"]);
 	},
 	OBV: function(can) {
-		return ab.candles.trans._.gnode(can, ["obv"]);
+		return ab.apex.trans._.gnode(can, ["obv"]);
 	},
 	VPT: function(can) {
-		return ab.candles.trans._.gnode(can, ["vpt"]);
+		return ab.apex.trans._.gnode(can, ["vpt"]);
 	},
 	terms: function(candles, dataOnly) {
-		const _ = ab.candles.trans._;
+		const _ = ab.apex.trans._;
 		return _.terms.map(term => _.term(candles, term, dataOnly));
 	}
 };

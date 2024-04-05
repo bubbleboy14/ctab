@@ -27,7 +27,7 @@ ab.candles.Manager = CT.Class({
 		},
 		graph: function(opts, h) {
 			const _ = this._, n = opts.name;
-			return new ab.candles.Graph(CT.merge(opts, {
+			return new ab.apex.Graph(CT.merge(opts, {
 				type: "line",
 				sym: this.sym,
 				node: _.graphs[n],

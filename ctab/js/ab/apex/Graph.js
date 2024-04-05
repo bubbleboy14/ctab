@@ -1,5 +1,5 @@
-ab.candles.Graph = CT.Class({
-	CLASSNAME: "ab.candles.Graph",
+ab.apex.Graph = CT.Class({
+	CLASSNAME: "ab.apex.Graph",
 	_: {
 		chart: function(series) {
 			const oz = this.opts, chart = new ApexCharts(this.node, {
@@ -9,11 +9,11 @@ ab.candles.Graph = CT.Class({
 				xaxis: {
 					type: "datetime"
 				},
-				chart: {
+				chart: CT.merge(oz.chartopts, {
 					type: "line",
 					width: oz.width,
 					height: oz.height
-				},
+				}),
 				series: series
 			});
 			setTimeout(() => chart.render());
@@ -21,7 +21,7 @@ ab.candles.Graph = CT.Class({
 			return chart;
 		},
 		series: function(part, cans, dataOnly) {
-			const dobj = { data: cans.map(ab.candles.trans[part.name]) };
+			const dobj = { data: cans.map(ab.apex.trans[part.name]) };
 			return dataOnly ? dobj : CT.merge(part, dobj, {
 				type: this.opts.type
 			});
@@ -31,7 +31,7 @@ ab.candles.Graph = CT.Class({
 		const opts = this.opts;
 		cans = cans || opts.candles;
 		const parts = opts.parts.map(part => this._.series(part, cans, dataOnly));
-		return opts.terms ? parts.concat(ab.candles.trans.terms(cans, dataOnly)) : parts;
+		return opts.terms ? parts.concat(ab.apex.trans.terms(cans, dataOnly)) : parts;
 	},
 	update: function(cans) {
 		this.chart.appendData(this.trans(cans, true));
