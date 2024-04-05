@@ -55,7 +55,7 @@ ab.apex.Graph = CT.Class({
 		this.setParts();
 		this.sym = opts.sym;
 		this.name = opts.name;
-		this.node = opts.node;
+		this.node = opts.node || CT.dom.id("ctmain");
 		this.chart = this._.chart(this.trans());
 	}
 });
