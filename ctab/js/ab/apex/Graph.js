@@ -2,7 +2,7 @@ ab.apex.Graph = CT.Class({
 	CLASSNAME: "ab.apex.Graph",
 	_: {
 		chart: function(series) {
-			const oz = this.opts, chart = new ApexCharts(this.node, {
+			const oz = this.opts, chart = new ApexCharts(this.node, CT.merge(oz.graphopts, {
 				title: {
 					text: this.sym + " " + this.name
 				},
@@ -15,7 +15,7 @@ ab.apex.Graph = CT.Class({
 					height: oz.height
 				}),
 				series: series
-			});
+			}));
 			setTimeout(() => chart.render());
 //			chart.render();
 			return chart;
