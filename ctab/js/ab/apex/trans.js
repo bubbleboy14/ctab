@@ -1,5 +1,6 @@
 ab.apex.trans = {
 	_: {
+		syms: ["ETH", "BTC"],
 		terms: ["small", "medium", "large"],
 		stamped: function(item, y) {
 			return {
@@ -7,9 +8,14 @@ ab.apex.trans = {
 				y: y
 			};
 		},
-		bal: function(fill, sym, mult) {
-			return ab.apex.trans._.stamped(fill,
-				(mult || 1) * parseFloat(fill.balances[sym].split(" ").shift()));
+		b2f: function(bline, mult, usd) {
+			const bparts = bline.slice(0, -1).split(" ($"),
+				bpart = bparts[usd ? 1 : 0];
+			return btotal = (mult || 1) * parseFloat(bpart);
+		},
+		bal: function(fill, sym, mult, usd) {
+			const _ = ab.apex.trans._;
+			return _.stamped(fill, _.b2f(fill.balances[sym], mult, usd));
 		},
 		gnode: function(can, stats) {
 			return ab.apex.trans._.stamped(can, stats.map(s => can[s]));
@@ -30,6 +36,10 @@ ab.apex.trans = {
 	},
 	BTC: function(fill) {
 		return ab.apex.trans._.bal(fill, "BTC", 10000000);
+	},
+	USD: function(fill) {
+		const _ = ab.apex.trans._, bz = fill.balances;
+		return _.stamped(fill, _.syms.map(s => _.b2f(bz[s], null, true)).reduce((a, b) => a + b));
 	},
 	candles: function(can) {
 		return ab.apex.trans._.gnode(can, ["open", "high", "low", "close"]);
