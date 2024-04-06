@@ -1,16 +1,32 @@
 ab.fills = {
 	_: {
 		syms: ["ETH", "BTC"],
+		all: ["USD", "ETH", "BTC"],
 		units: {
 			ETH: "mwei",
 			BTC: "finney"
+		},
+		pair: function(k, v) {
+			return "<div>" + k + " <b>" + v + "</b></div>";
+		},
+		point: function(series, index) {
+			const _ = ab.fills._;
+			return series.map((s, i) => _.pair(_.all[i], s[index])).reduce((a, b) => a + b);
+		},
+		tooltip: function({series, seriesIndex, dataPointIndex, w}) {
+			const _ = ab.fills._, gz = w.globals, title = gz.tooltip.tooltipTitle.outerHTML,
+				body = _.point(series, dataPointIndex),
+				f = _.fills[dataPointIndex];
+			return title + body + f.side + " " + f.amount + " " + f.market + " @ " + f.price;
+//			return w.globals.labels[dataPointIndex] + ": " + series[seriesIndex][dataPointIndex];
 		}
 	},
 	build: function(fills) {
 		const _ = ab.fills._, syms = _.syms;
+		_.fills = fills.filter(f => Object.keys(f.balances).length);
 		this.graph = new ab.apex.Graph({
 			sym: syms.map(s => s + " (" + _.units[s]  + ")").join(" / "),
-			items: fills.filter(f => Object.keys(f.balances).length),
+			items: _.fills,
 			name: "totals",
 			height: "85%",
 			type: "bar",
@@ -32,7 +48,10 @@ ab.fills = {
 					title: {
 						text: "native balances"
 					}
-				}]
+				}],
+				tooltip: {
+					custom: _.tooltip
+				}
 			},
 			parts: [{ name: "USD", type: "line" }].concat(syms.map(function(s) {
 				return { name: s, type: "bar" };
