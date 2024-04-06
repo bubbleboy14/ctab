@@ -18,6 +18,11 @@ ab.fills = {
 				type: "bar",
 				stacked: true
 			},
+			graphopts: {
+				stroke: {
+					width: 5
+				}
+			},
 			parts: syms.map(function(s) {
 				return { name: s, type: "bar" };
 			})
