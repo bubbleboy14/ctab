@@ -3,7 +3,7 @@ ab.apex.trans = {
 		terms: ["small", "medium", "large"],
 		stamped: function(item, y) {
 			return {
-				x: new Date(item.timestamp || (item.created.slice(0, -4) + "0")),
+				x: new Date(item.timestamp || item.created.slice(0, -3)),
 				y: y
 			};
 		},
