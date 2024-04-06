@@ -6,16 +6,18 @@ ab.fills = {
 			ETH: "mwei",
 			BTC: "finney"
 		},
-		pair: function(k, v) {
-			return "<div>" + k + " <b>" + v + "</b></div>";
+		pair: function(k, v, color) {
+			return "<div><span style='color: " + color + ";'>" + k + "</span> <b>" + v + "</b></div>";
 		},
-		point: function(series, index) {
+		point: function(series, index, labels) {
 			const _ = ab.fills._;
-			return series.map((s, i) => _.pair(_.all[i], s[index])).reduce((a, b) => a + b);
+			return series.map((s, i) => _.pair(_.all[i], s[index],
+				labels[i].previousElementSibling.style.color)).reduce((a, b) => a + b);
 		},
 		tooltip: function({series, seriesIndex, dataPointIndex, w}) {
-			const _ = ab.fills._, gz = w.globals, title = gz.tooltip.tooltipTitle.outerHTML,
-				body = _.point(series, dataPointIndex),
+			const _ = ab.fills._, gz = w.globals, tt = gz.tooltip,
+				title = tt.tooltipTitle.outerHTML,
+				body = _.point(series, dataPointIndex, tt.legendLabels),
 				f = _.fills[dataPointIndex];
 			return title + body + f.side + " " + f.amount + " " + f.market + " @ " + f.price;
 //			return w.globals.labels[dataPointIndex] + ": " + series[seriesIndex][dataPointIndex];
