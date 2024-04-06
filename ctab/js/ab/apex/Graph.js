@@ -1,40 +1,40 @@
-ab.candles.Graph = CT.Class({
-	CLASSNAME: "ab.candles.Graph",
+ab.apex.Graph = CT.Class({
+	CLASSNAME: "ab.apex.Graph",
 	_: {
 		chart: function(series) {
-			const oz = this.opts, chart = new ApexCharts(this.node, {
+			const oz = this.opts, chart = new ApexCharts(this.node, CT.merge(oz.graphopts, {
 				title: {
 					text: this.sym + " " + this.name
 				},
 				xaxis: {
 					type: "datetime"
 				},
-				chart: {
+				chart: CT.merge(oz.chartopts, {
 					type: "line",
 					width: oz.width,
 					height: oz.height
-				},
+				}),
 				series: series
-			});
+			}));
 			setTimeout(() => chart.render());
 //			chart.render();
 			return chart;
 		},
-		series: function(part, cans, dataOnly) {
-			const dobj = { data: cans.map(ab.candles.trans[part.name]) };
+		series: function(part, items, dataOnly) {
+			const dobj = { data: items.map(ab.apex.trans[part.name]) };
 			return dataOnly ? dobj : CT.merge(part, dobj, {
 				type: this.opts.type
 			});
 		}
 	},
-	trans: function(cans, dataOnly) {
+	trans: function(items, dataOnly) {
 		const opts = this.opts;
-		cans = cans || opts.candles;
-		const parts = opts.parts.map(part => this._.series(part, cans, dataOnly));
-		return opts.terms ? parts.concat(ab.candles.trans.terms(cans, dataOnly)) : parts;
+		items = items || opts.items;
+		const parts = opts.parts.map(part => this._.series(part, items, dataOnly));
+		return opts.terms ? parts.concat(ab.apex.trans.terms(items, dataOnly)) : parts;
 	},
-	update: function(cans) {
-		this.chart.appendData(this.trans(cans, true));
+	update: function(items) {
+		this.chart.appendData(this.trans(items, true));
 	},
 	setParts: function(parts) {
 		parts = this.opts.parts = parts || this.opts.parts;
@@ -55,7 +55,7 @@ ab.candles.Graph = CT.Class({
 		this.setParts();
 		this.sym = opts.sym;
 		this.name = opts.name;
-		this.node = opts.node;
+		this.node = opts.node || CT.dom.id("ctmain");
 		this.chart = this._.chart(this.trans());
 	}
 });

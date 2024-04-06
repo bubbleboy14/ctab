@@ -27,11 +27,11 @@ ab.candles.Manager = CT.Class({
 		},
 		graph: function(opts, h) {
 			const _ = this._, n = opts.name;
-			return new ab.candles.Graph(CT.merge(opts, {
+			return new ab.apex.Graph(CT.merge(opts, {
 				type: "line",
 				sym: this.sym,
 				node: _.graphs[n],
-				candles: this.candles,
+				items: this.candles,
 				height: h || _.heights[n]
 			}));
 		},
@@ -48,7 +48,7 @@ ab.candles.Manager = CT.Class({
 		linkify: function(node) {
 			const _ = this._, tnode = node.getElementsByTagName("text")[0];
 			if (!tnode) {
-				this.log("waiting for label...");
+				//this.log("waiting for label...");
 				return setTimeout(_.linkify, 2000, node);
 			}
 			tnode.classList.add("pointer");
