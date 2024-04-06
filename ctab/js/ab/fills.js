@@ -21,11 +21,22 @@ ab.fills = {
 			graphopts: {
 				stroke: {
 					width: 5
-				}
+				},
+				yaxis: [{
+					opposite: true,
+					seriesName: "USD",
+					title: {
+						text: "USD balance"
+					}
+				}, {
+					title: {
+						text: "native balances"
+					}
+				}]
 			},
-			parts: syms.map(function(s) {
+			parts: [{ name: "USD", type: "line" }].concat(syms.map(function(s) {
 				return { name: s, type: "bar" };
-			})
+			}))
 		})
 	},
 	init: function(opts) {
