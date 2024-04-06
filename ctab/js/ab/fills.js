@@ -1,14 +1,19 @@
 ab.fills = {
 	_: {
-		syms: ["ETH", "BTC"]
+		syms: ["ETH", "BTC"],
+		units: {
+			ETH: "mwei",
+			BTC: "finney"
+		}
 	},
 	build: function(fills) {
-		const syms = ab.fills._.syms;
+		const _ = ab.fills._, syms = _.syms;
 		this.graph = new ab.apex.Graph({
-			sym: syms.join("/"),
+			sym: syms.map(s => s + " (" + _.units[s]  + ")").join(" / "),
+			items: fills.filter(f => Object.keys(f.balances).length),
 			name: "totals",
+			height: "85%",
 			type: "bar",
-			items: fills,
 			chartopts: {
 				type: "bar",
 				stacked: true
@@ -19,7 +24,6 @@ ab.fills = {
 		})
 	},
 	init: function(opts) {
-		ab.fills.opts = opts;
 		CT.db.get("fill", ab.fills.build, 1000);
 	}
 };

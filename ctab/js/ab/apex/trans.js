@@ -7,9 +7,9 @@ ab.apex.trans = {
 				y: y
 			};
 		},
-		bal: function(fill, sym) {
+		bal: function(fill, sym, mult) {
 			return ab.apex.trans._.stamped(fill,
-				parseFloat(fill.balances[sym].split(" ").shift()));
+				(mult || 1) * parseFloat(fill.balances[sym].split(" ").shift()));
 		},
 		gnode: function(can, stats) {
 			return ab.apex.trans._.stamped(can, stats.map(s => can[s]));
@@ -26,10 +26,10 @@ ab.apex.trans = {
 		}
 	},
 	ETH: function(fill) {
-		return ab.apex.trans._.bal(fill, "ETH");
+		return ab.apex.trans._.bal(fill, "ETH", 1000000);
 	},
 	BTC: function(fill) {
-		return ab.apex.trans._.bal(fill, "BTC");
+		return ab.apex.trans._.bal(fill, "BTC", 10000000);
 	},
 	candles: function(can) {
 		return ab.apex.trans._.gnode(can, ["open", "high", "low", "close"]);
