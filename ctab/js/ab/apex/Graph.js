@@ -31,7 +31,8 @@ ab.apex.Graph = CT.Class({
 		const opts = this.opts;
 		items = items || opts.items;
 		const parts = opts.parts.map(part => this._.series(part, items, dataOnly));
-		return opts.terms ? parts.concat(ab.apex.trans.terms(items, dataOnly)) : parts;
+		return opts.terms ? parts.concat(ab.apex.trans.terms(items,
+			dataOnly, typeof opts.terms == 'string' && opts.terms)) : parts;
 	},
 	update: function(items) {
 		this.chart.appendData(this.trans(items, true));

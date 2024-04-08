@@ -15,7 +15,8 @@ ab.candles.Manager = CT.Class({
 				type: "candlestick"
 			},
 			VPT: {
-				name: "VPT"
+				name: "VPT",
+				terms: "VPT"
 			},
 			stats: {
 				name: "stats",

@@ -20,9 +20,9 @@ ab.apex.trans = {
 		gnode: function(can, stats) {
 			return ab.apex.trans._.stamped(can, stats.map(s => can[s]));
 		},
-		term: function(candles, term, dataOnly) {
+		term: function(candles, term, dataOnly, tpref) {
 			const gnode = ab.apex.trans._.gnode, d = {
-				data: candles.map(c => gnode(c, [term]))
+				data: candles.map(c => gnode(c, [(tpref || "") + term]))
 			};
 			if (!dataOnly) {
 				d.name = term;
@@ -53,8 +53,8 @@ ab.apex.trans = {
 	VPT: function(can) {
 		return ab.apex.trans._.gnode(can, ["vpt"]);
 	},
-	terms: function(candles, dataOnly) {
+	terms: function(candles, dataOnly, tpref) {
 		const _ = ab.apex.trans._;
-		return _.terms.map(term => _.term(candles, term, dataOnly));
+		return _.terms.map(term => _.term(candles, term, dataOnly, tpref));
 	}
 };
