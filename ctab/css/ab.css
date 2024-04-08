@@ -11,12 +11,12 @@ html, body {
 }
 
 .sidecol {
-	width: 120px;
+	width: 80px;
 	height: calc(100vh - 100px);
 }
 
 .maincol {
-	width: calc(100vw - 240px);
+	width: calc(100vw - 160px);
 }
 
 .infobubble {

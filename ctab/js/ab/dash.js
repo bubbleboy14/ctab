@@ -252,7 +252,7 @@ ab.dash.Dash = CT.Class({
 			var _ = this._, nz = _.nodes, trade, tnode, tsig, tclass, sells = [
 			], buys = [], proc = function(t, cname) {
 				tsig = t.amount + " " + t.symbol + " @ " + t.price;
-				tclass = "pointer hoverglow " + cname;
+				tclass = "pointer hoverglow pb5" + cname;
 				tnode = CT.hover.auto(CT.dom.div(tsig, tclass), [
 					CT.dom.div(t.score, "big"),
 					t.status,
