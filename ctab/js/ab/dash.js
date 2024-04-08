@@ -429,7 +429,7 @@ ab.dash.Dash = CT.Class({
 			], null, { className: "basicpopup h9-10" }), 1000);
 		},
 		setStreams: function() {
-			var _ = this._, nz = _.nodes, fhead;
+			var _ = this._, nz = _.nodes;
 			nz.streams = CT.dom.flex(d_.streams.map(function(name) {
 				nz[name] = CT.dom.div(null, "hm100p scrolly");
 				nz[name].header = CT.dom.div(name, "centered bold");
@@ -438,10 +438,8 @@ ab.dash.Dash = CT.Class({
 					nz[name]
 				], d_.scols[name]);
 			}), "bordered row");
-			fhead = nz.fills.header;
-			fhead.onclick = _.fillHistory;
-			fhead.classList.add("pointer");
-			fhead.classList.add("hoverglow");
+			ab.util.linkize(nz.fills.header, _.fillHistory);
+			ab.util.linkize(nz.crosses.header, null, "/ab/candles.html");
 		}
 	},
 	build: function(curconf) {
