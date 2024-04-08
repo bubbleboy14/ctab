@@ -458,9 +458,9 @@ ab.dash.Dash = CT.Class({
 		nz.mainCharts = CT.dom.div([nz.chart1, nz.chart2], "h1 w1");
 		nz.charts = CT.dom.div([nz.mainCharts, nz.candles], "midcharts fgrow");
 		nz.cancelAll = CT.dom.button("Cancel All Orders",
-			_.cancelAll, "abs b0 l0 w120 hoverglow red");
+			_.cancelAll, "abs b0 l0 w80p hoverglow red");
 		nz.bottomToggler = CT.dom.button("View Weighted Averages",
-			_.toggleMode, "abs b0 r0 w120 hoverglow");
+			_.toggleMode, "abs b0 r0 w80p hoverglow");
 		nz.bottomToggler._mode = "various stats";
 		nz.bottomToggler._nextMode = "weighted averages";
 		ab.candles.init({
