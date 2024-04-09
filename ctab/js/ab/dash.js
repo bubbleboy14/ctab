@@ -90,8 +90,10 @@ ab.dash.Dash = CT.Class({
 		tab: function(data, mode, sub, contClass) {
 			var col, sym, colnode, fnode, cols = {}, _ = this._, colors = _.colors,
 				params = d_.tables[mode], head = params.head, rows = params.rows,
+				bals = data.balances, latest = ab.candles.latest.get,
 				c = d => CT.dom.div(d, "w1 bordered smallpadded nowrap"),
-				bals = data.balances, latest = ab.candles.latest.get;
+				lacell = (sym, prop) => _.rounder(latest(sym, prop), 10),
+				obvcell = sym => lacell(sym, "obv") + " (" + lacell(sym, "OBVslope") + ")";
 			for (col of head)
 				cols[col] = [c("<b>" + col + "</b>")];
 			for (sym of rows) {
@@ -105,9 +107,9 @@ ab.dash.Dash = CT.Class({
 					cols.bids.push(c(_.rounder(data.totals[sym].bid, 10)));
 					cols.volume.push(c(_.rounder(data.volumes[sym], 1000)));
 					cols.vola.push(c(_.rounder(data.volvols[sym], 1000)));
-					cols.vpt.push(c(_.rounder(latest(sym, "vpt"), 10) || "-"));
-					cols.obv.push(c(_.rounder(latest(sym, "obv"), 10) || "-"));
-					cols.ad.push(c(_.rounder(latest(sym, "ad"), 10) || "-"));
+					cols.vpt.push(c(lacell(sym, "vpt")));
+					cols.obv.push(c(obvcell(sym)));
+					cols.ad.push(c(lacell(sym, "ad")));
 					cols.hint.push(c(_.hint(sym, data.hints)));
 				} else {
 					colnode.style.color = colors[sym];
