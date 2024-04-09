@@ -367,6 +367,7 @@ ab.dash.Dash = CT.Class({
 			}
 		},
 		rounder: function(val, factor) {
+			if (isNaN(val)) return "-";
 			factor = factor || 100000;
 			return parseInt(val * factor) / factor;
 		},
