@@ -11,6 +11,7 @@ html, body {
 }
 
 .sidecol {
+	font-size: 73%;
 	width: 80px;
 	height: calc(100vh - 100px);
 }
