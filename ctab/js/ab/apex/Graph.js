@@ -21,7 +21,8 @@ ab.apex.Graph = CT.Class({
 			return chart;
 		},
 		series: function(part, items, dataOnly) {
-			const dobj = { data: items.map(ab.apex.trans[part.name]) };
+			const transer = ab.apex.trans.transer(part.name),
+				dobj = { data: items.map(transer) };
 			return dataOnly ? dobj : CT.merge(part, dobj, {
 				type: this.opts.type
 			});

@@ -44,14 +44,17 @@ ab.apex.trans = {
 	candles: function(can) {
 		return ab.apex.trans._.gnode(can, ["open", "high", "low", "close"]);
 	},
+	transer: function(prop) {
+		const trans = ab.apex.trans;
+		if (prop in trans)
+			return trans[prop];
+		return can => trans._.gnode(can, [prop]);
+	},
 	AD: function(can) {
 		return ab.apex.trans._.gnode(can, ["ad"]);
 	},
 	OBV: function(can) {
 		return ab.apex.trans._.gnode(can, ["obv"]);
-	},
-	OBVslope: function(can) {
-		return ab.apex.trans._.gnode(can, ["OBVslope"]);
 	},
 	VPT: function(can) {
 		return ab.apex.trans._.gnode(can, ["vpt"]);
