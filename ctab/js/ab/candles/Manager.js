@@ -23,7 +23,7 @@ ab.candles.Manager = CT.Class({
 				parts: [{
 					name: "OBV",
 					type: "bar"
-				}, "OBVslope", "AD"]
+				}, "AD", "OBVslope", "ADslope"]
 			}
 		},
 		graph: function(opts, h) {

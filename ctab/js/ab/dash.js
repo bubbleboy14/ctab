@@ -93,7 +93,7 @@ ab.dash.Dash = CT.Class({
 				bals = data.balances, latest = ab.candles.latest.get,
 				c = d => CT.dom.div(d, "w1 bordered smallpadded nowrap"),
 				lacell = (sym, prop) => _.rounder(latest(sym, prop), 10),
-				obvcell = sym => lacell(sym, "obv") + " (" + lacell(sym, "OBVslope") + ")";
+				laparen = (sym, main, sub) => lacell(sym, main) + " (" + lacell(sym, sub) + ")";
 			for (col of head)
 				cols[col] = [c("<b>" + col + "</b>")];
 			for (sym of rows) {
@@ -108,8 +108,8 @@ ab.dash.Dash = CT.Class({
 					cols.volume.push(c(_.rounder(data.volumes[sym], 1000)));
 					cols.vola.push(c(_.rounder(data.volvols[sym], 1000)));
 					cols.vpt.push(c(lacell(sym, "vpt")));
-					cols.obv.push(c(obvcell(sym)));
-					cols.ad.push(c(lacell(sym, "ad")));
+					cols.obv.push(c(laparen(sym, "obv", "OBVslope")));
+					cols.ad.push(c(laparen(sym, "ad", "ADslope")));
 					cols.hint.push(c(_.hint(sym, data.hints)));
 				} else {
 					colnode.style.color = colors[sym];
