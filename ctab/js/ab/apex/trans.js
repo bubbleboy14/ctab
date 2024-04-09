@@ -50,6 +50,9 @@ ab.apex.trans = {
 	OBV: function(can) {
 		return ab.apex.trans._.gnode(can, ["obv"]);
 	},
+	OBVslope: function(can) {
+		return ab.apex.trans._.gnode(can, ["OBVslope"]);
+	},
 	VPT: function(can) {
 		return ab.apex.trans._.gnode(can, ["vpt"]);
 	},
