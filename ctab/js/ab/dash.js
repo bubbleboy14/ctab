@@ -95,7 +95,7 @@ ab.dash.Dash = CT.Class({
 				rcell = val => _.rounder(val, 10),
 				lacell = (sym, prop) => rcell(latest(sym, prop)),
 				paren = (v1, v2) => v1 + " (" + v2 + ")",
-				rparen = (v1, v2) => paren(rcell(v1), rcell(v2)),
+				rparen = (v1, v2) => paren(rcell(v1) || v1, rcell(v2) || v2),
 				laparen = (sym, main, sub) => paren(lacell(sym, main), lacell(sym, sub));
 			for (col of head)
 				cols[col] = [c("<b>" + col + "</b>")];
