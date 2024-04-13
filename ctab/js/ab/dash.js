@@ -92,8 +92,11 @@ ab.dash.Dash = CT.Class({
 				params = d_.tables[mode], head = params.head, rows = params.rows,
 				bals = data.balances, latest = ab.candles.latest.get,
 				c = d => CT.dom.div(d, "w1 bordered smallpadded nowrap"),
-				lacell = (sym, prop) => _.rounder(latest(sym, prop), 10),
-				laparen = (sym, main, sub) => lacell(sym, main) + " (" + lacell(sym, sub) + ")";
+				rcell = val => _.rounder(val, 10),
+				lacell = (sym, prop) => rcell(latest(sym, prop)),
+				paren = (v1, v2) => v1 + " (" + v2 + ")",
+				rparen = (v1, v2) => paren(rcell(v1), rcell(v2)),
+				laparen = (sym, main, sub) => paren(lacell(sym, main), lacell(sym, sub));
 			for (col of head)
 				cols[col] = [c("<b>" + col + "</b>")];
 			for (sym of rows) {
@@ -103,8 +106,8 @@ ab.dash.Dash = CT.Class({
 					cols.quote.push(c(data.prices[sym] || "-"));
 					cols.ask.push(c(data.orders[sym].ask));
 					cols.bid.push(c(data.orders[sym].bid));
-					cols.asks.push(c(_.rounder(data.totals[sym].ask, 10)));
-					cols.bids.push(c(_.rounder(data.totals[sym].bid, 10)));
+					cols.asks.push(c(rparen(data.totals[sym].ask, data.bests[sym].ask)));
+					cols.bids.push(c(rparen(data.totals[sym].bid, data.bests[sym].bid)));
 					cols.volume.push(c(_.rounder(data.volumes[sym], 1000)));
 					cols.vola.push(c(_.rounder(data.volvols[sym], 1000)));
 					cols.vpt.push(c(lacell(sym, "vpt")));
