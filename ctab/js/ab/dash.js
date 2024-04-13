@@ -104,10 +104,10 @@ ab.dash.Dash = CT.Class({
 				cols[mode].push(colnode);
 				if (mode == "market") {
 					cols.quote.push(c(data.prices[sym] || "-"));
-					cols.ask.push(c(data.orders[sym].ask));
-					cols.bid.push(c(data.orders[sym].bid));
-					cols.asks.push(c(rparen(data.totals[sym].ask, data.bests[sym].ask)));
-					cols.bids.push(c(rparen(data.totals[sym].bid, data.bests[sym].bid)));
+					cols.ask.push(c(rparen(data.orders[sym].ask, data.bests[sym].ask)));
+					cols.bid.push(c(rparen(data.orders[sym].bid, data.bests[sym].bid)));
+					cols.asks.push(c(rcell(data.totals[sym].ask)));
+					cols.bids.push(c(rcell(data.totals[sym].bid)));
 					cols.volume.push(c(_.rounder(data.volumes[sym], 1000)));
 					cols.vola.push(c(_.rounder(data.volvols[sym], 1000)));
 					cols.vpt.push(c(lacell(sym, "vpt")));
