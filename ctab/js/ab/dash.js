@@ -319,7 +319,7 @@ ab.dash.Dash = CT.Class({
 			CT.dom.setContent(_.nodes.prices, [
 				leggy,
 				symet,
-				_.tab(data, "market", null, "small")
+				_.tab(data, "market", null, "fs70p")
 			], "bigish");
 			wavs = nz["weighted averages"] = CT.dom.div([
 				_.leg({ "asks": data.weighted.ask }, false, null, true),
