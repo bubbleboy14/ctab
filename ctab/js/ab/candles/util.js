@@ -55,6 +55,7 @@ ab.candles.util = {
 		opts.mode && setTimeout(abcu.mode, 1000, opts.mode);
 	},
 	start: function() {
-		ab.util.req(ab.candles.util.load, "candles");
+		const c = CT.info.query.count;
+		ab.util.req(ab.candles.util.load, "candles", c && { count: c });
 	}
 };
