@@ -19,7 +19,9 @@ def response():
 	elif action == "setconf":
 		swapconf.set(cgi_get("mod"))
 	elif action == "candles":
-		succeed(office and office.actuary.oldCandles() or { "waiting": "candles loading" })
+		succeed(office and office.actuary.oldCandles(int(cgi_get("count", default=10))) or {
+			"waiting": "candles loading"
+		})
 	elif action == "bt":
 		sym = cgi_get("sym")
 		side = cgi_get("side")
