@@ -48,7 +48,8 @@ cfg = {
     "office": {
         "index": 0,
         "verbose": False,
-        "stagish": False
+        "stagish": False,
+        "wsdebug": False
     },
     "base": {
         "unspammed": True
