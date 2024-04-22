@@ -308,15 +308,14 @@ ab.dash.Dash = CT.Class({
 		legend: function(data) {
 			var _ = this._, nz = _.nodes, bals = data.balances,
 				wavs, stas, strats = _.leg(data.strategists, false, null, true),
-				leggy = nz.leggy = bals.waiting ? _.leg(bals, false, null, false,
-				null, null, true, "centered") : _.leg(bals.theoretical, true, {
+				waiter = () => _.leg(bals, false, null, false, null, null, true, "centered"),
+				leggy = nz.leggy = bals.waiting ? waiter() : _.leg(bals.theoretical, true, {
 					set: bals,
 					names: d_.balsubs
-				}), symet = nz.symet = bals.waiting ? _.leg(bals, false, null,
-					false, null, null, true, "centered") : CT.dom.flex([
-						_.tab(data, "symbol"),
-						_.tab(data, "metric", "ndx")
-					], "smallish row jcbetween");
+				}), symet = nz.symet = bals.waiting ? waiter() : CT.dom.flex([
+					_.tab(data, "symbol"),
+					_.tab(data, "metric", "ndx")
+				], "smallish row jcbetween");
 			strats.classList.add("fwrap");
 			CT.dom.setContent(_.nodes.prices, [
 				leggy,
