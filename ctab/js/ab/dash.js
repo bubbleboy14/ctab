@@ -118,7 +118,7 @@ ab.dash.Dash = CT.Class({
 				} else {
 					colnode.style.color = colors[sym];
 					if (mode == "symbol")
-						cols.initial.push(c(_.rounder(bals.initial[sym])));
+						cols.initial.push(c(bals.waiting ? "waiting" : _.rounder(bals.initial[sym])));
 					cols.actual.push(c(bals.waiting ? "waiting" : bals.actual[sym]));
 					cols.theoretical.push(c(bals.waiting ? "waiting" : bals.theoretical[sym]));
 				}
