@@ -118,9 +118,9 @@ ab.dash.Dash = CT.Class({
 				} else {
 					colnode.style.color = colors[sym];
 					if (mode == "symbol")
-						cols.initial.push(c(bals.waiting ? "waiting" : _.rounder(bals.initial[sym])));
-					cols.actual.push(c(bals.waiting ? "waiting" : bals.actual[sym]));
-					cols.theoretical.push(c(bals.waiting ? "waiting" : bals.theoretical[sym]));
+						cols.initial.push(c(_.rounder(bals.initial[sym])));
+					cols.actual.push(c(bals.actual[sym]));
+					cols.theoretical.push(c(bals.theoretical[sym]));
 				}
 			}
 			fnode = CT.dom.flex(head.map(h => cols[h]), "bordered row jcbetween");
@@ -312,10 +312,11 @@ ab.dash.Dash = CT.Class({
 				null, null, true, "centered") : _.leg(bals.theoretical, true, {
 					set: bals,
 					names: d_.balsubs
-				}), symet = nz.symet = CT.dom.flex([
-					_.tab(data, "symbol"),
-					_.tab(data, "metric", "ndx")
-				], "smallish row jcbetween");
+				}), symet = nz.symet = bals.waiting ? _.leg(bals, false, null,
+					false, null, null, true, "centered") : CT.dom.flex([
+						_.tab(data, "symbol"),
+						_.tab(data, "metric", "ndx")
+					], "smallish row jcbetween");
 			strats.classList.add("fwrap");
 			CT.dom.setContent(_.nodes.prices, [
 				leggy,
