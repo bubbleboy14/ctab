@@ -36,7 +36,7 @@ ab.candles.util = {
 	upman: function(sym, candles) {
 		const abc = ab.candles, abcu = abc.util, managers = abcu._.managers;
 		if (sym in managers)
-			return managers[sym].update(cans[sym]);
+			return managers[sym].update(candles);
 		const man = managers[sym] = abcu.manager(sym, candles);
 		CT.dom.addContent(abc.opts.container, man.node);
 		man.build();
