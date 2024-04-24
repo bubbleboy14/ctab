@@ -40,7 +40,7 @@ ab.candles.util = {
 		const man = managers[sym] = abcu.manager(sym, candles);
 		CT.dom.addContent(abc.opts.container, man.node);
 		man.build();
-	}
+	},
 	update: function(data) {
 		const abcu = ab.candles.util, cans = data.message.candles;
 		for (let sym in cans)
