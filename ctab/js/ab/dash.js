@@ -91,6 +91,7 @@ ab.dash.Dash = CT.Class({
 			var col, sym, colnode, fnode, cols = {}, _ = this._, colors = _.colors,
 				params = d_.tables[mode], head = params.head, rows = params.rows,
 				bals = data.balances, latest = ab.candles.latest.get,
+				mayb = (sec, sym, prop) => data[sec][sym] && data[sec][sym][prop],
 				c = d => CT.dom.div(d, "w1 bordered smallpadded nowrap"),
 				rcell = val => _.rounder(val, 10),
 				lacell = (sym, prop) => rcell(latest(sym, prop)),
@@ -104,10 +105,10 @@ ab.dash.Dash = CT.Class({
 				cols[mode].push(colnode);
 				if (mode == "market") {
 					cols.quote.push(c(data.prices[sym] || "-"));
-					cols.ask.push(c(rparen(data.orders[sym].ask, data.bests[sym].ask)));
-					cols.bid.push(c(rparen(data.orders[sym].bid, data.bests[sym].bid)));
-					cols.asks.push(c(rcell(data.totals[sym].ask)));
-					cols.bids.push(c(rcell(data.totals[sym].bid)));
+					cols.ask.push(c(rparen(mayb("orders", sym, "ask"), mayb("bests", sym, "ask"))));
+					cols.bid.push(c(rparen(mayb("orders", sym, "bid"), mayb("bests", sym, "bid"))));
+					cols.asks.push(c(rcell(mayb("totals", sym, "ask"))));
+					cols.bids.push(c(rcell(mayb("totals", sym, "bid"))));
 					cols.volume.push(c(_.rounder(data.volumes[sym], 1000)));
 					cols.vola.push(c(_.rounder(data.volvols[sym], 1000)));
 					cols.vpt.push(c(lacell(sym, "vpt")));
