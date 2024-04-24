@@ -33,10 +33,18 @@ ab.candles.util = {
 		abc.latest.set(sym, candles, true);
 		return man;
 	},
+	upman: function(sym, candles) {
+		const abc = ab.candles, abcu = abc.util, managers = abcu._.managers;
+		if (sym in managers)
+			return managers[sym].update(cans[sym]);
+		const man = managers[sym] = abcu.manager(sym, candles);
+		CT.dom.addContent(abc.opts.container, man.node);
+		man.build();
+	}
 	update: function(data) {
-		const managers = ab.candles.util._.managers, cans = data.message.candles;
+		const abcu = ab.candles.util, cans = data.message.candles;
 		for (let sym in cans)
-			managers[sym].update(cans[sym]);
+			abcu.upman(sym, cans[sym]);
 	},
 	build: function(cans) {
 		const abc = ab.candles,
