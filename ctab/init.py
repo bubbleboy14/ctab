@@ -50,8 +50,11 @@ cfg = {
         "verbose": False,
         "stagish": False
     },
+    "feeder": {
+        "heartbeat": 10,
+        "wsdebug": "auto"
+    },
     "base": {
-        "wsdebug": "auto",
         "unspammed": True
     },
     "ndx": {

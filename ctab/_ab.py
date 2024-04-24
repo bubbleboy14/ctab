@@ -7,8 +7,8 @@ from cantools import config
 
 def setconf(mod):
 	swapconf.set(mod) # move this sort of thing to fyg?
-	if "base" in mod and "wsdebug" in mod["base"]:
-		wsdebug(mod["base"]["wsdebug"])
+	if "feeder" in mod and "wsdebug" in mod["feeder"]:
+		wsdebug(mod["feeder"]["wsdebug"])
 
 def response():
 	office = config.ctab.live.office
