@@ -40,7 +40,7 @@ ab.dash = {
 		row3: ["backend", "harvester", "ndx"],
 		balsubs: ["ask", "bid", "actual"],
 		tribools: ["oneswap", "nudge", "wsdebug"],
-		littles: ["randlim"],
+		littles: ["randlim", "threshold"],
 		rounders: ["fees"],
 		sliceSpan: "short",
 		slice: 10,
