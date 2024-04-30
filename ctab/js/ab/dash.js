@@ -33,14 +33,14 @@ ab.dash = {
 			"ETH ask", "BTC ask", "ETH bid", "BTC bid"],
 		chart2: ["diff", "dph", "diff actual", "dph actual",
 			"diff ask", "dph ask", "diff bid", "dph bid"],
-		noclix: ["staging", "stagish", "live", "network", "capped", "credset", "mdv2"],
+		noclix: ["staging", "stagish", "live", "network", "capped", "credset", "mdv2", "threshold"],
 		streams: ["fills", "cancels", "warnings", "refills", "crosses"],
 		floats: ["prunelimit", "vcutoff", "nmult"],
 		row2: ["actuary", "strategy", "accountant"],
 		row3: ["backend", "harvester", "ndx"],
 		balsubs: ["ask", "bid", "actual"],
 		tribools: ["oneswap", "nudge", "wsdebug"],
-		littles: ["randlim", "threshold"],
+		littles: ["randlim"],
 		rounders: ["fees"],
 		sliceSpan: "short",
 		slice: 10,
@@ -234,8 +234,8 @@ ab.dash.Dash = CT.Class({
 						} else if (d_.littles.includes(d)) {
 							Object.assign(popts, {
 								max: 0.1,
-								min: 0.0001,
-								step: 0.0001
+								min: 0.001,
+								step: 0.001
 							});
 						}
 						CT.modal.prompt(popts);
