@@ -315,7 +315,7 @@ ab.dash.Dash = CT.Class({
 				leggy = nz.leggy = bals.waiting ? waiter() : _.leg(bals.theoretical, true, {
 					set: bals,
 					names: d_.balsubs
-				}), symet = nz.symet = bals.waiting ? waiter() : CT.dom.flex([
+				}, false, null, null, false, "big"), symet = nz.symet = bals.waiting ? waiter() : CT.dom.flex([
 					_.tab(data, "symbol"),
 					_.tab(data, "metric", "ndx")
 				], "smallish row jcbetween");
