@@ -37,20 +37,23 @@ ab.candles.util = {
 		const abc = ab.candles, abcu = abc.util, managers = abcu._.managers;
 		if (sym in managers)
 			return managers[sym].update(candles);
-		const man = managers[sym] = abcu.manager(sym, candles);
-		CT.dom.addContent(abc.opts.container, man.node);
-		man.build();
+		abcu.manager(sym, candles);
+		abcu.reflow();
 	},
 	update: function(data) {
 		const abcu = ab.candles.util, cans = data.message.candles;
 		for (let sym in cans)
 			abcu.upman(sym, cans[sym]);
 	},
-	build: function(cans) {
-		const abc = ab.candles,
-			cmen = Object.keys(cans).map(sym => abc.util.manager(sym, cans[sym]));
+	reflow: function() {
+		const abc = ab.candles, cmen = Object.values(abc.util._.managers);
 		CT.dom.setContent(abc.opts.container, cmen.map(m => m.node), "flex h1 w1");
 		cmen.forEach(c => c.build());
+	},
+	build: function(cans) {
+		const abcu = ab.candles.util;
+		Object.keys(cans).map(sym => abcu.manager(sym, cans[sym]));
+		abcu.reflow();
 	},
 	load: function(candles) {
 		const abc = ab.candles, abcu = abc.util, opts = abc.opts;
