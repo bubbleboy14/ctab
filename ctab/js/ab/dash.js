@@ -13,7 +13,8 @@ ab.dash = {
 			refills: "blue fgrow2",
 			fills: "green fgrow2",
 			warnings: "red fgrow",
-			crosses: "purple fgrow"
+			crosses: "purple fgrow",
+			notices: "pink fgrow"
 		},
 		tables: {
 			symbol: { // TODO: meh configurize symbol/market better
@@ -34,7 +35,7 @@ ab.dash = {
 		chart2: ["diff", "dph", "diff actual", "dph actual",
 			"diff ask", "dph ask", "diff bid", "dph bid"],
 		noclix: ["staging", "stagish", "live", "network", "capped", "credset", "mdv2", "threshold"],
-		streams: ["fills", "cancels", "warnings", "refills", "crosses"],
+		streams: ["fills", "cancels", "warnings", "refills", "crosses", "notices"],
 		floats: ["prunelimit", "vcutoff", "nmult"],
 		row2: ["actuary", "strategy", "accountant"],
 		row3: ["backend", "harvester", "ndx"],
