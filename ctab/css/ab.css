@@ -10,13 +10,18 @@ html, body {
 	margin-bottom: -19px;
 }
 
+.marchar {
+	font-size: 65%;
+}
+
 .sidecol {
-	width: 120px;
+	font-size: 73%;
+	width: 50px;
 	height: calc(100vh - 100px);
 }
 
 .maincol {
-	width: calc(100vw - 240px);
+	width: calc(100vw - 100px);
 }
 
 .infobubble {

@@ -18,6 +18,7 @@ cfg = {
         "bottom": 40,
         "skim": False,
         "balance": True,
+        "bookbalance": True,
         "network": "bitcoin"
     },
     "actuary": {
@@ -29,6 +30,9 @@ cfg = {
         "nmult": 1.0,
         "nudge": "auto",
         "capped": "auto"
+    },
+    "trader": {
+        "force": False
     },
     "comptroller": {
         "live": False,
@@ -45,6 +49,10 @@ cfg = {
         "index": 0,
         "verbose": False,
         "stagish": False
+    },
+    "feeder": {
+        "heartbeat": 10,
+        "wsdebug": "auto"
     },
     "base": {
         "unspammed": True
@@ -68,6 +76,11 @@ cfg = {
             "vcutoff": 0.8,
             "randlim": 0.04,
             "oneswap": "auto"
+        },
+        "handcart": {
+            "risk": 0.5,
+            "profit": 0.01,
+            "threshold": 0.05
         }
     },
     "mon": {

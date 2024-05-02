@@ -15,14 +15,15 @@ ab.candles.Manager = CT.Class({
 				type: "candlestick"
 			},
 			VPT: {
-				name: "VPT"
+				name: "VPT",
+				terms: "VPT"
 			},
 			stats: {
 				name: "stats",
 				parts: [{
 					name: "OBV",
 					type: "bar"
-				}, "AD"]
+				}, "AD", "OBVslope", "ADslope"]
 			}
 		},
 		graph: function(opts, h) {

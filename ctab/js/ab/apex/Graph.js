@@ -21,7 +21,8 @@ ab.apex.Graph = CT.Class({
 			return chart;
 		},
 		series: function(part, items, dataOnly) {
-			const dobj = { data: items.map(ab.apex.trans[part.name]) };
+			const transer = ab.apex.trans.transer(part.name),
+				dobj = { data: items.map(transer) };
 			return dataOnly ? dobj : CT.merge(part, dobj, {
 				type: this.opts.type
 			});
@@ -31,7 +32,8 @@ ab.apex.Graph = CT.Class({
 		const opts = this.opts;
 		items = items || opts.items;
 		const parts = opts.parts.map(part => this._.series(part, items, dataOnly));
-		return opts.terms ? parts.concat(ab.apex.trans.terms(items, dataOnly)) : parts;
+		return opts.terms ? parts.concat(ab.apex.trans.terms(items,
+			dataOnly, typeof opts.terms == 'string' && opts.terms)) : parts;
 	},
 	update: function(items) {
 		this.chart.appendData(this.trans(items, true));

@@ -1,8 +1,14 @@
 from rel.util import emit
+from mkswap.backend import wsdebug
 from mkswap.config import config as swapconf
 from cantools.web import respond, succeed, cgi_get
 from cantools.util import log
 from cantools import config
+
+def setconf(mod):
+	swapconf.set(mod) # move this sort of thing to fyg?
+	if "feeder" in mod and "wsdebug" in mod["feeder"]:
+		wsdebug(mod["feeder"]["wsdebug"])
 
 def response():
 	office = config.ctab.live.office
@@ -17,9 +23,11 @@ def response():
 	elif action == "curconf":
 		succeed(swapconf.obj())
 	elif action == "setconf":
-		swapconf.set(cgi_get("mod"))
+		setconf(cgi_get("mod"))
 	elif action == "candles":
-		succeed(office and office.actuary.oldCandles() or { "waiting": "candles loading" })
+		succeed(office and office.actuary.oldCandles(int(cgi_get("count", default=10))) or {
+			"waiting": "candles loading"
+		})
 	elif action == "bt":
 		sym = cgi_get("sym")
 		side = cgi_get("side")
