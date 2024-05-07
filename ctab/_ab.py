@@ -32,7 +32,7 @@ def response():
 		sym = cgi_get("sym")
 		side = cgi_get("side")
 		log("/_ab forwarding %s %s order"%(sym, side))
-		emit("balTrades", sym, side)
+		emit("bestTrades", sym, side)
 	else: # status (pubsub swapmon)
 		succeed(office and office.status() or { "waiting": "office loading" })
 

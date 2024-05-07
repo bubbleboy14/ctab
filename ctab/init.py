@@ -18,7 +18,6 @@ cfg = {
         "bottom": 40,
         "skim": False,
         "balance": True,
-        "bookbalance": True,
         "network": "bitcoin"
     },
     "actuary": {
@@ -32,7 +31,8 @@ cfg = {
         "capped": "auto"
     },
     "trader": {
-        "force": False
+        "force": False,
+        "booktrades": True
     },
     "comptroller": {
         "live": False,
