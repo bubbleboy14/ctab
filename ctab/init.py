@@ -39,7 +39,9 @@ cfg = {
     "comptroller": {
         "live": False,
         "actives": 20,
-        "prunelimit": 0.1
+        "leeway": 0.001,
+        "prunelimit": 0.1,
+        "canceleach": False
     },
     "backend": {
         "mdv2": True,
