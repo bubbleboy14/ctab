@@ -32,6 +32,7 @@ cfg = {
         "capped": "auto"
     },
     "trader": {
+        "size": 8,
         "force": False,
         "booktrades": True
     },
