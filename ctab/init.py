@@ -41,7 +41,7 @@ cfg = {
         "actives": 20,
         "leeway": 0.001,
         "prunelimit": 0.1,
-        "canceleach": False
+        "canceleach": True
     },
     "backend": {
         "mdv2": True,
