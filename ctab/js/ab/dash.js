@@ -18,7 +18,7 @@ ab.dash = {
 		},
 		tables: {
 			symbol: { // TODO: meh configurize symbol/market better
-				head: ["symbol", "initial", "actual", "theoretical"],
+				head: ["symbol", "initial", "actual", "theoretical", "available"],
 				rows: ["USD", "ETH", "BTC"]
 			},
 			market: {
@@ -37,11 +37,11 @@ ab.dash = {
 		noclix: ["staging", "stagish", "live", "network", "capped", "credset", "mdv2", "threshold"],
 		streams: ["fills", "cancels", "warnings", "refills", "crosses", "notices"],
 		floats: ["prunelimit", "vcutoff", "nmult", "score", "risk"],
-		row2: ["feeder", "strategy", "office"],
-		row3: ["backend", "harvester", "ndx"],
-		balsubs: ["ask", "bid", "actual"],
+		balsubs: ["ask", "bid", "actual", "available"],
 		tribools: ["oneswap", "nudge", "wsdebug"],
 		littles: ["randlim", "profit", "leeway"],
+		row2: ["feeder", "strategy", "office"],
+		row3: ["backend", "harvester", "ndx"],
 		rounders: ["fees"],
 		sliceSpan: "short",
 		slice: 10,
@@ -124,6 +124,8 @@ ab.dash.Dash = CT.Class({
 						cols.initial.push(c(_.rounder(bals.initial[sym])));
 					cols.actual.push(c(bals.actual[sym]));
 					cols.theoretical.push(c(bals.theoretical[sym]));
+					if (mode == "available")
+						cols.available.push(c(bals.available[sym]));
 				}
 			}
 			fnode = CT.dom.flex(head.map(h => cols[h]), "bordered row jcbetween");
