@@ -120,12 +120,12 @@ ab.dash.Dash = CT.Class({
 					cols.hint.push(c(_.hint(sym, data.hints)));
 				} else {
 					colnode.style.color = colors[sym];
-					if (mode == "symbol")
-						cols.initial.push(c(_.rounder(bals.initial[sym])));
 					cols.actual.push(c(bals.actual[sym]));
 					cols.theoretical.push(c(bals.theoretical[sym]));
-					if (mode == "available")
+					if (mode == "symbol") {
 						cols.available.push(c(bals.available[sym]));
+						cols.initial.push(c(_.rounder(bals.initial[sym])));
+					}
 				}
 			}
 			fnode = CT.dom.flex(head.map(h => cols[h]), "bordered row jcbetween");
