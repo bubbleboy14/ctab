@@ -30,8 +30,8 @@ ab.dash = {
 				rows: ["diff", "dph"]
 			}
 		},
-		chart1: ["USD", "ETH", "BTC", "USD actual", "ETH actual", "BTC actual",
-			"ETH ask", "BTC ask", "ETH bid", "BTC bid"],
+		chart1: ["USD", "ETH", "BTC", "USD actual", "ETH actual", "BTC actual", "USD available",
+			"ETH available", "BTC available", "ETH ask", "BTC ask", "ETH bid", "BTC bid"],
 		chart2: ["diff", "dph", "diff actual", "dph actual",
 			"diff ask", "dph ask", "diff bid", "dph bid"],
 		noclix: ["staging", "stagish", "live", "network", "capped", "credset", "mdv2", "threshold"],
@@ -184,6 +184,8 @@ ab.dash.Dash = CT.Class({
 				if (subbers) {
 					for (subber of subbers.names) {
 						if (d == "USD" && ["ask", "bid"].includes(subber))
+							continue;
+						if (subber == "available" && ["diff", "dph"].includes(d))
 							continue;
 						srow = [];
 						sval = subbers.set[subber][d];
