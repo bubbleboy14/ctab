@@ -36,7 +36,7 @@ ab.dash = {
 			"diff ask", "dph ask", "diff bid", "dph bid"],
 		noclix: ["staging", "stagish", "live", "network", "capped", "credset", "mdv2", "threshold"],
 		streams: ["fills", "cancels", "warnings", "refills", "crosses", "notices"],
-		floats: ["prunelimit", "vcutoff", "nmult", "score", "risk"],
+		floats: ["prunelimit", "vcutoff", "nmult", "score", "risk", "mult"],
 		balsubs: ["ask", "bid", "actual", "available"],
 		tribools: ["oneswap", "nudge", "wsdebug"],
 		littles: ["randlim", "profit", "leeway"],

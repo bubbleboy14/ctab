@@ -76,6 +76,7 @@ cfg = {
             "period": 16
         },
         "cross": {
+            "mult": 0.8,
             "score": 1.5
         },
         "slosh": {
