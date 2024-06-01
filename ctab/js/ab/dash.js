@@ -147,7 +147,7 @@ ab.dash.Dash = CT.Class({
 			o[tpath[tpath.length - 1]] = val;
 			return full;
 		},
-		leg: function(data, colored, subbers, round, onclick, tpath, forceBreak, withClass) {
+		leg: function(data, colored, subbers, round, onclick, tpath, forceBreak, withClass, subClass) {
 			if (!data) return "0";
 			tpath = tpath || [];
 			var _ = this._, cont, dnode, lname, lab, labs = {}, popts, subber, sval, srow, d2n = function(d) {
@@ -157,7 +157,7 @@ ab.dash.Dash = CT.Class({
 					return CT.dom.div([
 						CT.dom.div(d, "centered"),
 						_.leg(data[d], colored, subbers && subbers[d], round, onclick, mypath)
-					], "w1");
+					], subClass || "w1");
 				}
 
 				if (forceBreak) {
@@ -323,7 +323,7 @@ ab.dash.Dash = CT.Class({
 					_.tab(data, "symbol"),
 					_.tab(data, "metric", "ndx")
 				], "smallish row jcbetween");
-			strats.classList.add("fwrap");
+//			strats.classList.add("fwrap");
 			CT.dom.setContent(_.nodes.prices, [
 				leggy,
 				symet,
