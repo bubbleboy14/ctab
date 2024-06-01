@@ -18,7 +18,7 @@ ab.dash = {
 		},
 		tables: {
 			symbol: { // TODO: meh configurize symbol/market better
-				head: ["symbol", "initial", "actual", "theoretical"],
+				head: ["symbol", "initial", "actual", "theoretical", "available"],
 				rows: ["USD", "ETH", "BTC"]
 			},
 			market: {
@@ -30,18 +30,18 @@ ab.dash = {
 				rows: ["diff", "dph"]
 			}
 		},
-		chart1: ["USD", "ETH", "BTC", "USD actual", "ETH actual", "BTC actual",
-			"ETH ask", "BTC ask", "ETH bid", "BTC bid"],
+		chart1: ["USD", "ETH", "BTC", "USD actual", "ETH actual", "BTC actual", "USD available",
+			"ETH available", "BTC available", "ETH ask", "BTC ask", "ETH bid", "BTC bid"],
 		chart2: ["diff", "dph", "diff actual", "dph actual",
 			"diff ask", "dph ask", "diff bid", "dph bid"],
 		noclix: ["staging", "stagish", "live", "network", "capped", "credset", "mdv2", "threshold"],
 		streams: ["fills", "cancels", "warnings", "refills", "crosses", "notices"],
 		floats: ["prunelimit", "vcutoff", "nmult", "score", "risk"],
-		row2: ["feeder", "strategy", "office"],
-		row3: ["backend", "harvester", "ndx"],
-		balsubs: ["ask", "bid", "actual"],
+		balsubs: ["ask", "bid", "actual", "available"],
 		tribools: ["oneswap", "nudge", "wsdebug"],
 		littles: ["randlim", "profit", "leeway"],
+		row2: ["feeder", "strategy", "office"],
+		row3: ["backend", "harvester", "ndx"],
 		rounders: ["fees"],
 		sliceSpan: "short",
 		slice: 10,
@@ -120,10 +120,12 @@ ab.dash.Dash = CT.Class({
 					cols.hint.push(c(_.hint(sym, data.hints)));
 				} else {
 					colnode.style.color = colors[sym];
-					if (mode == "symbol")
-						cols.initial.push(c(_.rounder(bals.initial[sym])));
 					cols.actual.push(c(bals.actual[sym]));
 					cols.theoretical.push(c(bals.theoretical[sym]));
+					if (mode == "symbol") {
+						cols.available.push(c(bals.available[sym]));
+						cols.initial.push(c(_.rounder(bals.initial[sym])));
+					}
 				}
 			}
 			fnode = CT.dom.flex(head.map(h => cols[h]), "bordered row jcbetween");
@@ -145,7 +147,7 @@ ab.dash.Dash = CT.Class({
 			o[tpath[tpath.length - 1]] = val;
 			return full;
 		},
-		leg: function(data, colored, subbers, round, onclick, tpath, forceBreak, withClass) {
+		leg: function(data, colored, subbers, round, onclick, tpath, forceBreak, withClass, subClass) {
 			if (!data) return "0";
 			tpath = tpath || [];
 			var _ = this._, cont, dnode, lname, lab, labs = {}, popts, subber, sval, srow, d2n = function(d) {
@@ -155,7 +157,7 @@ ab.dash.Dash = CT.Class({
 					return CT.dom.div([
 						CT.dom.div(d, "centered"),
 						_.leg(data[d], colored, subbers && subbers[d], round, onclick, mypath)
-					], "w1");
+					], subClass || "w1");
 				}
 
 				if (forceBreak) {
@@ -182,6 +184,8 @@ ab.dash.Dash = CT.Class({
 				if (subbers) {
 					for (subber of subbers.names) {
 						if (d == "USD" && ["ask", "bid"].includes(subber))
+							continue;
+						if (subber == "available" && ["diff", "dph"].includes(d))
 							continue;
 						srow = [];
 						sval = subbers.set[subber][d];
@@ -319,7 +323,7 @@ ab.dash.Dash = CT.Class({
 					_.tab(data, "symbol"),
 					_.tab(data, "metric", "ndx")
 				], "smallish row jcbetween");
-			strats.classList.add("fwrap");
+//			strats.classList.add("fwrap");
 			CT.dom.setContent(_.nodes.prices, [
 				leggy,
 				symet,
