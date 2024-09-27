@@ -75,7 +75,7 @@ cfg = {
             "size": 4,
             "period": 16
         },
-        "cross": {
+        "hint": {
             "mult": 0.8,
             "score": 1.5
         },
