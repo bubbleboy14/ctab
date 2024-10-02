@@ -13,8 +13,10 @@ ab.candles.Manager = CT.Class({
 			candles: {
 				terms: true,
 				name: "candles",
-				type: "candlestick",
-				parts: ["emafast", "emaslow"]
+				parts: [{
+					name: "candles",
+					type: "candlestick"
+				}, "emafast", "emaslow"]
 			},
 			VPT: {
 				name: "VPT",
