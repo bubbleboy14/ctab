@@ -7,7 +7,7 @@ ab.candles.Manager = CT.Class({
 			VPT: "20%",
 			MACD: "25%",
 			stats: "25%",
-			candles: "30%"
+			candles: "27%"
 		},
 		gconf: {
 			candles: {
