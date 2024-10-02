@@ -23,8 +23,11 @@ ab.candles.Manager = CT.Class({
 				terms: "VPT"
 			},
 			MACD: {
-				name: "MACD", // macdhist?
-				parts: ["macd", "macdsig"]
+				name: "MACD",
+				parts: [{
+					name: "macdhist",
+					type: "bar"
+				}, "macd", "macdsig"]
 			},
 			stats: {
 				name: "stats",
