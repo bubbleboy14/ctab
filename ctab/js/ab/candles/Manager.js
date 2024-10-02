@@ -1,22 +1,33 @@
 ab.candles.Manager = CT.Class({
 	CLASSNAME: "ab.candles.Manager",
 	_: {
-		all: ["candles", "VPT", "stats"],
+		all: ["candles", "VPT", "MACD", "stats"],
 		graphs: {},
 		heights: {
-			VPT: "25%",
-			stats: "30%",
-			candles: "42%"
+			VPT: "20%",
+			MACD: "25%",
+			stats: "25%",
+			candles: "27%"
 		},
 		gconf: {
 			candles: {
 				terms: true,
 				name: "candles",
-				type: "candlestick"
+				parts: [{
+					name: "candles",
+					type: "candlestick"
+				}, "emafast", "emaslow"]
 			},
 			VPT: {
 				name: "VPT",
 				terms: "VPT"
+			},
+			MACD: {
+				name: "MACD",
+				parts: [{
+					name: "macdhist",
+					type: "bar"
+				}, "macd", "macdsig"]
 			},
 			stats: {
 				name: "stats",
@@ -98,8 +109,9 @@ ab.candles.Manager = CT.Class({
 	},
 	load: function() {
 		const _ = this._, gz = _.graphs, cans = gz.candles = CT.dom.div(),
-			stats = gz.stats = CT.dom.div(), vpts = gz.VPT = CT.dom.div();
-		this.node = CT.dom.div([cans, vpts, stats], "w1 h1");
+			stats = gz.stats = CT.dom.div(), vpts = gz.VPT = CT.dom.div(),
+			macd = gz.MACD = CT.dom.div();
+		this.node = CT.dom.div([cans, vpts, macd, stats], "w1 h1");
 	},
 	init: function(opts) {
 		this.opts = opts = CT.merge(opts, {

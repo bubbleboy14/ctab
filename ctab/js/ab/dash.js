@@ -41,7 +41,7 @@ ab.dash = {
 		tribools: ["oneswap", "nudge", "wsdebug"],
 		littles: ["randlim", "profit", "leeway"],
 		row2: ["feeder", "strategy", "office"],
-		row3: ["backend", "harvester", "ndx"],
+		row3: ["actuary", "backend", "comptroller"],
 		rounders: ["fees"],
 		sliceSpan: "short",
 		slice: 10,

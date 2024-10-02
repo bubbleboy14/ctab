@@ -21,6 +21,9 @@ cfg = {
         "network": "bitcoin"
     },
     "actuary": {
+        "sig": 9,
+        "fast": 12,
+        "slow": 26,
         "small": 10,
         "medium": 60,
         "large": 360
@@ -75,7 +78,7 @@ cfg = {
             "size": 4,
             "period": 16
         },
-        "cross": {
+        "hint": {
             "mult": 0.8,
             "score": 1.5
         },
