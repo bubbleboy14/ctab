@@ -56,7 +56,8 @@ cfg = {
     "office": {
         "index": 0,
         "verbose": False,
-        "stagish": False
+        "stagish": False,
+        "strategy": "preset"
     },
     "feeder": {
         "heartbeat": 10,
