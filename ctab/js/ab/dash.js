@@ -34,7 +34,7 @@ ab.dash = {
 			"ETH available", "BTC available", "ETH ask", "BTC ask", "ETH bid", "BTC bid"],
 		chart2: ["diff", "dph", "diff actual", "dph actual",
 			"diff ask", "dph ask", "diff bid", "dph bid"],
-		noclix: ["staging", "stagish", "live", "network", "capped", "credset", "mdv2", "threshold"],
+		noclix: ["staging", "stagish", "live", "network", "capped", "credset", "mdv2", "threshold", "strategy"],
 		streams: ["fills", "cancels", "warnings", "refills", "crosses", "notices"],
 		floats: ["prunelimit", "vcutoff", "nmult", "score", "risk", "mult"],
 		balsubs: ["ask", "bid", "actual", "available"],
