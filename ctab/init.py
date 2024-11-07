@@ -27,7 +27,8 @@ cfg = {
         "range": 14,
         "small": 10,
         "medium": 60,
-        "large": 360
+        "large": 360,
+        "int": "5m"
     },
     "accountant": {
         "split": 16,
@@ -43,8 +44,8 @@ cfg = {
     "comptroller": {
         "live": False,
         "actives": 20,
+        "plimit": 0.1,
         "leeway": 0.001,
-        "prunelimit": 0.1,
         "canceleach": True
     },
     "backend": {
