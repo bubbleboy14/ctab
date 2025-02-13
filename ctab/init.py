@@ -71,7 +71,8 @@ cfg = {
         "inner": 32,
         "short": 64,
         "long": 128,
-        "outer": 256
+        "outer": 256,
+        "hist": 1024
     },
     "strategy": {
         "base": {
