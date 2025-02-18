@@ -22,7 +22,7 @@ ab.dash = {
 				rows: ["USD", "ETH", "BTC"]
 			},
 			market: {
-				head: ["market", "quote", "ask", "bid", "asks", "bids", "volume", "vola", "vpt", "obv", "ad", "mfi", "score", "hint"],
+				head: ["market", "quote", "ask", "bid", "asks", "bids", "volume", "vola", "vpt", "obv", "ad", "mfi", "adx", "score", "hint"],
 				rows: ["ETHBTC", "ETHUSD", "BTCUSD"]
 			},
 			metric: {
@@ -116,6 +116,7 @@ ab.dash.Dash = CT.Class({
 					cols.obv.push(c(laparen(sym, "obv", "OBVslope")));
 					cols.ad.push(c(laparen(sym, "ad", "ADslope")));
 					cols.mfi.push(c(lacell(sym, "mfi")));
+					cols.adx.push(c(lacell(sym, "ADX")));
 					cols.score.push(c(rcell(data.scores[sym])));
 					cols.hint.push(c(_.hint(sym, data.hints)));
 				} else {

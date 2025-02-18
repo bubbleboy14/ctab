@@ -1,13 +1,14 @@
 ab.candles.Manager = CT.Class({
 	CLASSNAME: "ab.candles.Manager",
 	_: {
-		all: ["candles", "VPT", "MACD", "stats"],
+		all: ["candles", "VPT", "MACD", "ADX", "stats"],
 		graphs: {},
 		heights: {
-			VPT: "20%",
-			MACD: "25%",
-			stats: "25%",
-			candles: "27%"
+			VPT: "19%",
+			ADX: "19%",
+			MACD: "19%",
+			stats: "19%",
+			candles: "19%"
 		},
 		gconf: {
 			candles: {
@@ -28,6 +29,10 @@ ab.candles.Manager = CT.Class({
 					name: "macdhist",
 					type: "bar"
 				}, "macd", "macdsig"]
+			},
+			ADX: {
+				name: "ADX",
+				parts: ["ADX", "-DI", "+DI"]
 			},
 			stats: {
 				name: "stats",
@@ -108,10 +113,11 @@ ab.candles.Manager = CT.Class({
 		_.linx();
 	},
 	load: function() {
-		const _ = this._, gz = _.graphs, cans = gz.candles = CT.dom.div(),
-			stats = gz.stats = CT.dom.div(), vpts = gz.VPT = CT.dom.div(),
-			macd = gz.MACD = CT.dom.div();
-		this.node = CT.dom.div([cans, vpts, macd, stats], "w1 h1");
+		const _ = this._, gz = _.graphs;
+		this.node = CT.dom.div(_.all.map(function(gset) {
+			gz[gset] = CT.dom.div();
+			return gz[gset];
+		}), "w1 h1");
 	},
 	init: function(opts) {
 		this.opts = opts = CT.merge(opts, {
