@@ -56,6 +56,7 @@ cfg = {
     },
     "office": {
         "index": 0,
+        "tpvtick": 60,
         "verbose": False,
         "stagish": False,
         "strategy": "preset"
