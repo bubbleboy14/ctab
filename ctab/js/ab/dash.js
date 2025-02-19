@@ -438,8 +438,11 @@ ab.dash.Dash = CT.Class({
 		fillHistory: function() {
 			var _ = this._;
 			CT.db.get("fill", fz => CT.modal.modal([
-				CT.dom.link("Fill History", null,
-					"/ab/fills.html", "bigger bold block centered"),
+				CT.dom.link("TPV", null,
+					"/ab/tpv.html", "bigger bold right"),
+				CT.dom.link("Fills", null,
+					"/ab/fills.html", "bigger bold left"),
+				CT.dom.div("History", "biggest bold centered"),
 				fz.map(_.fnode)
 			], null, { className: "basicpopup h9-10" }), 1000);
 		},
