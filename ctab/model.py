@@ -10,3 +10,8 @@ class Fill(db.TimeStampedBase):
 	order_id = db.String()
 	client_order_id = db.String()
 	balances = db.JSON()
+
+class TPV(db.TimeStampedBase):
+	total = db.Float()
+	prices = db.JSON()
+	balances = db.JSON()
