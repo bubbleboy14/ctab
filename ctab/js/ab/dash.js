@@ -444,7 +444,7 @@ ab.dash.Dash = CT.Class({
 					"/ab/fills.html", "bigger bold left"),
 				CT.dom.div("History", "biggest bold centered"),
 				fz.map(_.fnode)
-			], null, { className: "basicpopup h9-10" }), 1000);
+			], null, { className: "basicpopup h9-10" }), 50, null, "-created");
 		},
 		setStreams: function() {
 			var _ = this._, nz = _.nodes;
