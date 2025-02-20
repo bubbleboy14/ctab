@@ -58,11 +58,9 @@ ab.fills = {
 			parts: [{ name: "USD", type: "line" }].concat(syms.map(function(s) {
 				return { name: s, type: "bar" };
 			}))
-		})
+		});
 	},
 	init: function(opts) {
-		var h = location.hash.slice(1),
-			p = parseInt(h), c = isNaN(p) ? 100 : p;
-		CT.db.get("fill", ab.fills.build, c, null, "-created");
+		ab.popper.build("fill", ab.fills.build);
 	}
 };

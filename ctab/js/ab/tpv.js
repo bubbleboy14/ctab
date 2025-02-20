@@ -31,8 +31,6 @@ ab.tpv = {
 		});
 	},
 	init: function(opts) {
-		const h = location.hash.slice(1),
-			p = parseInt(h), c = isNaN(p) ? 100 : p;
-		CT.db.get("tpv", ab.tpv.build, c, null, "-created");
+		ab.popper.build("tpv", ab.tpv.build);
 	}
 }
