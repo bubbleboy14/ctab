@@ -97,6 +97,10 @@ cfg = {
             "risk": 0.5,
             "profit": 0.01,
             "threshold": 0.05
+        },
+        "macdadx": {
+            "low": 25,
+            "high": 50
         }
     },
     "mon": {

@@ -40,7 +40,7 @@ ab.dash = {
 		balsubs: ["ask", "bid", "actual", "available"],
 		tribools: ["oneswap", "nudge", "wsdebug"],
 		littles: ["randlim", "profit", "leeway"],
-		row2: ["feeder", "strategy", "trader"],
+		row2: ["base", "strategy", "feeder"],
 		row3: ["harvester", "actuary", "comptroller"],
 		rounders: ["fees"],
 		sliceSpan: "short",
@@ -427,7 +427,7 @@ ab.dash.Dash = CT.Class({
 				_.leg(curconf, false, null, false, _.upConf),
 				_.leg(row2, false, null, false, _.upConf),
 				_.leg(row3, false, null, false, _.upConf)
-			], "bigish");
+			]);
 		},
 		fnode: function(f) {
 			return this._.snode({
