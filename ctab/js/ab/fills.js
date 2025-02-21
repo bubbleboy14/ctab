@@ -6,20 +6,40 @@ ab.fills = {
 			ETH: "mwei",
 			BTC: "finney"
 		},
+		labcol: function(lab) {
+			return lab.parentNode.firstElementChild.firstElementChild.firstElementChild.getAttribute("fill");
+		},
+		pline: function(f) {
+			return "<div><b>" + f.side + "</b> " + f.amount + " <b>"
+				+ f.market + "</b> @ <b>" + f.price + "</b></div>";
+		},
 		pair: function(k, v, color) {
 			return "<div><span style='color: " + color + ";'>" + k + "</span> <b>" + v + "</b></div>";
 		},
 		point: function(series, index, labels) {
 			const _ = ab.fills._;
 			return series.map((s, i) => _.pair(_.all[i], s[index],
-				labels[i].previousElementSibling.style.color)).reduce((a, b) => a + b);
+				_.labcol(labels[i]))).reduce((a, b) => a + b);
+		},
+		metrics: function(metrics) {
+			const _ = ab.fills._, lines = [];
+			let k, v;
+			if (!metrics || !Object.keys(metrics).length) return "(no metrics)";
+			for (k in metrics) {
+				v = metrics[k];
+				if (typeof(v) == "object")
+					lines.push(k + "<div class='lpadded'>" + _.metrics(v) + "</div>");
+				else
+					lines.push(_.pair(k, v));
+			}
+			return lines.join("");
 		},
 		tooltip: function({series, seriesIndex, dataPointIndex, w}) {
 			const _ = ab.fills._, gz = w.globals, tt = gz.tooltip,
 				title = tt.tooltipTitle.outerHTML,
-				body = _.point(series, dataPointIndex, tt.legendLabels),
+				balances = _.point(series, dataPointIndex, tt.legendLabels),
 				f = _.fills[dataPointIndex];
-			return title + body + f.side + " " + f.amount + " " + f.market + " @ " + f.price;
+			return title + _.pline(f) + balances + _.metrics(f.metrics);
 //			return w.globals.labels[dataPointIndex] + ": " + series[seriesIndex][dataPointIndex];
 		}
 	},
