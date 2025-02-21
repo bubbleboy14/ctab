@@ -10,6 +10,7 @@ from model import Fill, TPV
 
 def filled(trade):
 	fill = Fill()
+	fill.metrics = config.ctab.live.office.stratuses()
 	fill.balances = ask("balances", mode="actual")
 	fill.client_order_id = trade["client_order_id"]
 	fill.order_id = trade["order_id"]
