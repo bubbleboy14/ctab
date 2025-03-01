@@ -81,11 +81,12 @@ ab.popper = {
 		}, _.count, 0, _.order, _.filts());
 	},
 	picker: function() {
-		const _ = ab.popper._;
-		CT.modal.modal([
+		const _ = ab.popper._, tweax = [
 			_.tweaker("count"),
 			_.tweaker("mod")
-		], null, {
+		];
+		_.extra && tweax.push(_.extra);
+		CT.modal.modal(tweax, null, {
 			center: false,
 			noClose: true,
 			transition: "slide",
@@ -94,10 +95,11 @@ ab.popper = {
 			}
 		});
 	},
-	build: function(model, builder) {
+	build: function(model, builder, extra) {
 		const pop = ab.popper, _ = pop._;
-		_.model = model;
 		_.builder = builder;
+		_.model = model;
+		_.extra = extra;
 		pop.parse();
 		pop.pop();
 		pop.picker();
