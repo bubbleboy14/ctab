@@ -1,6 +1,6 @@
 ab.tpv = {
 	_: {
-		bals: ["total", "usd", "eth", "btc"],
+		bals: ["total", "usd", "eth", "btc", "adjusted"],
 		secs: ["prices", "balances"],
 		gropts: {
 			sym: "TPV",
@@ -19,25 +19,49 @@ ab.tpv = {
 			}, _.gropts));
 		},
 		baller: function(d) {
-			let sym, slo;
+			const aprices = ab.tpv._.aprices;
+			let sym, slo, uname;
 			d.usdbals = {};
+			d.adjusted = 0;
 			for (sym in d.balances) {
 				slo = sym.toLowerCase();
 				d[slo] = d.balances[sym];
-				if (sym != "USD") {
-					d[slo] *= d.prices[sym + "USD"];
+				if (sym == "USD")
+					d.adjusted += d[slo];
+				else {
+					uname = sym + "USD";
+					d.adjusted += d[slo] * aprices[uname];
+					d[slo] *= d.prices[uname];
 					d.usdbals[sym] = d[slo];
 				}
 			}
 		},
 		balbutt: function() {
-			const _ = ab.tpv._, b = CT.dom.button("show all balances", function() {
+			const _ = ab.tpv._, tmax = _.tpvs.length - 1, doshow = function(tindex) {
+				_.aprices = _.tpvs[tindex].prices;
 				_.tpvs.forEach(_.baller);
 				_.gropts.parts = _.bals;
-				_.secs.push("usdbals");
+				CT.data.append(_.secs, "usdbals");
 				CT.dom.clear("ctmain");
 				b.remove();
 				_.graph();
+			}, b = CT.dom.button("show all balances", function() {
+				CT.modal.choice({
+					prompt: "adjust totals to which price set?",
+					data: ["latest", "select"],
+					cb: function(sel) {
+						if (sel == "latest")
+							return doshow(tmax);
+						CT.modal.prompt({
+							prompt: "please select a snapshot",
+							style: "number",
+							min: 0,
+							max: tmax,
+							value: tmax,
+							cb: doshow
+						});
+					}
+				});
 			});
 			return b;
 		},
