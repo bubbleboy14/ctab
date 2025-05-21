@@ -50,15 +50,14 @@ ab.tpv = {
 					prompt: "adjust totals to which price set?",
 					data: ["latest", "select"],
 					cb: function(sel) {
-						const tmax = _.tpvs.length - 1;
 						if (sel == "latest")
-							return doshow(tmax);
+							return doshow(0);
 						CT.modal.prompt({
 							prompt: "please select a snapshot",
 							style: "number",
+							max: _.tpvs.length - 1,
 							min: 0,
-							max: tmax,
-							value: tmax,
+							value: 0,
 							cb: doshow
 						});
 					}
