@@ -37,7 +37,7 @@ ab.tpv = {
 			}
 		},
 		balbutt: function() {
-			const _ = ab.tpv._, tmax = _.tpvs.length - 1, doshow = function(tindex) {
+			const _ = ab.tpv._, doshow = function(tindex) {
 				_.aprices = _.tpvs[tindex].prices;
 				_.tpvs.forEach(_.baller);
 				_.gropts.parts = _.bals;
@@ -50,6 +50,7 @@ ab.tpv = {
 					prompt: "adjust totals to which price set?",
 					data: ["latest", "select"],
 					cb: function(sel) {
+						const tmax = _.tpvs.length - 1;
 						if (sel == "latest")
 							return doshow(tmax);
 						CT.modal.prompt({
