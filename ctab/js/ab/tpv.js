@@ -57,8 +57,11 @@ ab.tpv = {
 							style: "number",
 							max: _.tpvs.length - 1,
 							min: 0,
-							value: 0,
-							cb: doshow
+							step: 1,
+							initial: 0,
+							cb: doshow,
+							classname: "w200p",
+							labeler: index => _.tpvs[index].created
 						});
 					}
 				});
