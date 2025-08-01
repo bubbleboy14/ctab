@@ -75,8 +75,10 @@ ab.tpv = {
 			return lines.join("");
 		},
 		dstring: function(d) {
-			const _ = ab.tpv._;
-			return _.secs.map(s => _.kvblock(d, s)).concat(["total: " + d.total]).join("<br>");
+			const _ = ab.tpv._, bits = _.secs.map(s => _.kvblock(d, s));
+			bits.push("total: " + d.total);
+			d.adjusted && bits.push("adjusted: " + d.adjusted);
+			return bits.join("<br>");
 		},
 		tooltip: function({series, seriesIndex, dataPointIndex, w}) {
 			const _ = ab.tpv._, ttt = w.globals.tooltip.tooltipTitle;
