@@ -25,7 +25,9 @@ def response():
 	elif action == "setconf":
 		setconf(cgi_get("mod"))
 	elif action == "candles":
-		succeed(office and office.actuary.oldCandles(int(cgi_get("count", default=10))) or {
+		count = int(cgi_get("count", default=10))
+		mod = int(cgi_get("mod", default=0))
+		succeed(office and office.actuary.oldCandles(count, mod) or {
 			"waiting": "candles loading"
 		})
 	elif action == "bt":
