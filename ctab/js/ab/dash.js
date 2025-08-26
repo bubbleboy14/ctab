@@ -116,7 +116,7 @@ ab.dash.Dash = CT.Class({
 					cols.obv.push(c(laparen(sym, "obv", "OBVslope")));
 					cols.ad.push(c(laparen(sym, "ad", "ADslope")));
 					cols.mfi.push(c(lacell(sym, "mfi")));
-					cols.adx.push(c((latest("+DI") > latest("-DI")
+					cols.adx.push(c((latest(sym, "+DI") > latest(sym, "-DI")
 						? "+" : "-") + lacell(sym, "ADX")));
 					cols.score.push(c(rcell(data.scores[sym])));
 					cols.hint.push(c(_.hint(sym, data.hints)));
