@@ -244,6 +244,11 @@ ab.dash.Dash = CT.Class({
 								min: 0.001,
 								step: 0.001
 							});
+						} else if (d == "adxguard") {
+							Object.assign(popts, {
+								min: 0,
+								max: 99
+							});
 						}
 						CT.modal.prompt(popts);
 					};
