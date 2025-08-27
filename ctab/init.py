@@ -39,7 +39,8 @@ cfg = {
     "trader": {
         "size": 8,
         "book": True,
-        "force": False
+        "force": False,
+        "adxguard": False
     },
     "comptroller": {
         "live": False,
