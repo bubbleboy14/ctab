@@ -15,7 +15,8 @@ routes = {
 cfg = {
     "harvester": {
         "batch": 10,
-        "bottom": 40,
+        "bottom": 10,
+        "usdmax": 50,
         "skim": False,
         "balance": True,
         "network": "bitcoin"
