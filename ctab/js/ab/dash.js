@@ -40,6 +40,7 @@ ab.dash = {
 		balsubs: ["ask", "bid", "actual", "available"],
 		tribools: ["oneswap", "nudge", "wsdebug"],
 		littles: ["randlim", "profit", "leeway"],
+		centers: ["adxguard", "mfilim"],
 		row2: ["base", "strategy", "office"],
 		row3: ["harvester", "actuary", "comptroller"],
 		rounders: ["fees"],
@@ -244,7 +245,7 @@ ab.dash.Dash = CT.Class({
 								min: 0.001,
 								step: 0.001
 							});
-						} else if (d == "adxguard") {
+						} else if (d_.centers.includes(d)) {
 							Object.assign(popts, {
 								min: 0,
 								max: 99
