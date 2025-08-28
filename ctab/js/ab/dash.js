@@ -235,7 +235,7 @@ ab.dash.Dash = CT.Class({
 						if (d_.floats.includes(d)) {
 							Object.assign(popts, {
 								max: 4,
-								min: 0.1,
+								min: 0.05,
 								step: 0.05
 							});
 						} else if (d_.littles.includes(d)) {
