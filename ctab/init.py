@@ -65,7 +65,7 @@ cfg = {
         "strategy": "preset"
     },
     "feeder": {
-        "heartbeat": 10,
+        "hbeat": 10,
         "wsdebug": "auto"
     },
     "base": {
