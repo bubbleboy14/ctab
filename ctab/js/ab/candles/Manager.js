@@ -32,7 +32,7 @@ ab.candles.Manager = CT.Class({
 			},
 			ADX: {
 				name: "ADX",
-				parts: ["ADX", "-DI", "+DI"]
+				parts: ["ADX", "-DI", "+DI", "mfi"]
 			},
 			stats: {
 				name: "stats",
