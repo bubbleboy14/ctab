@@ -29,7 +29,7 @@ cfg = {
         "small": 10,
         "medium": 60,
         "large": 360,
-        "int": "1m"
+        "int": "5m"
     },
     "accountant": {
         "split": 16,
