@@ -2,13 +2,13 @@ ab.apex.Graph = CT.Class({
 	CLASSNAME: "ab.apex.Graph",
 	_: {
 		chart: function(series) {
-			const oz = this.opts, chart = new ApexCharts(this.node, CT.merge({
-				tooltip: CT.merge(oz.graphopts.tooltip, {
+			const oz = this.opts, goz = oz.graphopts, gopts = CT.merge({
+				tooltip: CT.merge(goz && goz.tooltip, {
 					x: {
 						format: "d MMM H:mm"
 					}
 				})
-			}, oz.graphopts, {
+			}, goz), chart = new ApexCharts(this.node, CT.merge(gopts, {
 				title: {
 					text: this.sym + " " + this.name
 				},
