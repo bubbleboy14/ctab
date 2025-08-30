@@ -6,11 +6,13 @@ ab.apex.Graph = CT.Class({
 				title: {
 					text: this.sym + " " + this.name
 				},
-				xaxis: {
-					type: "datetime",
-					labels: {
+				tooltip: {
+					x: {
 						format: "d MMM H:mm"
 					}
+				},
+				xaxis: {
+					type: "datetime"
 				},
 				chart: CT.merge(oz.chartopts, {
 					type: "line",
