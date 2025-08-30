@@ -2,14 +2,15 @@ ab.apex.Graph = CT.Class({
 	CLASSNAME: "ab.apex.Graph",
 	_: {
 		chart: function(series) {
-			const oz = this.opts, chart = new ApexCharts(this.node, CT.merge(oz.graphopts, {
-				title: {
-					text: this.sym + " " + this.name
-				},
-				tooltip: {
+			const oz = this.opts, chart = new ApexCharts(this.node, CT.merge({
+				tooltip: CT.merge(oz.graphopts.tooltip, {
 					x: {
 						format: "d MMM H:mm"
 					}
+				})
+			}, oz.graphopts, {
+				title: {
+					text: this.sym + " " + this.name
 				},
 				xaxis: {
 					type: "datetime"
