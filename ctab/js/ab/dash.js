@@ -40,7 +40,7 @@ ab.dash = {
 		balsubs: ["ask", "bid", "actual", "available"],
 		tribools: ["oneswap", "nudge", "wsdebug"],
 		littles: ["randlim", "profit", "leeway"],
-		centers: ["adxguard", "mfilim"],
+		centers: ["adxlim", "mfilim"],
 		row2: ["base", "strategy", "office"],
 		row3: ["harvester", "actuary", "comptroller"],
 		rounders: ["fees"],
