@@ -29,6 +29,7 @@ cfg = {
         "small": 10,
         "medium": 60,
         "large": 360,
+        "jumbo": 720,
         "int": "5m"
     },
     "accountant": {

@@ -1,7 +1,7 @@
 ab.apex.trans = {
 	_: {
 		syms: ["ETH", "BTC"],
-		terms: ["small", "medium", "large"],
+		terms: ["small", "medium", "large", "jumbo"],
 		stamped: function(item, y) {
 			return {
 				x: new Date(item.timestamp || item.created.slice(0, -3)),
