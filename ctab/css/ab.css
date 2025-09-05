@@ -24,6 +24,10 @@ html, body {
 	width: calc(100vw - 100px);
 }
 
+.dstream {
+	max-height: 290px;
+}
+
 .infobubble {
 	color: white;
 	background: rgba(1, 1, 1, 0.7);

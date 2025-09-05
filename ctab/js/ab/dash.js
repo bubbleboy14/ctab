@@ -456,7 +456,7 @@ ab.dash.Dash = CT.Class({
 		setStreams: function() {
 			var _ = this._, nz = _.nodes;
 			nz.streams = CT.dom.flex(d_.streams.map(function(name) {
-				nz[name] = CT.dom.div(null, "hm300p scrolly");
+				nz[name] = CT.dom.div(null, "dstream scrolly");
 				nz[name].header = CT.dom.div(name, "centered bold");
 				return CT.dom.div([
 					nz[name].header,
