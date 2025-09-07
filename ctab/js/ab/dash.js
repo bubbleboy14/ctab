@@ -41,7 +41,7 @@ ab.dash = {
 		tribools: ["oneswap", "nudge", "wsdebug"],
 		littles: ["randlim", "profit", "leeway"],
 		centers: ["adxlim", "mfilim"],
-		row2: ["base", "strategy", "office"],
+		row2: ["trader", "strategy", "office"],
 		row3: ["harvester", "actuary", "comptroller"],
 		rounders: ["fees"],
 		sliceSpan: "short",
@@ -343,7 +343,11 @@ ab.dash.Dash = CT.Class({
 				_.leg({ "trades": data.weighted.trade }, false, null, true),
 			]);
 			stas = nz["various stats"] = CT.dom.div([
-				_.leg({ orders: data.accountant, harvester: data.harvester }),
+				_.leg({
+					accountant: data.accountant,
+					adjuster: data.adjuster,
+					harvester: data.harvester
+				}),
 				strats,
 				_.leg(data.gem)
 			]);
