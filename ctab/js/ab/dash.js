@@ -95,7 +95,7 @@ ab.dash.Dash = CT.Class({
 				bals = data.balances, latest = ab.candles.latest.get,
 				mayb = (sec, sym, prop) => data[sec][sym] && data[sec][sym][prop],
 				c = d => CT.dom.div(d, "w1 bordered smallpadded nowrap"),
-				rcell = val => _.rounder(val, 10),
+				rcell = (val, precision) => _.rounder(val, precision || 10),
 				lacell = (sym, prop) => rcell(latest(sym, prop)),
 				paren = (v1, v2) => v1 + " (" + v2 + ")",
 				rparen = (v1, v2) => paren(rcell(v1) || v1, rcell(v2) || v2),
@@ -119,7 +119,7 @@ ab.dash.Dash = CT.Class({
 					cols.mfi.push(c(lacell(sym, "mfi")));
 					cols.adx.push(c((latest(sym, "+DI") > latest(sym, "-DI")
 						? "+" : "-") + lacell(sym, "ADX")));
-					cols.score.push(c(rcell(data.scores[sym])));
+					cols.score.push(c(rcell(data.scores[sym], 100)));
 					cols.hint.push(c(_.hint(sym, data.hints)));
 				} else {
 					colnode.style.color = colors[sym];
