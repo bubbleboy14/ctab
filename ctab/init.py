@@ -34,9 +34,12 @@ cfg = {
     },
     "accountant": {
         "split": 16,
-        "nmult": 1.0,
-        "nudge": "auto",
         "capped": "auto"
+    },
+    "adjuster": {
+        "nudge": "auto",
+        "nmult": 1.0,
+        "leeway": 0.001
     },
     "trader": {
         "size": 24,
@@ -51,7 +54,6 @@ cfg = {
         "live": False,
         "actives": 20,
         "plimit": 0.1,
-        "leeway": 0.001,
         "canceleach": True
     },
     "backend": {
