@@ -24,7 +24,7 @@ ab.dash = {
 				rows: ["USD", "ETH", "BTC"]
 			},
 			market: {
-				head: ["market", "quote", "ask", "bid", "asks", "bids", "volume", "vola", "vpt", "obv", "ad", "mfi", "adx", "score", "hint"],
+				head: ["market", "quote", "ask", "bid", "asks", "bids", "volume", "vpt", "obv", "ad", "mfi", "adx", "vola", "drift", "score", "hint"],
 				rows: mrkts
 			},
 			metric: {
@@ -36,7 +36,7 @@ ab.dash = {
 			"ETH available", "BTC available", "ETH ask", "BTC ask", "ETH bid", "BTC bid"],
 		chart2: ["diff", "dph", "diff actual", "dph actual",
 			"diff ask", "dph ask", "diff bid", "dph bid"],
-		chart3: ["ETHBTC score", "ETHBTC vol", "ETHUSD score", "ETHUSD vol", "BTCUSD score", "BTCUSD vol"],
+		chart3: ["ETHBTC score", "ETHBTC drift", "ETHBTC vol", "ETHUSD score", "ETHUSD drift", "ETHUSD vol", "BTCUSD score", "BTCUSD drift", "BTCUSD vol"],
 		noclix: ["staging", "stagish", "live", "network", "capped", "credset", "mdv2", "threshold", "strategy", "int"],
 		streams: ["fills", "cancels", "warnings", "refills", "crosses", "notices"],
 		floats: ["plimit", "vcutoff", "nmult", "score", "risk", "mult"],
@@ -98,9 +98,10 @@ ab.dash.Dash = CT.Class({
 		tab: function(data, mode, sub, contClass) {
 			var col, sym, colnode, fnode, cols = {}, _ = this._, colors = _.colors,
 				params = d_.tables[mode], head = params.head, rows = params.rows,
-				bals = data.balances, latest = ab.candles.latest.get, sco, vol,
+				bals = data.balances, latest = ab.candles.latest.get, sco, dri, vol,
+				padclass = mode == "market" ? "p3" : "smallpadded"
 				mayb = (sec, sym, prop) => data[sec][sym] && data[sec][sym][prop],
-				c = d => CT.dom.div(d, "w1 bordered smallpadded nowrap"),
+				c = d => CT.dom.div(d, "w1 bordered nowrap " + padclass),
 				rcell = (val, precision) => _.rounder(val, precision || 10),
 				lacell = (sym, prop) => rcell(latest(sym, prop)),
 				paren = (v1, v2) => v1 + " (" + v2 + ")",
@@ -118,18 +119,21 @@ ab.dash.Dash = CT.Class({
 					cols.asks.push(c(rcell(mayb("totals", sym, "ask"))));
 					cols.bids.push(c(rcell(mayb("totals", sym, "bid"))));
 					cols.volume.push(c(_.rounder(data.volumes[sym], 1000)));
-					vol = c(_.rounder(data.volvols[sym], 1000));
-					cols.vola.push(vol);
 					cols.vpt.push(c(lacell(sym, "vpt")));
 					cols.obv.push(c(laparen(sym, "obv", "OBVslope")));
 					cols.ad.push(c(laparen(sym, "ad", "ADslope")));
 					cols.mfi.push(c(lacell(sym, "mfi")));
 					cols.adx.push(c((latest(sym, "+DI") > latest(sym, "-DI")
 						? "+" : "-") + lacell(sym, "ADX")));
+					vol = c(_.rounder(data.volvols[sym], 1000));
+					cols.vola.push(vol);
+					dri = c(_.rounder(data.drifts[sym], 1000));
+					cols.drift.push(dri);
 					sco = c(rcell(data.scores[sym], 100));
 					cols.score.push(sco);
 					cols.hint.push(c(_.hint(sym, data.hints)));
 					sco.style.color = colors[sym + " score"];
+					dri.style.color = colors[sym + " drift"];
 					vol.style.color = colors[sym + " vol"];
 				} else {
 					colnode.style.color = colors[sym];
@@ -431,8 +435,10 @@ ab.dash.Dash = CT.Class({
 		scoreup: function(data) {
 			var s, all = {}, _ = this._;
 			for (s of d_.markets) {
-				all[s + " score"] = data.scores[s];
+				data.drifts[s] *= 1000;
 				all[s + " vol"] = data.volvols[s];
+				all[s + " drift"] = data.drifts[s];
+				all[s + " score"] = data.scores[s];
 			}
 			d_.loud && this.log("updates scores:", all);
 			_.up(all);
