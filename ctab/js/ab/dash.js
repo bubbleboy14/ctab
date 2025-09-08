@@ -1,5 +1,7 @@
+var mrkts = ["ETHBTC", "ETHUSD", "BTCUSD"];
 ab.dash = {
 	_: {
+		markets: mrkts,
 		counts: { // now unused
 			orders: ["approved", "active", "filled", "cancelled", "fees"],
 			harvester: ["hauls", "harvest", "refills"]
@@ -23,7 +25,7 @@ ab.dash = {
 			},
 			market: {
 				head: ["market", "quote", "ask", "bid", "asks", "bids", "volume", "vola", "vpt", "obv", "ad", "mfi", "adx", "score", "hint"],
-				rows: ["ETHBTC", "ETHUSD", "BTCUSD"]
+				rows: mrkts
 			},
 			metric: {
 				head: ["metric", "actual", "theoretical"],
@@ -34,6 +36,7 @@ ab.dash = {
 			"ETH available", "BTC available", "ETH ask", "BTC ask", "ETH bid", "BTC bid"],
 		chart2: ["diff", "dph", "diff actual", "dph actual",
 			"diff ask", "dph ask", "diff bid", "dph bid"],
+		chart3: ["ETHBTC score", "ETHBTC vol", "ETHUSD score", "ETHUSD vol", "BTCUSD score", "BTCUSD vol"],
 		noclix: ["staging", "stagish", "live", "network", "capped", "credset", "mdv2", "threshold", "strategy", "int"],
 		streams: ["fills", "cancels", "warnings", "refills", "crosses", "notices"],
 		floats: ["plimit", "vcutoff", "nmult", "score", "risk", "mult"],
@@ -54,7 +57,7 @@ ab.dash = {
 };
 
 var d_  = ab.dash._;
-d_.charts = d_.chart1.concat(d_.chart2);
+d_.charts = d_.chart1.concat(d_.chart2).concat(d_.chart3);
 
 ab.dash.Dash = CT.Class({
 	CLASSNAME: "ab.dash.Dash",
@@ -79,6 +82,9 @@ ab.dash.Dash = CT.Class({
 			new Chartist.Line(_.nodes.chart2, {
 				series: d_.chart2.map(k => _.data[k])
 			});
+			new Chartist.Line(_.nodes.chart3, {
+				series: d_.chart3.map(k => _.data[k])
+			});
 		},
 		hint: function(sym, hints) {
 			var hint = hints[sym];
@@ -92,7 +98,7 @@ ab.dash.Dash = CT.Class({
 		tab: function(data, mode, sub, contClass) {
 			var col, sym, colnode, fnode, cols = {}, _ = this._, colors = _.colors,
 				params = d_.tables[mode], head = params.head, rows = params.rows,
-				bals = data.balances, latest = ab.candles.latest.get,
+				bals = data.balances, latest = ab.candles.latest.get, sco, vol,
 				mayb = (sec, sym, prop) => data[sec][sym] && data[sec][sym][prop],
 				c = d => CT.dom.div(d, "w1 bordered smallpadded nowrap"),
 				rcell = (val, precision) => _.rounder(val, precision || 10),
@@ -112,15 +118,19 @@ ab.dash.Dash = CT.Class({
 					cols.asks.push(c(rcell(mayb("totals", sym, "ask"))));
 					cols.bids.push(c(rcell(mayb("totals", sym, "bid"))));
 					cols.volume.push(c(_.rounder(data.volumes[sym], 1000)));
-					cols.vola.push(c(_.rounder(data.volvols[sym], 1000)));
+					vol = c(_.rounder(data.volvols[sym], 1000));
+					cols.vola.push(vol);
 					cols.vpt.push(c(lacell(sym, "vpt")));
 					cols.obv.push(c(laparen(sym, "obv", "OBVslope")));
 					cols.ad.push(c(laparen(sym, "ad", "ADslope")));
 					cols.mfi.push(c(lacell(sym, "mfi")));
 					cols.adx.push(c((latest(sym, "+DI") > latest(sym, "-DI")
 						? "+" : "-") + lacell(sym, "ADX")));
-					cols.score.push(c(rcell(data.scores[sym], 100)));
+					sco = c(rcell(data.scores[sym], 100));
+					cols.score.push(sco);
 					cols.hint.push(c(_.hint(sym, data.hints)));
+					sco.style.color = colors[sym + " score"];
+					vol.style.color = colors[sym + " vol"];
 				} else {
 					colnode.style.color = colors[sym];
 					cols.actual.push(c(bals.actual[sym]));
@@ -260,11 +270,11 @@ ab.dash.Dash = CT.Class({
 			}, n = CT.dom.flex(Object.keys(data).map(d2n), "bordered row jcbetween");
 			colored && CT.dom.className("ct-line", _.nodes.mainCharts).forEach(function(n, i) {
 				lname = d_.charts[i];
+				_.colors[lname] = window.getComputedStyle(n).getPropertyValue("stroke");
 				if (lname in labs)
-					labs[lname].style.color = _.colors[lname]
-						= window.getComputedStyle(n).getPropertyValue("stroke");
+					labs[lname].style.color = _.colors[lname];
 				else
-					CT.log("can't find " + lname + " to color!");
+					d_.loud && CT.log("can't find " + lname + " to color!");
 			});
 			withClass && n.classList.add(withClass);
 			return n;
@@ -418,6 +428,15 @@ ab.dash.Dash = CT.Class({
 			d_.loud && this.log("updated balances:", Object.keys(all));
 			_.up(all);
 		},
+		scoreup: function(data) {
+			var s, all = {}, _ = this._;
+			for (s of d_.markets) {
+				all[s + " score"] = data.scores[s];
+				all[s + " vol"] = data.volvols[s];
+			}
+			d_.loud && this.log("updates scores:", all);
+			_.up(all);
+		},
 		upConf: function(cobj) {
 			ab.util.req(() => this.log("conf updated!"), "setconf", {
 				mod: cobj
@@ -478,11 +497,12 @@ ab.dash.Dash = CT.Class({
 		nz.prices = CT.dom.div();
 		nz.legend = CT.dom.div();
 		nz.candles = CT.dom.div(null, "h1 w1 hidden");
-		nz.chart1 = CT.dom.div(null, "h1 w1-2 inline-block");
-		nz.chart2 = CT.dom.div(null, "h1 w1-2 inline-block");
+		nz.chart1 = CT.dom.div(null, "h1 w1-3 inline-block");
+		nz.chart2 = CT.dom.div(null, "h1 w1-3 inline-block");
+		nz.chart3 = CT.dom.div(null, "h1 w1-3 inline-block");
 		nz.sells = CT.dom.div(null, "scrolly red sidecol");
 		nz.buys = CT.dom.div(null, "scrolly green sidecol");
-		nz.mainCharts = CT.dom.div([nz.chart1, nz.chart2], "h1 w1 pointer");
+		nz.mainCharts = CT.dom.div([nz.chart1, nz.chart2, nz.chart3], "h1 w1 pointer");
 		nz.charts = CT.dom.div([nz.mainCharts, nz.candles], "midcharts fgrow");
 		nz.cancelAll = CT.dom.button("Cancel All Orders",
 			_.cancelAll, "abs b0 l0 p0 w50p fs70p hoverglow red");
@@ -520,6 +540,7 @@ ab.dash.Dash = CT.Class({
 			return this.log("waiting!", m.waiting);
 		if (!m.balances.waiting) {
 			_.balup(m.balances);
+			_.scoreup(m);
 			_.charts();
 		}
 		_.trades(m);
