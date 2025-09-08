@@ -28,6 +28,10 @@ html, body {
 	max-height: 290px;
 }
 
+.bigcharts .dstream {
+	max-height: 90px;
+}
+
 .infobubble {
 	color: white;
 	background: rgba(1, 1, 1, 0.7);

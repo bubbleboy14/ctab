@@ -482,7 +482,7 @@ ab.dash.Dash = CT.Class({
 		nz.chart2 = CT.dom.div(null, "h1 w1-2 inline-block");
 		nz.sells = CT.dom.div(null, "scrolly red sidecol");
 		nz.buys = CT.dom.div(null, "scrolly green sidecol");
-		nz.mainCharts = CT.dom.div([nz.chart1, nz.chart2], "h1 w1");
+		nz.mainCharts = CT.dom.div([nz.chart1, nz.chart2], "h1 w1 pointer");
 		nz.charts = CT.dom.div([nz.mainCharts, nz.candles], "midcharts fgrow");
 		nz.cancelAll = CT.dom.button("Cancel All Orders",
 			_.cancelAll, "abs b0 l0 p0 w50p fs70p hoverglow red");
@@ -495,6 +495,10 @@ ab.dash.Dash = CT.Class({
 			startWS: false,
 			container: nz.candles
 		});
+		nz.mainCharts.onclick = function() {
+			_.bigcharts = !_.bigcharts;
+			nz.streams.classList[_.bigcharts ? "add" : "remove"]("bigcharts");
+		};
 		CT.dom.setMain(CT.dom.flex([
 			nz.sells,
 			CT.dom.flex([
