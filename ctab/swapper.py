@@ -13,6 +13,7 @@ def filled(trade):
 	fill.metrics = config.ctab.live.office.stratuses()
 	fill.balances = ask("balances", mode="actual")
 	fill.client_order_id = trade["client_order_id"]
+	fill.rationale = trade["rationale"]
 	fill.order_id = trade["order_id"]
 	fill.market = trade["symbol"]
 	fill.amount = trade["amount"]
