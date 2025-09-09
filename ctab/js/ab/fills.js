@@ -21,14 +21,15 @@ ab.fills = {
 			return series.map((s, i) => _.pair(_.all[i], s[index],
 				_.labcol(labels[i]))).reduce((a, b) => a + b);
 		},
-		metrics: function(metrics) {
+		cluster: function(cluster, sub) {
 			const _ = ab.fills._, lines = [];
 			let k, v;
-			if (!metrics || !Object.keys(metrics).length) return "(no metrics)";
-			for (k in metrics) {
-				v = metrics[k];
+			cluster = cluster[sub];
+			if (!cluster || !Object.keys(cluster).length) return "(no " + sub + ")";
+			for (k in cluster) {
+				v = cluster[k];
 				if (typeof(v) == "object")
-					lines.push(k + "<div class='lpadded'>" + _.metrics(v) + "</div>");
+					lines.push(k + "<div class='lpadded'>" + _.cluster(cluster, k) + "</div>");
 				else
 					lines.push(_.pair(k, v));
 			}
@@ -39,7 +40,7 @@ ab.fills = {
 				title = tt.tooltipTitle.outerHTML,
 				balances = _.point(series, dataPointIndex, tt.legendLabels),
 				f = _.fills[dataPointIndex];
-			return title + _.pline(f) + balances + _.metrics(f.metrics);
+			return title + _.pline(f) + balances + _.cluster(f, "metrics") + _.cluster(f, "rationale");
 //			return w.globals.labels[dataPointIndex] + ": " + series[seriesIndex][dataPointIndex];
 		}
 	},
