@@ -11,6 +11,7 @@ class Fill(db.TimeStampedBase):
 	client_order_id = db.String()
 	balances = db.JSON()
 	metrics = db.JSON()
+	rationale = db.JSON()
 
 class TPV(db.TimeStampedBase):
 	total = db.Float()
