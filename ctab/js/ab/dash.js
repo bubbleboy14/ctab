@@ -47,7 +47,7 @@ ab.dash = {
 		row2: ["trader", "strategy", "office"],
 		row3: ["accountant", "harvester", "base", "actuary", "feeder"],
 		rounders: ["fees"],
-		sliceSpan: "short",
+		sliceSpan: "inner",
 		slice: 10,
 		loud: false
 	},
