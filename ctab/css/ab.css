@@ -14,7 +14,7 @@ html, body {
 	width: 105%;
 	height: 100%;
 	cursor: pointer;
-	margin-left: 19px;
+	margin-left: -19px;
 }
 
 .marchar {
