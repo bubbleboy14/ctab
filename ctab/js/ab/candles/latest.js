@@ -1,7 +1,7 @@
 ab.candles.latest = {
 	_: {
 		latest: {},
-		lasters: ["ad", "obv", "vpt", "OBVslope", "ADslope", "mfi", "ADX", "-DI", "+DI"]
+		lasters: ["ad", "obv", "vpt", "OBVslope", "ADslope", "mfi", "ADX", "-DI", "+DI", "trajectory"]
 	},
 	get: function(sym, stat) {
 		const latest = ab.candles.latest._.latest;

@@ -99,9 +99,9 @@ ab.dash.Dash = CT.Class({
 			var col, sym, colnode, fnode, cols = {}, _ = this._, colors = _.colors,
 				params = d_.tables[mode], head = params.head, rows = params.rows,
 				bals = data.balances, latest = ab.candles.latest.get, sco, dri, vol,
-				padclass = mode == "market" ? "p3" : "smallpadded"
+				padclass = mode == "market" ? "p3" : "smallpadded", adx, mfi, traj,
 				mayb = (sec, sym, prop) => data[sec][sym] && data[sec][sym][prop],
-				c = d => CT.dom.div(d, "w1 bordered nowrap " + padclass),
+				c = d => CT.dom.div(d, "w1 bordered nowrap " + padclass), over, under,
 				rcell = (val, precision) => _.rounder(val, precision || 10),
 				lacell = (sym, prop) => rcell(latest(sym, prop)),
 				paren = (v1, v2) => v1 + " (" + v2 + ")",
@@ -122,9 +122,11 @@ ab.dash.Dash = CT.Class({
 					cols.vpt.push(c(lacell(sym, "vpt")));
 					cols.obv.push(c(laparen(sym, "obv", "OBVslope")));
 					cols.ad.push(c(laparen(sym, "ad", "ADslope")));
-					cols.mfi.push(c(lacell(sym, "mfi")));
-					cols.adx.push(c((latest(sym, "+DI") > latest(sym, "-DI")
-						? "+" : "-") + lacell(sym, "ADX")));
+					mfi = c(lacell(sym, "mfi"));
+					cols.mfi.push(mfi);
+					adx = c((latest(sym, "+DI") > latest(sym, "-DI")
+						? "+" : "-") + lacell(sym, "ADX"));
+					cols.adx.push(adx);
 					vol = c(_.rounder(data.volvols[sym], 1000));
 					cols.vola.push(vol);
 					dri = c(_.rounder(data.drifts[sym], 1000));
@@ -135,6 +137,11 @@ ab.dash.Dash = CT.Class({
 					sco.style.color = colors[sym + " score"];
 					dri.style.color = colors[sym + " drift"];
 					vol.style.color = colors[sym + " vol"];
+					traj = latest(sym, "trajectory");
+					over = traj == "overheated";
+					under = traj == "undersold";
+					if (over || under)
+						adx.style.borderColor = mfi.style.borderColor = over ? "red" : "blue";
 				} else {
 					colnode.style.color = colors[sym];
 					cols.actual.push(c(bals.actual[sym]));
