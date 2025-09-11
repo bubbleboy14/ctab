@@ -1,6 +1,6 @@
 ab.apex.trans = {
 	_: {
-		syms: ["ETH", "BTC"],
+		syms: ["ETH", "BTC", "USD"],
 		terms: ["small", "medium", "large", "jumbo"],
 		stamped: function(item, y) {
 			return {
@@ -9,9 +9,12 @@ ab.apex.trans = {
 			};
 		},
 		b2f: function(bline, mult, usd) {
+			mult = mult || 1;
+			if (typeof bline == "number")
+				return mult * bline;
 			const bparts = bline.slice(0, -1).split(" ($"),
 				bpart = bparts[usd ? 1 : 0];
-			return btotal = (mult || 1) * parseFloat(bpart);
+			return btotal = mult * parseFloat(bpart);
 		},
 		bal: function(fill, sym, mult, usd) {
 			const _ = ab.apex.trans._;
@@ -32,10 +35,10 @@ ab.apex.trans = {
 		}
 	},
 	ETH: function(fill) {
-		return ab.apex.trans._.bal(fill, "ETH", 1000000);
+		return ab.apex.trans._.bal(fill, "ETH", 100);
 	},
 	BTC: function(fill) {
-		return ab.apex.trans._.bal(fill, "BTC", 10000000);
+		return ab.apex.trans._.bal(fill, "BTC", 3000);
 	},
 	USD: function(fill) {
 		const _ = ab.apex.trans._, bz = fill.balances;

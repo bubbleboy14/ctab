@@ -3,8 +3,8 @@ ab.fills = {
 		syms: ["ETH", "BTC"],
 		all: ["USD", "ETH", "BTC"],
 		units: {
-			ETH: "mwei",
-			BTC: "finney"
+			ETH: "x100",
+			BTC: "x3000"
 		},
 		labcol: function(lab) {
 			return lab.parentNode.firstElementChild.firstElementChild.firstElementChild.getAttribute("fill");
