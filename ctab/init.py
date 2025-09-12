@@ -14,12 +14,16 @@ routes = {
 }
 cfg = {
     "harvester": {
+        "int": 10,
         "batch": 10,
+        "skim": False,
+        "network": "bitcoin"
+    },
+    "balancer": {
+        "int": 30,
         "bottom": 10,
         "usdmax": 50,
-        "skim": False,
-        "balance": True,
-        "network": "bitcoin"
+        "balance": True
     },
     "actuary": {
         "sig": 9,
