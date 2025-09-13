@@ -72,7 +72,7 @@ ab.fills.Filter = CT.Class({
 				style: "number",
 				min: data.min,
 				max: data.max,
-				unit: 0.01,
+				unit: 0.001,
 				cb: function(num) {
 					oz.fills = oz.fills.filter(s.filt(direction, num));
 					_.refresh("score");
