@@ -1,4 +1,4 @@
-from rel.util import emit
+from rel.util import ask, emit
 from mkswap.backend import wsdebug
 from mkswap.config import config as swapconf
 from cantools.web import respond, succeed, cgi_get
@@ -13,7 +13,7 @@ def setconf(mod):
 def response():
 	office = config.ctab.live.office
 	action = cgi_get("action", choices=["status", "curconf",
-		"setconf", "cancel", "candles", "bt"], default="status")
+		"setconf", "cancel", "candles", "bt", "prices"], default="status")
 	if action == "cancel":
 		token = cgi_get("token")
 		if token == "all":
@@ -35,6 +35,8 @@ def response():
 		side = cgi_get("side")
 		log("/_ab forwarding %s %s order"%(sym, side))
 		emit("bestTrades", sym, side)
+	elif action == "prices":
+		succeed(ask("prices"))
 	else: # status (pubsub swapmon)
 		succeed(office and office.status() or { "waiting": "office loading" })
 
