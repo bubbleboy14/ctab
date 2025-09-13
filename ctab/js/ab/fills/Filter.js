@@ -30,11 +30,12 @@ ab.fills.Filter = CT.Class({
 	},
 	score: {
 		calc: function() {
-			const data = this.score.data = {}, prices = this.opts.prices;
+			const oz = this.opts, data = this.score.data = {
+			}, af = oz.allfills, prices = oz.prices;
 			let score, pold, pnew, vold, vnew;
 			this.log("scoring", prices);
 			CT.net.spinOn();
-			this.opts.allfills.forEach(function(fill) {
+			af.forEach(function(fill) {
 				// market, amount, price, side, fee
 				pnew = prices[fill.market];
 				pold = fill.price;
@@ -57,6 +58,7 @@ ab.fills.Filter = CT.Class({
 					retrospective: score
 				}
 			});
+			data.average = data.total / af.length;
 			CT.net.spinOff();
 			this.log("scored", data);
 		},
@@ -72,7 +74,8 @@ ab.fills.Filter = CT.Class({
 				style: "number",
 				min: data.min,
 				max: data.max,
-				unit: 0.001,
+				step: 0.001,
+				initial: data.average,
 				cb: function(num) {
 					oz.fills = oz.fills.filter(s.filt(direction, num));
 					_.refresh("score");
