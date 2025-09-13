@@ -72,12 +72,18 @@ ab.fills.Filler = CT.Class({
 			}
 			return lines.join("");
 		},
+		score: function(f) {
+			const _ = this._;
+			if (typeof f.score == "number")
+				return _.pair("score (prospective)", f.score);
+			return _.cluster(f, "score");
+		},
 		tooltip: function({series, seriesIndex, dataPointIndex, w}) {
 			const _ = this._, gz = w.globals, tt = gz.tooltip,
 				title = tt.tooltipTitle.outerHTML,
 				balances = _.point(series, dataPointIndex, tt.legendLabels),
 				f = this.opts.fills[dataPointIndex];
-			return title + _.pline(f) + balances + _.cluster(f, "metrics") + _.cluster(f, "rationale");
+			return title + _.pline(f) + balances + _.cluster(f, "metrics") + _.score(f) + _.cluster(f, "rationale");
 //			return w.globals.labels[dataPointIndex] + ": " + series[seriesIndex][dataPointIndex];
 		}
 	},
