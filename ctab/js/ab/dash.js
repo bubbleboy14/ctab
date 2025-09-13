@@ -45,7 +45,7 @@ ab.dash = {
 		littles: ["randlim", "profit", "leeway"],
 		centers: ["adxlim", "mfilim"],
 		row2: ["trader", "strategy", "office"],
-		row3: ["accountant", "ndx", "actuary", "backend", "feeder"],
+		row3: ["accountant", "adjuster", "actuary", "backend", "feeder"],
 		rounders: ["fees"],
 		sliceSpan: "inner",
 		slice: 10,
