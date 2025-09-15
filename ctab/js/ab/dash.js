@@ -142,6 +142,10 @@ ab.dash.Dash = CT.Class({
 					under = traj == "undersold";
 					if (over || under)
 						adx.style.borderColor = mfi.style.borderColor = over ? "red" : "blue";
+					else if (traj == "up")
+						adx.style.borderColor = "green";
+					else if (traj == "down")
+						adx.style.borderColor = "red";
 				} else {
 					colnode.style.color = colors[sym];
 					cols.actual.push(c(bals.actual[sym]));
