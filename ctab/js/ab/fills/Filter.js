@@ -50,21 +50,21 @@ ab.fills.Filter = CT.Class({
 				score -= fill.fee; // right?
 				if ("total" in data) {
 					data.total += score;
-					data.volume += amount;
+					data.volume += vnew;
 					data.min = Math.min(score, data.min);
 					data.max = Math.max(score, data.max);
 				} else {
 					data.total = data.min = data.max = score;
-					data.volume = amount;
+					data.volume = vnew;
 				}
 				if (reason in data) {
 					data[reason].total += score;
-					data[reason].volume += amount;
+					data[reason].volume += vnew;
 					data[reason].min = Math.min(score, data[reason].min);
 					data[reason].max = Math.max(score, data[reason].max);
 				} else {
 					data[reason] = {};
-					data[reason].volume = amount;
+					data[reason].volume = vnew;
 					data[reason].total = data[reason].min = data[reason].max = score;
 				}
 				fill.score = {
