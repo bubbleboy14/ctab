@@ -32,11 +32,12 @@ ab.fills.Filter = CT.Class({
 		calc: function() {
 			const oz = this.opts, data = this.score.data = {
 			}, af = oz.allfills, prices = oz.prices;
-			let score, pold, pnew, vold, vnew;
+			let score, pold, pnew, vold, vnew, reason;
 			this.log("scoring", prices);
 			CT.net.spinOn();
 			af.forEach(function(fill) {
 				// market, amount, price, side, fee
+				reason = fill.rationale.reason;
 				pnew = prices[fill.market];
 				pold = fill.price;
 				amount = fill.amount;
@@ -53,6 +54,14 @@ ab.fills.Filter = CT.Class({
 					data.max = Math.max(score, data.max);
 				} else
 					data.total = data.min = data.max = score;
+				if (reason in data) {
+					data[reason].total += score;
+					data[reason].min = Math.min(score, data[reason].min);
+					data[reason].max = Math.max(score, data[reason].max);
+				} else {
+					data[reason] = {};
+					data[reason].total = data[reason].min = data[reason].max = score;
+				}
 				fill.score = {
 					prospective: fill.score,
 					retrospective: score
