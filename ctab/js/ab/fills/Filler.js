@@ -9,9 +9,9 @@ ab.fills.Filler = CT.Class({
 		},
 		graphs: function() {
 			const top = CT.dom.div(),
-				left = CT.dom.div(null, "w2-3 inline-block"),
-				right = CT.dom.div(null, "w1-3 inline-block"),
-				bot = CT.dom.div([left, right], "hm300p");
+				left = CT.dom.div(null, "w3-4 inline-block"),
+				right = CT.dom.div(null, "w1-4 inline-block h300p"),
+				bot = CT.dom.div([left, right]);
 			CT.dom.setMain([top, bot]);
 			this.graphs.volumes(right);
 			this.graphs.scores(left);
