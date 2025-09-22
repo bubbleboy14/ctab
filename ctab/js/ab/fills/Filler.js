@@ -9,10 +9,9 @@ ab.fills.Filler = CT.Class({
 		},
 		graphs: function() {
 			const top = CT.dom.div(),
-				left = CT.dom.div(null, "w3-4 inline-block"),
-				right = CT.dom.div(null, "w1-4 inline-block h300p"),
+				left = CT.dom.div(null, "w2-3 inline-block"),
+				right = CT.dom.div(null, "w1-3 inline-block hmin200p hm300p"),
 				bot = CT.dom.div([left, right]);
-			top.style.height = "calc(100% - 350px)";
 			CT.dom.setMain([top, bot], "h1");
 			this.graphs.volumes(right);
 			this.graphs.scores(left);
@@ -71,6 +70,7 @@ ab.fills.Filler = CT.Class({
 				name: "totals",
 				type: "bar",
 				node: node,
+				height: "70%",
 				chartopts: {
 					type: "bar",
 					stacked: true
