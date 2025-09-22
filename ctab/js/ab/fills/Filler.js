@@ -7,41 +7,15 @@ ab.fills.Filler = CT.Class({
 			ETH: "x100",
 			BTC: "x3000"
 		},
-		graph: function() {
-			const _ = this._, syms = _.syms, fills = this.opts.fills;
-			new ab.apex.Graph({
-				sym: syms.map(s => s + " (" + _.units[s]  + ")").join(" / "),
-				items: fills,
-				name: "totals",
-				height: "85%",
-				type: "bar",
-				chartopts: {
-					type: "bar",
-					stacked: true
-				},
-				graphopts: {
-					stroke: {
-						width: 5
-					},
-					yaxis: [{
-						opposite: true,
-						seriesName: "USD",
-						title: {
-							text: "USD balance"
-						}
-					}, {
-						title: {
-							text: "native balances"
-						}
-					}],
-					tooltip: {
-						custom: _.tooltip
-					}
-				},
-				parts: [{ name: "USD", type: "line" }].concat(syms.map(function(s) {
-					return { name: s, type: "bar" };
-				}))
-			});
+		graphs: function() {
+			const top = CT.dom.div(),
+				left = CT.dom.div(null, "w2-3 inline-block"),
+				right = CT.dom.div(null, "w1-3 inline-block"),
+				bot = CT.dom.div([left, right], "hm300p");
+			CT.dom.setMain([top, bot]);
+			this.graphs.volumes(right);
+			this.graphs.scores(left);
+			this.graphs.fills(top);
 		},
 		labcol: function(lab) {
 			return lab.parentNode.firstElementChild.firstElementChild.firstElementChild.getAttribute("fill");
@@ -87,14 +61,101 @@ ab.fills.Filler = CT.Class({
 //			return w.globals.labels[dataPointIndex] + ": " + series[seriesIndex][dataPointIndex];
 		}
 	},
+	graphs: {
+		fills: function(node) {
+			const _ = this._, syms = _.syms, fills = this.opts.fills;
+			new ab.apex.Graph({
+				sym: syms.map(s => s + " (" + _.units[s]  + ")").join(" / "),
+				items: fills,
+				name: "totals",
+				type: "bar",
+				node: node,
+				chartopts: {
+					type: "bar",
+					stacked: true
+				},
+				graphopts: {
+					stroke: {
+						width: 5
+					},
+					yaxis: [{
+						opposite: true,
+						seriesName: "USD",
+						title: {
+							text: "USD balance"
+						}
+					}, {
+						title: {
+							text: "native balances"
+						}
+					}],
+					tooltip: {
+						custom: _.tooltip
+					}
+				},
+				parts: [{ name: "USD", type: "line" }].concat(syms.map(function(s) {
+					return { name: s, type: "bar" };
+				}))
+			});
+		},
+		scores: function(node) {
+			const reasons = this.filter.reasons();
+			new ab.apex.Graph({
+				categories: reasons.map(r => r.reason),
+				xprop: "reason",
+				items: reasons,
+				name: "scores",
+				sym: "reason",
+				type: "bar",
+				node: node,
+				chartopts: {
+					type: "bar"
+				},
+				graphopts: {
+					yaxis: [{
+						opposite: true,
+						seriesName: "total",
+						title: {
+							text: "total"
+						}
+					}, {
+						seriesName: ["min", "max"],
+						title: {
+							text: "min/max"
+						}
+					}]
+				},
+				parts: ["min", "max", "total"].map(function(p) {
+					return { name: p, type: "bar" };
+				})
+			});
+		},
+		volumes: function(node) {
+			const reasons = this.filter.reasons();
+			new ab.apex.Graph({
+				name: "volume",
+				sym: "reason",
+				type: "pie",
+				node: node,
+				chartopts: {
+					type: "pie"
+				},
+				graphopts: {
+					series: reasons.map(r => r.volume),
+					labels: reasons.map(r => r.reason)
+				}
+			});
+		}
+	},
 	build: function(fills) {
 		const oz = this.opts;
 		oz.fills = oz.allfills = fills.filter(this.filter.balanced);
-		this._.graph();
+		this.filter.score.calc();
+		this._.graphs();
 	},
 	init: function(opts) {
 		this.opts = opts = CT.merge(opts, {
-			refresher: this._.graph
+			refresher: this._.graphs
 		});
 		this.filter = new ab.fills.Filter(opts);
 		ab.popper.build("fill", this.build, this.filter.filters);
