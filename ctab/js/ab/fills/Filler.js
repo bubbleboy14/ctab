@@ -13,7 +13,7 @@ ab.fills.Filler = CT.Class({
 				right = CT.dom.div(null, "w1-4 inline-block h300p"),
 				bot = CT.dom.div([left, right]);
 			top.style.height = "calc(100% - 350px)";
-			CT.dom.setMain([top, bot]);
+			CT.dom.setMain([top, bot], "h1");
 			this.graphs.volumes(right);
 			this.graphs.scores(left);
 			this.graphs.fills(top);
