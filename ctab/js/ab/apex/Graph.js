@@ -3,7 +3,7 @@ ab.apex.Graph = CT.Class({
 	_: {
 		chart: function(series) {
 			const oz = this.opts, goz = oz.graphopts, gopts = CT.merge({
-				tooltip: CT.merge(goz && goz.tooltip, {
+				tooltip: CT.merge(goz.tooltip, {
 					x: {
 						format: "d MMM H:mm"
 					}
@@ -27,7 +27,7 @@ ab.apex.Graph = CT.Class({
 			return chart;
 		},
 		series: function(part, items, dataOnly) {
-			const transer = ab.apex.trans.transer(part.name),
+			const transer = ab.apex.trans.transer(part.name, this.opts.xprop),
 				dobj = { data: items.map(transer) };
 			return dataOnly ? dobj : CT.merge(part, dobj, {
 				type: this.opts.type
@@ -37,6 +37,8 @@ ab.apex.Graph = CT.Class({
 	trans: function(items, dataOnly) {
 		const opts = this.opts;
 		items = items || opts.items;
+		if (!items && opts.graphopts.series)
+			return this.log("aborting trans (series present)");
 		const parts = opts.parts.map(part => this._.series(part, items, dataOnly));
 		return opts.terms ? parts.concat(ab.apex.trans.terms(items,
 			dataOnly, typeof opts.terms == 'string' && opts.terms)) : parts;
@@ -56,10 +58,17 @@ ab.apex.Graph = CT.Class({
 	init: function(opts) {
 		opts.type = opts.type || "line";
 		this.opts = opts = CT.merge(opts, {
+			graphopts: {},
 			width: "100%",
 			height: "100%",
 			parts: [{ name: opts.name, type: opts.type }]
 		});
+		if (opts.categories) {
+			opts.graphopts.xaxis = {
+				type: "category",
+				categories: opts.categories
+			};
+		}
 		this.setParts();
 		this.sym = opts.sym;
 		this.name = opts.name;
