@@ -2,9 +2,10 @@ ab.apex.trans = {
 	_: {
 		syms: ["ETH", "BTC", "USD"],
 		terms: ["small", "medium", "large", "jumbo"],
-		stamped: function(item, y) {
+		stamped: function(item, y, xprop) {
+			const x = xprop ? item[xprop] : new Date(item.timestamp || item.created.slice(0, -3));
 			return {
-				x: new Date(item.timestamp || item.created.slice(0, -3)),
+				x: x,
 				y: y
 			};
 		},
@@ -20,8 +21,8 @@ ab.apex.trans = {
 			const _ = ab.apex.trans._;
 			return _.stamped(fill, _.b2f(fill.balances[sym], mult, usd));
 		},
-		gnode: function(can, stats) {
-			return ab.apex.trans._.stamped(can, stats.map(s => can[s]));
+		gnode: function(can, stats, xprop) {
+			return ab.apex.trans._.stamped(can, stats.map(s => can[s]), xprop);
 		},
 		term: function(candles, term, dataOnly, tpref) {
 			const gnode = ab.apex.trans._.gnode, d = {
@@ -47,11 +48,11 @@ ab.apex.trans = {
 	candles: function(can) {
 		return ab.apex.trans._.gnode(can, ["open", "high", "low", "close"]);
 	},
-	transer: function(prop) {
+	transer: function(prop, xprop) {
 		const trans = ab.apex.trans;
 		if (prop in trans)
 			return trans[prop];
-		return can => trans._.gnode(can, [prop]);
+		return can => trans._.gnode(can, [prop], xprop);
 	},
 	AD: function(can) {
 		return ab.apex.trans._.gnode(can, ["ad"]);
