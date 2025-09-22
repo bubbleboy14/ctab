@@ -14,9 +14,7 @@ ab.fills.Filter = CT.Class({
 			});
 		},
 		score: function() {
-			const fs = this.score;
-			fs.data || fs.calc();
-			fs.prompt();
+			this.score.prompt();
 		},
 		clear: function() {
 			this.opts.fills = this.opts.allfills;
@@ -107,6 +105,10 @@ ab.fills.Filter = CT.Class({
 			this.opts.prices = prices;
 			this.log("prices", prices);
 		}
+	},
+	reasons: function() {
+		const d = this.score.data;
+		return this._.reasons.map(r => CT.merge(d[r], { reason: r }));
 	},
 	balanced: function(f) {
 		const reason = f.rationale && f.rationale.reason;
