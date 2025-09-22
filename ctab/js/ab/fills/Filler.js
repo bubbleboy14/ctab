@@ -9,8 +9,8 @@ ab.fills.Filler = CT.Class({
 		},
 		graphs: function() {
 			const top = CT.dom.div(),
-				left = CT.dom.div(null, "w2-3 inline-block"),
-				right = CT.dom.div(null, "w1-3 inline-block hmin200p hm300p"),
+				left = CT.dom.div(null, "w1-2 inline-block"),
+				right = CT.dom.div(null, "w1-2 inline-block hmin250p hm400p"),
 				bot = CT.dom.div([left, right]);
 			CT.dom.setMain([top, bot], "h1");
 			this.graphs.volumes(right);
@@ -70,7 +70,7 @@ ab.fills.Filler = CT.Class({
 				name: "totals",
 				type: "bar",
 				node: node,
-				height: "70%",
+				height: "65%",
 				chartopts: {
 					type: "bar",
 					stacked: true
@@ -81,11 +81,13 @@ ab.fills.Filler = CT.Class({
 					},
 					yaxis: [{
 						opposite: true,
+						decimalsInFloat: 0,
 						seriesName: "USD",
 						title: {
 							text: "USD balance"
 						}
 					}, {
+						decimalsInFloat: 0,
 						title: {
 							text: "native balances"
 						}
@@ -115,11 +117,13 @@ ab.fills.Filler = CT.Class({
 				graphopts: {
 					yaxis: [{
 						opposite: true,
+						decimalsInFloat: 1,
 						seriesName: "total",
 						title: {
 							text: "total"
 						}
 					}, {
+						decimalsInFloat: 1,
 						seriesName: ["min", "max"],
 						title: {
 							text: "min/max"
